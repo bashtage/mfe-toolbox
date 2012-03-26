@@ -23,7 +23,7 @@ function [LLF, likelihoods, errors] = armaxfilter_likelihood(parameters,p,q,cons
 %
 % COMMENTS:
 %
-%  See also REALIZED_KERNEL, ARMAXERRORS
+%  See also ARMAXERRORS
 
 % Author: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk
