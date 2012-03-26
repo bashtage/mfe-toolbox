@@ -4,17 +4,17 @@ function [LLF, likelihoods, errors] = armaxfilter_likelihood(parameters,p,q,cons
 %
 % USAGE:
 %   [LLF, LIKELIHOODS, ERRORS] = armaxfilter_likelihood(PARAMETERS,P,Q,CONSTANT,Y,X,M)
-%   [LLF, LIKELIHOODS, ERRORS] = armaxfilter_likelihood(PARAMETERS,P,Q,CONSTANT,Y,X,M)
+%   [LLF, LIKELIHOODS, ERRORS] = armaxfilter_likelihood(PARAMETERS,P,Q,CONSTANT,Y,X,M,SIGMA)
 %
 % INPUTS:
-%   PARAMETERS  - A vector of ARMAX process params of the form [constant, arch, garch]
+%   PARAMETERS  - A vector of ARMAX process params of the form [constant, AR, eXog, MA]
 %   P           - Vector containing lag indices of the AR component
 %   Q           - Vector containing lag indices of the MA component
 %   CONSTANT    - Value indicating whether the model contains a constant (1) or not (0)
-%   Y           -
-%   X           -
+%   Y           - Dependent variable
+%   X           - Regressors, excluding the constant
 %   M           - Index to first element to use in the recursive residual calculation
-%   SIGMA       - T by 1 vector
+%   SIGMA       - T by 1 vector of conditional standard deviations
 %
 % OUTPUTS:
 %   LLF         - Minus 1 times the log likelihood
@@ -23,7 +23,7 @@ function [LLF, likelihoods, errors] = armaxfilter_likelihood(parameters,p,q,cons
 %
 % COMMENTS:
 %
-% See also armaerrors
+%  See also REALIZED_KERNEL, ARMAXERRORS
 
 % Author: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk

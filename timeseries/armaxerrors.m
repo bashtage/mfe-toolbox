@@ -3,7 +3,7 @@ function errors = armaxerrors(parameters,p,q,constant,y,x,m,sigma)
 %   Compute errors from an ARMAX model for use in a least squares optimizer
 %
 % USAGE:
-%   [ERRORS] = armaxfilter_likelihood(PARAMETERS,P,Q,CONSTANT,Y,X,M)
+%   [ERRORS] = armaxfilter_likelihood(PARAMETERS,P,Q,CONSTANT,Y,X,M,SIGMA)
 %
 % INPUTS:
 %   PARAMETERS - A vector of GARCH process aprams of the form [constant, arch, garch]
@@ -17,9 +17,11 @@ function errors = armaxerrors(parameters,p,q,constant,y,x,m,sigma)
 %                  GLS estimation
 %
 % OUTPUTS:
-%   E          - Vector of errors with the same size as Y.  First M elements are 0.
+%   ERRORS     - Vector of errors with the same size as Y.  First M elements are 0.
 %
 % COMMENTS:
+%
+%  See also ARMAXFILTER_LIKELIHOOD
 
 % Author: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk
