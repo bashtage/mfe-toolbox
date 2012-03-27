@@ -1,12 +1,48 @@
-function [C,A,B] = rarch_parameter_transform(parameters,p,q,v,k,C,type,isJoint,cpTransform)
+function [C,A,B] = rarch_parameter_transform(parameters,p,q,k,C,type,isJoint)
+% Parameter transformation for RARCH(p,q) multivarate volatility model simulation and estimatiorn 
+%
+% USAGE:
+%  [C,A,B] = rarch_parameter_transform(PARAMETERS,P,Q,K,C,TYPE,ISJOINT)
+%
+% INPUTS:
+%   PARAMETERS - Vector of parameters governing the dynamics.  See RARCH or RARCH_SIMULATE
+%   P          - Positive, scalar integer representing the number of symmetric innovations
+%   Q          - Non-negative, scalar integer representing the number of conditional covariance
+%                  lags.  When using 'CP' model, 0<=q<=1
+%   K          - Number of assets
+%   C          - Unconditional covariance of data. Ignored if ISJOINT==1
+%   TYPE       - Integer indicating type
+%                  1: Scalar
+%                  2: CP
+%                  3: Diagonal
+%   ISJOINT    - Boolean indicating whether PARAMETER contains only the dynamics (ISJOINT==false) or
+%                  both the Cholesky of the unconditional and the dynamic parameters
+% OUTPUTS:
+%   C - K by K unconditional covariance matrix
+%   A - K by K by P matrix of innovation parameters
+%   B - K by K by Q matrix of smoothing parameters
+%
+% COMMENTS:
+%   The dynamics of a RARCH model are identical to that of a BEKK, except
+%   that the model evolves in the rotated space.
+%   
+%   G(:,:,t) = (eye(K) - sum(A.^2,3) - sum(B.^2,3)) +
+%       A(:,:,1)*OP(:,:,t-1)*A(:,:,1) + ... A(:,:,p)*OP(:,:,t-1)*A(:,:,p) +
+%       B(:,:,1)*G(:,:,t-1)*B(:,:,1) + ... B(:,:,p)*OP(:,:,t-1)*B(:,:,p)
+%
+%   where in the scalar model A(:,:,i) = a(i)*eye(K), B(:,:,j)=b(j)*eye(K)
+%   and in the CP model, B(:,:,j) = theta - sum(A.^2,3);
+%
+% See also RARCH, RARCH_SIMULATE, RARCH_LIKELIHOOD
 
 % Scalar defaults
 numA = 1;
 numB = 1;
 if type>=2 % Common Persistence
-    numA = v;
-elseif type==3 % Diagonal
-    numB = v;
+    numA = k;
+end
+if type==3 % Diagonal
+    numB = k;
 end
 
 parameterCount = 0;
@@ -29,9 +65,9 @@ for i=1:p
     temp = parameters(parameterCount+1:parameterCount+numA);
     parameterCount = parameterCount + numA;
     if numA == 1
-        A(1:v,1:v,i) = temp * eye(v);
+        A(:,:,i) = temp * eye(k);
     else
-        A(1:v,1:v,i) = diag(temp);
+        A(:,:,i) = diag(temp);
     end
 end
 B = zeros(k,k,q);
@@ -39,20 +75,14 @@ for i=1:q
     temp = parameters(parameterCount+1:parameterCount+numB);
     parameterCount = parameterCount + numB;
     if numB == 1
-        B(1:v,1:v,i) = temp * eye(v);
+        B(:,:,i) = temp * eye(k);
     else
-        B(1:v,1:v,i) = diag(temp);
+        B(:,:,i) = diag(temp);
     end
 end
 
 % Common Persistence uses a different parameterization
-if type==2 && cpTransform
-    % B is really A+B
-    % A is the % of B of A
+if type==2 && q>0
     theta = B(1,1,1).^2;
-    A = A*theta;
-    B = theta - sum(A.^2,3);
-elseif type==2 
-    theta = B(1,1,1).^2;
-    B = theta - sum(A.^2);
+    B = eye(k)*theta - sum(A.^2,3);
 end

@@ -1,4 +1,4 @@
-function [data, Ht] = rarch_simulate(T,C,parameters,p,q,v,type)
+function [data, Ht] = rarch_simulate(T,C,parameters,p,q,type)
 % Simulation of RARCH(p,q) multivarate volatility model of Noureldin, Shephard and Sheppard
 %
 % USAGE:
@@ -17,8 +17,8 @@ function [data, Ht] = rarch_simulate(T,C,parameters,p,q,v,type)
 %                  'Diagonal' 
 %                  [diag(A(:,:,1))' ... diag(A(:,:,p))' diag(B(:,:,1))' ... diag(B(:,:,p))']'
 %   P          - Positive, scalar integer representing the number of symmetric innovations
-%   Q          - Non-negative, scalar integer representing the number of conditional covariance lags
-%   V          - Number of components allowed to have time-varying conditional covariance
+%   Q          - Non-negative, scalar integer representing the number of conditional covariance
+%                  lags.  When using 'CP' model, 0<=q<=1
 %   TYPE       - String, one of :
 %                  'Scalar' (Default) 
 %                  'CP' (Common Persistence) 
@@ -38,12 +38,34 @@ function [data, Ht] = rarch_simulate(T,C,parameters,p,q,v,type)
 %   where in the scalar model A(:,:,i) = a(i)*eye(K), B(:,:,j)=b(j)*eye(K)
 %   and in the CP model, B(:,:,j) = theta - sum(A.^2,3);
 %
-%   Note that then V<K, then only the first V elements of A and B are
-%   non-zero, and PARAMETERS should exclude 0 values.
+%  EXAMPLES:
+%    % Scalar with A.^2=.05 and B.^2=.93
+%    [data,Ht] = rarch_simulate(1000,eye(2)+1,sqrt([.05,.93]),1,1,'Scalar')
+%    % Diagonal 
+%    [data,Ht] = rarch_simulate(1000,eye(2)+1,sqrt([.05 .07 .93 .88]),1,1,'Diagonal')
+%    % Common Persistence, note uses theta (sqrt(A.^2+B.^2) not B)
+%    [data,Ht] = rarch_simulate(1000,eye(2)+1,sqrt([.05 .07 .99]),1,1,'CP')
+%
+% See also RARCH
 
 % Copyright: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk
 % Revision: 1    Date: 3/27/2012
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Input checking
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+k = size(C,1);
+if isscalar(T)
+    e = randn(2*T,k);
+else
+    e = T;
+    if size(e,2)~=k
+        error('T must have K columns when providing simulated random numbers.')
+    end
+    T = size(e,1);
+    e = [e(ceil(rand(T,1)*T),:);e];
+end
 
 if strcmpi(type,'Scalar')
     type = 1;
@@ -55,16 +77,31 @@ else
     error('TYPE must be ''Scalar'', ''CP'' or  ''Diagonal''.')
 end
 
-k = size(C,1);
-if isscalar(T)
-    e = randn(2*T,k);
-else
-    e = T;
-    e = [e(ceil(rand(T,1)*T),:);e];
+if type==2 && q>1
+    error('Q must be either 0 or 1 for the ''CP'' model.')
 end
 
-[C,A,B] = rarch_parameter_transform(parameters,p,q,v,k,C,type,false,false);
-
+switch type
+    case 1
+        count = p+q;
+    case 2
+        count = p*k+q;
+    case 3
+        count = (p+q)*k;
+end
+if length(parameters)~=count
+    error('PARAMETERS does not have the expected number of elements.')
+end
+[C,A,B] = rarch_parameter_transform(parameters,p,q,k,C,type,false);
+if max(diag(sum(A.^2,3)+sum(B.^2,3)))>=1
+    warning('MFE:nonstationary','The parameters do not correspond to the stationary region.')
+end
+if type==2 && q==1 && min(B(:))<0
+    error('When using ''CP'', the common persistence parameter Theta must satisfy Theta^2>=sum(A.^2,3)')
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Input checking
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Gt = repmat(eye(k),[1 1 2*T]);
 intercept = eye(k) - sum(A.^2,3) - sum(B.^2,3);
 backCast = eye(k);
