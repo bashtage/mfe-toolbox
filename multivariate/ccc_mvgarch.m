@@ -157,7 +157,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if ndims(data)==3
-    [k,nothing,t]=size(data);
+    [k,~,t]=size(data);
 else
     [t,k] = size(data);
     temp = zeros(k,k,t);
@@ -179,7 +179,7 @@ for i=1:k
     % Prepare the data
     tempData = sqrt(data(i,i,:));
     if o(i)>0
-        tempData = tempData .* ((dataAsym(i,i,:)<=0) -(dataAsym(i,i,:)>0));
+        tempData = tempData .* ((dataAsym(i,i,:)<=0) - (dataAsym(i,i,:)>0));
     end
     volData(:,i) = squeeze(tempData);
     tarchStartingVals = [];
@@ -188,7 +188,7 @@ for i=1:k
         parameterStart = parameterEnd - 1 - p(i) - o(i) - q(i) + 1;
         tarchStartingVals = startingVals(parameterStart:parameterEnd);
     end
-    [tarchParameters{i},nothing,ht{i},nothing,tarchVcv{i},tarchScores{i}]=tarch(volData(:,i),p(i),o(i),q(i),[],2,tarchStartingVals,options);
+    [tarchParameters{i},~,ht{i},~,tarchVcv{i},tarchScores{i}]=tarch(volData(:,i),p(i),o(i),q(i),[],2,tarchStartingVals,options);
     htMat(:,i) = ht{i};
 end
 
