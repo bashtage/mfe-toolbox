@@ -10,7 +10,8 @@ function [parameters, ll, ht, VCV, scores] = rarch(data,p,q,v,type,method,starti
 %                    K by K by T array of covariance estimators (e.g. realized covariance)
 %   P            - Positive, scalar integer representing the number of symmetric innovations
 %   Q            - Non-negative, scalar integer representing the number of conditional covariance lags
-%   V            - [OPTIONAL] Number of eigenvalues which are allowed to have dynamics (Default is K)
+%   V            - [OPTIONAL] Number of components allowed to have time-varying conditional
+%                    covariance (Default = K)
 %   TYPE         - [OPTIONAL] String, one of 'Scalar' (Default) ,'CP' (Common Persistence) or 'Diagonal'
 %   METHOD       - [OPTIONAL] String, one of '2-stage' (Default) or 'Joint'
 %   STARTINGVALS - [OPTIONAL] Vector of starting values to use.  See parameters and COMMENTS.
@@ -27,7 +28,7 @@ function [parameters, ll, ht, VCV, scores] = rarch(data,p,q,v,type,method,starti
 
 % Copyright: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk
-% Revision: 3    Date: 3/27/2012
+% Revision: 1    Date: 3/27/2012
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input Argument Checking
@@ -133,9 +134,10 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Estimation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-dynamicParameters = fmincon(@rarch_likelihood,startingVals,[],[],[],[],LB,UB,@rarch_constraint,options,stdData,p,q,eye(K),backCast,type,false);
+% Use stdData and set C = eye(K)
+dynamicParameters = fmincon(@rarch_likelihood,startingVals,[],[],[],[],LB,UB,@rarch_constraint,options,stdData,p,q,v,eye(K),backCast,type,false);
 if isJoint
-    allParameters = fmincon(@rarch_likelihood,startingValAll,[],[],[],[],LBall,UBall,@rarch_constraint,options,data,p,q,C,backCast,type,true);
+    allParameters = fmincon(@rarch_likelihood,startingValAll,[],[],[],[],LBall,UBall,@rarch_constraint,options,data,p,q,v,C,backCast,type,true);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inference

@@ -1,4 +1,36 @@
-function [ll, lls, Gt] = rarch_likelihood(parameters,data,p,q,C,backCast,type,isJoint)
+function [ll, lls, Ht] = rarch_likelihood(parameters,data,p,q,C,backCast,type,isJoint)
+% Likelihood for RARCH(p,q) multivarate volatility model of Noureldin, Shephard and Sheppard
+%
+% USAGE:
+%  [LL] = rarch_likelihood(DATA,P,Q)
+%  [PARAMETERS,LL,HT,VCV,SCORES] = rarch(PARAMETERS,DATA,P,Q,C,BACKCAST,TYPE,ISJOINT)
+%
+% INPUTS:
+%   PARAMETERS   - Vector of parameters required to compute the (negative) of the log-likelihood
+%   DATA         - K by K by T array of data
+%   P            - Positive, scalar integer representing the number of symmetric innovations
+%   Q            - Non-negative, scalar integer representing the number of conditional covariance lags
+%   V            - Number of components allowed to have time-varying conditional covariance
+%   C            - Unconditional covariance of the data
+%   BACKCAST     - K by K matrix to use for back casting
+%   TYPE         - Number indicating type: 
+%                    1 - Scalar
+%                    2 - Common Persistence
+%                    3 - Diagonal
+%   ISJOINT      - Boolean indicating wether the estimation is joint or not
+%
+% OUTPUTS:
+%   PARAMETERS   -
+%   LL           - The log likelihood at the optimum
+%   HT           - A [K K T] dimension matrix of conditional covariances
+%   VCV          - A numParams^2 square matrix of robust parameter covariances (A^(-1)*B*A^(-1)/T)
+%   SCORES       - A T by numParams matrix of individual scores
+%
+% COMMENTS:
+
+% Copyright: Kevin Sheppard
+% kevin.sheppard@economics.ox.ac.uk
+% Revision: 1    Date: 3/27/2012
 
 % Get the parameters together
 T = size(data,3);
@@ -8,9 +40,9 @@ k2 = k*(k+1)/2;
 numA = 1;
 numB = 1;
 if type>=2 % Common Persistence
-    numA = k;
+    numA = v;
 elseif type==3 % Diagonal
-    numB = k;
+    numB = v;
 end
 
 parameterCount = 0;
@@ -32,9 +64,9 @@ for i=1:p
     temp = parameters(parameterCount+1:parameterCount+numA);
     parameterCount = parameterCount + numA;
     if numA == 1
-        A(:,:,i) = temp * eye(k);
+        A(1:v,1:v,i) = temp * eye(v);
     else
-        A(:,:,i) = diag(temp);
+        A(1:v,1:v,i) = diag(temp);
     end
 end
 B = zeros(k,k,q);
@@ -42,9 +74,9 @@ for i=1:q
     temp = parameters(parameterCount+1:parameterCount+numB);
     parameterCount = parameterCount + numB;
     if numB == 1
-        B(:,:,i) = temp * eye(k);
+        B(1:v,1:v,i) = temp * eye(v);
     else
-        B(:,:,i) = diag(temp);
+        B(1:v,1:v,i) = diag(temp);
     end
 end
 

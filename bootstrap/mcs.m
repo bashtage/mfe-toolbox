@@ -21,7 +21,7 @@ function [includedR,pvalsR,excludedR,includedSQ,pvalsSQ,excludedSQ]=mcs(losses,a
 %   EXCLUDEDSQ - Excluded models using SQ method
 %
 % COMMENTS:
-%   This version of the MCS operates on quatities that should be "bads", such as losses.  If the
+%   This version of the MCS operates on quantities that should be "bads", such as losses.  If the
 %   quantities of interest are "goods", such as returns, simply call MCS with -1*LOSSES
 %
 % EXAMPLES
@@ -35,7 +35,7 @@ function [includedR,pvalsR,excludedR,includedSQ,pvalsSQ,excludedSQ]=mcs(losses,a
 %       [includedR, pvalsR] = mcs(losses, .05, 1000, 12, 'BLOCK')
 %
 % See also BSDS
-
+ 
 % Copyright: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk
 % Revision: 3    Date: 4/1/2007

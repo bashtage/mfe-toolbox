@@ -9,7 +9,7 @@ function [c,u,l]=bsds(bench,models,B,w,type,boot)
 %
 % INPUTS:
 %   BENCH  - Losses from the benchmark model
-%   MODELS - Losses from each of the models used for comparrison
+%   MODELS - Losses from each of the models used for comparison
 %   B      - Number of Bootstrap replications
 %   W      - Desired block length
 %   TYPE   - String, either 'STANDARD' or 'STUDENTIZED'.  'STUDENTIZED' is the default, and

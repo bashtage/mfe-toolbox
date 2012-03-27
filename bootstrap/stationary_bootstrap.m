@@ -1,5 +1,5 @@
 function [bsdata, indices]=stationary_bootstrap(data,B,w)
-% Implements the stationay bootstrap for bootstrapping stationary, dependant series
+% Implements the stationary bootstrap for bootstrapping stationary, dependent series
 % 
 % USAGE:
 %   [BSDATA, INDICES] = stationary_bootstrap(DATA,B,W)
@@ -14,8 +14,8 @@ function [bsdata, indices]=stationary_bootstrap(data,B,w)
 %   INDICES - T by B matrix of locations of the original BSDATA=DATA(indexes);
 % 
 % COMMENTS:
-%   To generate bootstrap sequences for other uses, such as bootstrapping vector processes, simply
-%   set DATA to (1:N)'   
+%   To generate bootstrap sequences for other uses, such as bootstrapping vector processes,
+%   set DATA to (1:N)'.  
 %
 % See also block_bootstrap
 

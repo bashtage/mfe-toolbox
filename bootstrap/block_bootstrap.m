@@ -1,5 +1,5 @@
 function [bsdata, indices]=block_bootstrap(data,B,w)
-% Implements a circular block bootstrap for bootstrapping stationary, dependant series
+% Implements a circular block bootstrap for bootstrapping stationary, dependent series
 % 
 % USAGE:
 %   [BSDATA, INDICES]=block_bootstrap(DATA,B,W)
@@ -15,7 +15,7 @@ function [bsdata, indices]=block_bootstrap(data,B,w)
 % 
 % COMMENTS:
 %   To generate bootstrap sequences for other uses, such as bootstrapping vector processes,
-%   simpleset DATA to (1:N)'   
+%   set DATA to (1:N)'.
 %
 % See also stationary_bootstrap
 

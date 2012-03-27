@@ -32,7 +32,7 @@ function  [parameters, ll, ht, VCV, scores] = ccc_mvgarch(data,dataAsym,p,o,q,st
 %                    and where R is the constant conditional correlation.
 %   LL           - The log likelihood at the optimum
 %   HT           - A [K K T] dimension matrix of conditional covariances
-%   VCV          - A numParams^2 square matrix of robust parameter covariances (A^(-1)*B*A^(-1)?T)
+%   VCV          - A numParams^2 square matrix of robust parameter covariances (A^(-1)*B*A^(-1)/T)
 %   SCORES       - A T by numParams matrix of individual scores
 %
 % COMMENTS:
