@@ -76,7 +76,9 @@ ll = sum(lls);
 if isnan(ll) || isinf(ll)
     ll = 1e7;
 end
-
+if ~isreal(ll)
+    keyboard
+end
 if nargout>2
     Ht = zeros(k,k,T);
     for i=1:T

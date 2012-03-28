@@ -8,7 +8,8 @@ switch type
     case 1
         c = constraint(1);
     case 2
-        c = constraint;
+        theta = parameters(length(parameters)).^2;
+        c = diag(sum(A.^2,3)) - theta;
     case 3
         c = constraint;
 end

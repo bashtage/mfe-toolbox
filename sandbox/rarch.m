@@ -95,10 +95,34 @@ else
     error('METHOD must be either ''2-stage'' or  ''Joint''.')
 end
 
+if ~isempty(startingVals)
+    switch type
+        case 1
+            count = p+q;
+        case 2
+            count = p*k+q;
+        case 3
+            count = (p+q)*k;
+    end
+    if isJoint
+        count = count + k*(k+1)/2;
+    end
+    if length(startingVals)~=count
+        error('STARTINGVALS does not have the expected number of elements.')
+    end
+end
+
 if isempty(options)
     options = optimset('fmincon');
     options.Display = 'iter';
     options.Diagnostics = 'on';
+    options.Algorithm = 'interior-point';
+else
+    try
+        options = optimset(options);
+    catch ME
+        error('The user provided options structure is not valid.')
+    end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Data Transformation
@@ -119,29 +143,46 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Starting Values
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% FIXME : Need to improve this
+% FIXME : Need to improve starting values
 % TODO  : Improve starting values
-switch type
-    case 1
-        startingVals = sqrt([.05/p * ones(1,p) .93/q*ones(1,q)]);
-    case 2
-        startingVals = sqrt([.05/p * ones(1,k*p) .93]);
-    case 3
-        startingVals = sqrt([.05/p * ones(1,k*p) .93/q*ones(1,k*q)]);
-end
-startingVals = startingVals';
-LB = -ones(size(startingVals));
-UB = ones(size(startingVals));
 w = .06*.94.^(0:ceil(sqrt(T)));
 w = w/sum(w);
 backCast = zeros(k);
 for i=1:length(w)
     backCast = backCast + w(i)*stdData(:,:,i);
 end
+
+as = .02:.03:.11;
+apbs = .9:.03:.99;
+startingLLs = zeros(length(as),length(apbs));
+for i=1:length(as)
+    for j=1:length(apbs)
+        a = as(i);
+        b = apbs(j) - a;
+        parameters = sqrt([a b]);
+        startingLLs(i,j) = rarch_likelihood(parameters,data,1,1,C,backCast,1,false,false);
+    end
+end
+
+[i,j]=find(startingLLs==min(min(startingLLs)));
+a = as(i);
+b = apbs(j)-a;
+switch type
+    case 1
+        startingVals = sqrt([a/p * ones(1,p) b/q*ones(1,q)]);
+    case 2
+        startingVals = sqrt([a/p * ones(1,k*p) (a+b)]);
+    case 3
+        startingVals = sqrt([a/p * ones(1,k*p) b/q*ones(1,k*q)]);
+end
+startingVals = startingVals';
+UB = .99998 * ones(size(startingVals));
+LB = -UB;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Estimation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Use stdData and set C = eye(K)
+%rarch_likelihood(startingVals,data,p,q,C,backCast,type,false,false);
 parameters = fmincon(@rarch_likelihood,startingVals,[],[],[],[],LB,UB,@rarch_constraint,options,data,p,q,C,backCast,type,false,false);
 [ll,~,Ht] = rarch_likelihood(parameters,data,p,q,C,backCast,type,false,false);
 if isJoint
@@ -155,7 +196,6 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inference
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-keyboard
 k2 = k*(k+1)/2;
 if isJoint
     C = parameters(1:k2);
@@ -169,15 +209,16 @@ else
     for i=1:T
         scores1(i,:) = vech(data(:,:,i)-C)';
     end
-    scores2 = gradient_2sided(@rarch_likelihood,parameters,data,p,q,C,backCast,type,true,true);
+    [~,scores2] = gradient_2sided(@rarch_likelihood,parameters,data,p,q,C,backCast,type,false,false);
     scores = [scores1 scores2];
-    B = covnw(scores,1.2*ceil(T^(0.25)));
+    B = covnw(scores,ceil(1.2*T^(0.25)));
     m = length(parameters);
     parameters = [vech(C);parameters];
     A1 = -eye(k2);
     A2 = hessian_2sided_nrows(@rarch_likelihood,parameters,m,data,p,q,C,backCast,type,true,false);
+    A2 = A2/T;
     A = [[A1 zeros(k2,m)];
           A2];
-    Ainv = eye(length(A))\A;
-    VCV = Ainv'*B*Ainv;
+    Ainv = A\eye(length(A));
+    VCV = Ainv*B*Ainv'/T;
 end

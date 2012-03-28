@@ -89,5 +89,7 @@ end
 % Common Persistence uses a different parameterization
 if type==2 && q>0
     theta = B(1,1,1).^2;
-    B = eye(k)*theta - sum(A.^2,3);
+    B = theta - diag(sum(A.^2,3));
+    B(B<0)=0;
+    B = diag(sqrt(B));
 end
