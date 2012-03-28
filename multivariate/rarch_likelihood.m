@@ -18,11 +18,9 @@ function [ll, lls, Ht] = rarch_likelihood(parameters,data,p,q,C,backCast,type,is
 %   ISJOINT      - Boolean indicating wether the estimation is joint or not
 %
 % OUTPUTS:
-%   PARAMETERS   - Parameter vector.  See RARCH
-%   LL           - The log likelihood at the optimum
+%   LL           - The log likelihood evaluated at the PARAMETERS
+%   LLS          - A T by 1 vector of log-likelihoods
 %   HT           - A [K K T] dimension matrix of conditional covariances
-%   VCV          - A numParams^2 square matrix of robust parameter covariances (A^(-1)*B*A^(-1)/T)
-%   SCORES       - A T by numParams matrix of individual scores
 %
 % COMMENTS:
 %
@@ -73,12 +71,10 @@ for i=1:T
 end
 ll = sum(lls);
 
-if isnan(ll) || isinf(ll)
+if isnan(ll) || isinf(ll) || ~isreal(ll)
     ll = 1e7;
 end
-if ~isreal(ll)
-    keyboard
-end
+
 if nargout>2
     Ht = zeros(k,k,T);
     for i=1:T

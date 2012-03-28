@@ -143,8 +143,6 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Starting Values
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% FIXME : Need to improve starting values
-% TODO  : Improve starting values
 w = .06*.94.^(0:ceil(sqrt(T)));
 w = w/sum(w);
 backCast = zeros(k);
