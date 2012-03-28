@@ -1,5 +1,5 @@
-function [C,A,B] = rarch_parameter_transform(parameters,p,q,k,C,type,isJoint)
-% Parameter transformation for RARCH(p,q) multivarate volatility model simulation and estimatiorn 
+function [C,A,B] = rarch_parameter_transform(parameters,p,q,k,C,type,isJoint,isCChol)
+% Parameter transformation for RARCH(p,q) multivarate volatility model simulation and estimatiorn
 %
 % USAGE:
 %  [C,A,B] = rarch_parameter_transform(PARAMETERS,P,Q,K,C,TYPE,ISJOINT)
@@ -25,7 +25,7 @@ function [C,A,B] = rarch_parameter_transform(parameters,p,q,k,C,type,isJoint)
 % COMMENTS:
 %   The dynamics of a RARCH model are identical to that of a BEKK, except
 %   that the model evolves in the rotated space.
-%   
+%
 %   G(:,:,t) = (eye(K) - sum(A.^2,3) - sum(B.^2,3)) +
 %       A(:,:,1)*OP(:,:,t-1)*A(:,:,1) + ... A(:,:,p)*OP(:,:,t-1)*A(:,:,p) +
 %       B(:,:,1)*G(:,:,t-1)*B(:,:,1) + ... B(:,:,p)*OP(:,:,t-1)*B(:,:,p)
@@ -49,14 +49,19 @@ parameterCount = 0;
 if isJoint
     k2 = k*(k+1)/2;
     C = parameters(1:k2);
-    C = ivech(C);
-    C = C*C';
-    % Ensure C is PSD
-    [V,D] = eig(C);
-    if (min(D)/max(D))<eps
-        D((D/max(D))<eps) = 2*eps;
-        C = V*D*V';
-        C=(C+C)/2;
+    if isCChol
+        C = vec2chol(C);
+        C = C*C';
+        % Ensure C is PSD
+        [V,D] = eig(C);
+        D = diag(D);
+        if (min(D))<(2*eps*max(D))
+            D((D/max(D))<eps) = 2*max(D)*eps;
+            C = V*diag(D)*V';
+            C=(C+C)/2;
+        end
+    else
+        C = ivech(C);
     end
     parameterCount = parameterCount + k2;
 end

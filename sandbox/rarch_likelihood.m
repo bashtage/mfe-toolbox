@@ -1,4 +1,4 @@
-function [ll, lls, Ht] = rarch_likelihood(parameters,data,p,q,C,backCast,type,isJoint)
+function [ll, lls, Ht] = rarch_likelihood(parameters,data,p,q,C,backCast,type,isJoint,isCChol)
 % Likelihood for RARCH(p,q) multivarate volatility model of Noureldin, Shephard and Sheppard
 %
 % USAGE:
@@ -36,7 +36,7 @@ function [ll, lls, Ht] = rarch_likelihood(parameters,data,p,q,C,backCast,type,is
 T = size(data,3);
 k = size(data,2);
 
-[C,A,B] = rarch_parameter_transform(parameters,p,q,k,C,type,isJoint);
+[C,A,B] = rarch_parameter_transform(parameters,p,q,k,C,type,isJoint,isCChol);
 % Fix B in case of CP
 B(B<0)= 0;
 
@@ -69,7 +69,7 @@ for i=1:T
         end
     end
     V = C12*Gt(:,:,i)*C12;
-    lls(i) = logLikConst + log(det(V)) + sum(diag(V^(-1)*data(:,:,i)));
+    lls(i) = 0.5*(logLikConst + log(det(V)) + sum(diag(V^(-1)*data(:,:,i))));
 end
 ll = sum(lls);
 
