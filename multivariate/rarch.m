@@ -23,6 +23,28 @@ function [parameters, ll, Ht, VCV, scores] = rarch(data,p,q,type,method,starting
 %   SCORES       - A T by numParams matrix of individual scores
 %
 % COMMENTS:
+%   The dynamics of a RARCH model are identical to that of a BEKK, except
+%   that the model evolves in the rotated space.
+%
+%   G(:,:,t) = (eye(K) - sum(A.^2,3) - sum(B.^2,3)) +
+%       A(:,:,1)*OP(:,:,t-1)*A(:,:,1) + ... A(:,:,p)*OP(:,:,t-1)*A(:,:,p) +
+%       B(:,:,1)*G(:,:,t-1)*B(:,:,1) + ... B(:,:,p)*OP(:,:,t-1)*B(:,:,p)
+%
+%   where in the scalar model A(:,:,i) = a(i)*eye(K), B(:,:,j)=b(j)*eye(K)
+%   and in the CP model, B(:,:,j) = theta - sum(A.^2,3).  OP is the outer product of the
+%   unconditionally standardized data.
+%
+%   When ISJOINT=1, the first K*(K+1)/2 element of STARTINGBALS mus tbe vech(C).
+%
+% EXAMPLES:
+%   % Scalar (1,1)
+%   parameters = rarch(data,1,1,'Scalar')
+%   % Scalar (1,1), jointly estimated
+%   parameters = rarch(data,1,1,'Scalar','Joint')
+%   % Common persistence (2,1)
+%   parameters = rarch(data,2,1,'CP')
+%   % Diagons (2,2)
+%   parameters = rarch(data,2,2,'Diagonal')
 
 % Copyright: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk
@@ -150,16 +172,22 @@ for i=1:length(w)
     backCast = backCast + w(i)*stdData(:,:,i);
 end
 
-as = .02:.03:.11;
-apbs = .9:.03:.99;
-startingLLs = zeros(length(as),length(apbs));
-for i=1:length(as)
-    for j=1:length(apbs)
-        a = as(i);
-        b = apbs(j) - a;
-        parameters = sqrt([a b]);
-        startingLLs(i,j) = rarch_likelihood(parameters,data,1,1,C,backCast,1,false,false);
+k2 = k*(k+1)/2;
+if isempty(startingVals)
+    as = .02:.03:.11;
+    apbs = .9:.03:.99;
+    startingLLs = zeros(length(as),length(apbs));
+    for i=1:length(as)
+        for j=1:length(apbs)
+            a = as(i);
+            b = apbs(j) - a;
+            parameters = sqrt([a b]);
+            startingLLs(i,j) = rarch_likelihood(parameters,data,1,1,C,backCast,1,false,false);
+        end
     end
+else
+    % Ignore C in the starting vals
+    startingVals = startingVals(k2+1:length(startingVals));
 end
 
 [i,j]=find(startingLLs==min(min(startingLLs)));
@@ -179,22 +207,19 @@ LB = -UB;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Estimation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Use stdData and set C = eye(K)
-%rarch_likelihood(startingVals,data,p,q,C,backCast,type,false,false);
 parameters = fmincon(@rarch_likelihood,startingVals,[],[],[],[],LB,UB,@rarch_constraint,options,data,p,q,C,backCast,type,false,false);
 [ll,~,Ht] = rarch_likelihood(parameters,data,p,q,C,backCast,type,false,false);
 if isJoint
     CChol = chol2vec(chol(C)');
-    startingValAll =[CChol;parameters];
-    LBall = [-inf*ones(size(CChol));-ones(size(parameters))];
-    UBall = abs(LBall);
-    parameters = fmincon(@rarch_likelihood,startingValAll,[],[],[],[],LBall,UBall,@rarch_constraint,options,data,p,q,C,backCast,type,true,true);
+    startingValJoint =[CChol;parameters];
+    LBJoint = [-inf*ones(size(CChol));-ones(size(parameters))];
+    UBJoint = abs(LBJoint);
+    parameters = fmincon(@rarch_likelihood,startingValJoint,[],[],[],[],LBJoint,UBJoint,@rarch_constraint,options,data,p,q,C,backCast,type,true,true);
     [ll,~,Ht] = rarch_likelihood(parameters,data,p,q,C,backCast,type,true,true);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inference
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-k2 = k*(k+1)/2;
 if isJoint
     C = parameters(1:k2);
     C = vec2chol(C);
@@ -216,7 +241,7 @@ else
     A2 = hessian_2sided_nrows(@rarch_likelihood,parameters,m,data,p,q,C,backCast,type,true,false);
     A2 = A2/T;
     A = [[A1 zeros(k2,m)];
-          A2];
+        A2];
     Ainv = A\eye(length(A));
     VCV = Ainv*B*Ainv'/T;
 end

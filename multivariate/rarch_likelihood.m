@@ -23,6 +23,7 @@ function [ll, lls, Ht] = rarch_likelihood(parameters,data,p,q,C,backCast,type,is
 %   HT           - A [K K T] dimension matrix of conditional covariances
 %
 % COMMENTS:
+%   When ISJOINT==1, the first K*(K+1)/2 of the parameters are chol2vec(chol(C)').
 %
 % See also RARCH
 

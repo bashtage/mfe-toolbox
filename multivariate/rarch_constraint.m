@@ -13,8 +13,6 @@ function [c,ceq] = rarch_constraint(parameters,data,p,q,C,backCast,type,isJoint,
 %
 % COMMENTS:
 %
-%  EXAMPLES:
-%
 % See also RARCH, RARCH_LIKELIHOOD
 
 % Copyright: Kevin Sheppard

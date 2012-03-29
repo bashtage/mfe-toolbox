@@ -23,15 +23,7 @@ function [C,A,B] = rarch_parameter_transform(parameters,p,q,k,C,type,isJoint,isC
 %   B - K by K by Q matrix of smoothing parameters
 %
 % COMMENTS:
-%   The dynamics of a RARCH model are identical to that of a BEKK, except
-%   that the model evolves in the rotated space.
-%
-%   G(:,:,t) = (eye(K) - sum(A.^2,3) - sum(B.^2,3)) +
-%       A(:,:,1)*OP(:,:,t-1)*A(:,:,1) + ... A(:,:,p)*OP(:,:,t-1)*A(:,:,p) +
-%       B(:,:,1)*G(:,:,t-1)*B(:,:,1) + ... B(:,:,p)*OP(:,:,t-1)*B(:,:,p)
-%
-%   where in the scalar model A(:,:,i) = a(i)*eye(K), B(:,:,j)=b(j)*eye(K)
-%   and in the CP model, B(:,:,j) = theta - sum(A.^2,3);
+%   When ISJOINT==1, the first K*(K+1)/2 of the parameters are chol2vec(chol(C)').
 %
 % See also RARCH, RARCH_SIMULATE, RARCH_LIKELIHOOD
 

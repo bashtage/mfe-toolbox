@@ -6,8 +6,8 @@ function [data, Ht] = rarch_simulate(T,C,parameters,p,q,type)
 %
 % INPUTS:
 %   T          - Either a scalar containing the length of the series to simulate, or a T by K matrix 
-%                  of simulated random variables.  The default is to use standard normals.  Providing 
-%                  a T by K matrix allows other distributions to be used.
+%                  of simulated random variables.  The default is to use standard normal random 
+%                  variables.  Providing a T by K matrix allows other distributions to be used.
 %   C          - Unconditional covariance of the data
 %   PARAMETERS - Vector of parameters governing the dynamics.  The form of the parameters depends on the TYPE.  
 %                  'Scalar':
@@ -37,7 +37,8 @@ function [data, Ht] = rarch_simulate(T,C,parameters,p,q,type)
 %       B(:,:,1)*G(:,:,t-1)*B(:,:,1) + ... B(:,:,p)*OP(:,:,t-1)*B(:,:,p)
 %
 %   where in the scalar model A(:,:,i) = a(i)*eye(K), B(:,:,j)=b(j)*eye(K)
-%   and in the CP model, B(:,:,j) = theta - sum(A.^2,3);
+%   and in the CP model, B(:,:,j) = theta - sum(A.^2,3).  OP is the outer product of the
+%   unconditionally standardized data.
 %
 %  EXAMPLES:
 %    % Scalar with A.^2=.05 and B.^2=.93
