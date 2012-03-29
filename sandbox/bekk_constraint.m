@@ -21,8 +21,6 @@ function [c,ceq] = bekk_constraint(parameters,data,dataAsym,p,o,q,backCast,backC
 % kevin.sheppard@economics.ox.ac.uk
 % Revision: 1    Date: 3/27/2012
 
-
-
 ceq = [];
 k = size(data,2);
 [~,A,G,B] = bekk_parameter_transform(parameters,p,o,q,k,type);
@@ -43,5 +41,5 @@ switch type
         for i=1:q
             m = m + kron(B(:,:,i),B(:,:,i));
         end
-        c = eig(m) - 1;
+        c = abs(eig(m)) - .99998;
 end

@@ -192,7 +192,9 @@ backCastAsym = sum(bsxfun(@times,w,dataAsym(:,:,1:m)),3);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Use stdData and set C = eye(K)
 %rarch_likelihood(startingVals,data,p,q,C,backCast,type,false,false);
+warning('off') %#ok<*WNOFF>
 parameters = fmincon(@bekk_likelihood,startingVals,[],[],[],[],LB,UB,@bekk_constraint,options,data,dataAsym,p,o,q,backCast,backCastAsym,type);
+warning('on') %#ok<*WNON>
 [ll,~,Ht] = bekk_likelihood(parameters,data,dataAsym,p,o,q,backCast,backCastAsym,type);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inference

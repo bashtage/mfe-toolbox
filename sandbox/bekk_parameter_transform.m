@@ -38,6 +38,13 @@ C = parameters(1:k2);
 C = vec2chol(C);
 C = C*C';
 offset = k2;
+[V,D] = eig(C);
+D = diag(D);
+if (min(D))<(2*eps*max(D))
+    D((D/max(D))<eps) = 2*max(D)*eps;
+    C = V*diag(D)*V';
+    C=(C+C)/2;
+end
 
 m = p+o+q;
 temp = zeros(k,k,m);
