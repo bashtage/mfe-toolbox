@@ -1,5 +1,5 @@
 function [C,A,B] = rarch_parameter_transform(parameters,p,q,k,C,type,isJoint,isCChol)
-% Parameter transformation for RARCH(p,q) multivarate volatility model simulation and estimatiorn
+% Parameter transformation for RARCH(p,q) multivariate volatility model simulation and estimation
 %
 % USAGE:
 %  [C,A,B] = rarch_parameter_transform(PARAMETERS,P,Q,K,C,TYPE,ISJOINT)

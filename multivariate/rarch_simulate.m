@@ -1,5 +1,5 @@
 function [data, Ht] = rarch_simulate(T,C,parameters,p,q,type)
-% Simulation of RARCH(p,q) multivarate volatility model of Noureldin, Shephard and Sheppard
+% Simulation of RARCH(p,q) multivariate volatility model of Noureldin, Shephard and Sheppard
 %
 % USAGE:
 %  [DATA,HT] = rarch_simulate(T,C,PARAMETERS,P,Q,TYPE)

@@ -1,4 +1,25 @@
 function [c,ceq] = rarch_constraint(parameters,data,p,q,C,backCast,type,isJoint,isCChol) %#ok<*INUSL>
+% Non-linear constraint for estimation of RARCH(p,q) multivariate volatility models
+%
+% USAGE:
+%  [C,CEQ] = rarch_constraint(PARAMETERS,DATA,P,Q,C,BACKCAST,TYPE,ISJOINT)
+%
+% INPUTS:
+%   See rarch_likelihood
+%
+% OUTPUTS:
+%   C   - Vector of inequality constraints
+%   CEQ - Empty
+%
+% COMMENTS:
+%
+%  EXAMPLES:
+%
+% See also RARCH, RARCH_LIKELIHOOD
+
+% Copyright: Kevin Sheppard
+% kevin.sheppard@economics.ox.ac.uk
+% Revision: 1    Date: 3/27/2012
 
 ceq = [];
 k = size(data,1);

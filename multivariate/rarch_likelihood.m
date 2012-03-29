@@ -1,5 +1,5 @@
 function [ll, lls, Ht] = rarch_likelihood(parameters,data,p,q,C,backCast,type,isJoint,isCChol)
-% Likelihood for RARCH(p,q) multivarate volatility model of Noureldin, Shephard and Sheppard
+% Likelihood for RARCH(p,q) multivariate volatility model of Noureldin, Shephard and Sheppard
 %
 % USAGE:
 %  [LL,LLS,HT] = rarch_likelihood(PARAMETERS,DATA,P,Q,C,BACKCAST,TYPE,ISJOINT)
