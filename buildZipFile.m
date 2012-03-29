@@ -4,7 +4,7 @@ pd = pwd;
 cd([pd filesep 'mex_source\'])
 f = dir('*.c');
 for i=1:length(f);
-    mex(f(i).name);
+    mex([f(i).name],'-largeArrayDims');
 end
 movefile('*.mexw64',[pd '\dlls\']);
 
