@@ -1,9 +1,9 @@
-function [parameters, ll, ht, VCV, scores, diagnostics] = scalar_vt_vech(data,dataAsym,p,o,q,startingvals,options)
+function [parameters, ll, ht, intercept, VCV, scores, diagnostics] = scalar_vt_vech(data,dataAsym,p,o,q,startingvals,options)
 % Estimation of symmetric and asymmetric scalar multivariate vech ARCH models using variance
 % targeting to reduce the number of parameters needing to be estimated simultaneously
 %
 % USAGE:
-%  [PARAMETERS,LL,HT,VCV,SCORES,DIAGNOSTICS] = scalar_vt_vech(DATA,DATAASYM,P,O,Q,STARTINGVALS,OPTIONS)
+%  [PARAMETERS,LL,HT,INTERCEPT,VCV,SCORES,DIAGNOSTICS] = scalar_vt_vech(DATA,DATAASYM,P,O,Q,STARTINGVALS,OPTIONS)
 %
 % INPUTS:
 %   DATA         - A T by K matrix of zero mean residuals -OR-
@@ -19,6 +19,8 @@ function [parameters, ll, ht, VCV, scores, diagnostics] = scalar_vt_vech(data,da
 %   PARAMETERS   - A p+o+q column vector of parameters.  The intercept is reported in DIAGNOSTICS
 %   LL           - The log likelihood at the optimum
 %   HT           - A [K K T] dimension matrix of conditional covariances
+%   INTERCEPT    - K by K matrix containing the intercept computed from the unconditional variance
+%                    and parameters
 %   VCV          - A numParams^2 square matrix of robust parameter covariances (A^(-1)*B*A^(-1)*t^(-1))
 %   SCORES       - A T by numParams matrix of individual scores
 %
@@ -206,14 +208,14 @@ end
 
 parameters=scalar_vt_vech_itransform(parameters,p,o,q,kappa);
 if nargout>1
-    [ll,lls,ht]=scalar_vt_vech_likelihood(parameters,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,false);
+    [ll,~,ht]=scalar_vt_vech_likelihood(parameters,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,false);
     ll=-ll;
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Compute the VCV
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-if nargout>3
+if nargout>4
     k2 = k*(k+1)/2;
     CVech=vech(C);
     if o==0
@@ -240,7 +242,7 @@ if nargout>3
             scoreCount = scoreCount  + 1;
         end
     end
-    [g,gt] = gradient_2sided(@scalar_vt_vech_likelihood,parameters,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,false);
+    [~,gt] = gradient_2sided(@scalar_vt_vech_likelihood,parameters,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,false);
     scores(:,momentCount+1:momentCount+p+o+q) = gt;
     A(momentCount+1:momentCount+p+o+q,:) = hessian_2sided_nrows(@scalar_vt_vech_likelihood,jointParameters,p+o+q,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,true,false);
     
@@ -258,10 +260,11 @@ diagnostics.ITERATIONS=output.iterations;
 diagnostics.FUNCCOUNT=output.funcCount;
 diagnostics.MESSAGE=output.message;
 diagnostics.kappa=kappa;
-alpha = parameters(1:p);
-gamma = parameters(p+1:p+o);
-beta = parameters(p+o+1:p+o+q);
+alpha = sum(parameters(1:p));
+gamma = sum(parameters(p+1:p+o));
+beta = sum(parameters(p+o+1:p+o+q));
 diagnostics.intercept = C*(1-alpha-beta);
 if o>0
     diagnostics.intercept  = diagnostics.intercept  - gamma*Casym;
 end
+intercept = diagnostics.intercept;
