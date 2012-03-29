@@ -2,7 +2,7 @@ function [data, Ht] = rarch_simulate(T,C,parameters,p,q,type)
 % Simulation of RARCH(p,q) multivarate volatility model of Noureldin, Shephard and Sheppard
 %
 % USAGE:
-%  [DATA,HT] = rarch_simulate(T,C,PARAMETERS,P,Q,V,TYPE)
+%  [DATA,HT] = rarch_simulate(T,C,PARAMETERS,P,Q,TYPE)
 %
 % INPUTS:
 %   T          - Either a scalar containing the length of the series to simulate, or a T by K matrix 
@@ -23,6 +23,7 @@ function [data, Ht] = rarch_simulate(T,C,parameters,p,q,type)
 %                  'Scalar' (Default) 
 %                  'CP' (Common Persistence) 
 %                  'Diagonal'
+%
 % OUTPUTS:
 %   DATA   - A T by K matrix of simulated data
 %   HT     - A [K K T] dimension matrix of conditional covariances
