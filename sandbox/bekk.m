@@ -93,13 +93,13 @@ end
 if isempty(o)
     o=0;
 end
-if o<=0 || floor(q)~=o
+if o<0 || floor(o)~=o
     error('O must be a non-negative scalar.')
 end
 if isempty(q)
     q=0;
 end
-if q<=0 || floor(q)~=q
+if q<0 || floor(q)~=q
     error('Q must be a non-negative scalar.')
 end
 

@@ -1,0 +1,2971 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass book
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Vector Autoregressions
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+VAR
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Vector Autoregression |see
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+VAR
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Section
+Stationary Vector Autoregression
+\end_layout
+
+\begin_layout Subsection
+Vector Autoregression estimation: 
+\family typewriter
+vectorar
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+VAR! @
+\family typewriter
+vectorar
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+VAR!Estimation
+\end_layout
+
+\end_inset
+
+ Estimates Pþorder (regular and irregular) vector autoregressions.
+ The options for 
+\family typewriter
+vectorar
+\family default
+ include the ability to include or exclude a constant, choose the lag order,
+ and to specify which assumptions should be made for computing the covariance
+ matrix of the estimated parameters.
+ The parameter covariance matrix can be estimated under 4 sets of assumptions
+ on the errors:
+\end_layout
+
+\begin_layout Itemize
+Uncorrelated and Homoskedastic 
+\end_layout
+
+\begin_layout Itemize
+Correlated and Homoskedastic 
+\end_layout
+
+\begin_layout Itemize
+Uncorrelated and Heteroskedastic 
+\end_layout
+
+\begin_layout Itemize
+Correlated and Heteroskedastic 
+\end_layout
+
+\begin_layout Standard
+To examine the outputs and choices of the covariance estimator consider
+ a regular bivariate VAR(2), 
+\begin_inset Formula 
+\begin{align*}
+\by_{t} & =\PhiB_{0}+\PhiB_{1}\by_{t-1}+\PhiB_{2}\by_{t-2}+\epsilonB_{t}\\
+\\
+\left[\begin{array}{c}
+y_{1,t}\\
+y_{2,t}
+\end{array}\right] & =\left[\begin{array}{c}
+\phi_{1,0}\\
+\phi_{2,0}
+\end{array}\right]+\left[\begin{array}{cc}
+\phi_{11,1} & \phi_{12,1}\\
+\phi_{21,1} & \phi_{22,1}
+\end{array}\right]\left[\begin{array}{c}
+y_{1,t-1}\\
+y_{2,t-1}
+\end{array}\right]+\left[\begin{array}{cc}
+\phi_{11,2} & \phi_{12,2}\\
+\phi_{21,2} & \phi_{22,2}
+\end{array}\right]\left[\begin{array}{c}
+y_{1,t-2}\\
+y_{2,t-1}
+\end{array}\right]+\left[\begin{array}{c}
+\epsilon_{1,t-2}\\
+\epsilon_{2,t-1}
+\end{array}\right]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The first four outputs of 
+\family typewriter
+vectorar
+\family default
+ all share a common structure, cell arrays.
+ Cell arrays are structures of other MATLAB elements.
+ In this function, each of these are cell arrays of 
+\begin_inset Formula $P$
+\end_inset
+
+ elements where each element is a 
+\begin_inset Formula $k$
+\end_inset
+
+ by 
+\begin_inset Formula $k$
+\end_inset
+
+ matrix of parameters.
+ (2 by 2 in the bivariate case).
+ To estimate a bivariate VAR with a constant in MATLAB , call
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[parameters,stderr,tstat,pval] = vectorar(y,1,[1 2]);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where the first input is the 
+\begin_inset Formula $T$
+\end_inset
+
+ by 
+\begin_inset Formula $k$
+\end_inset
+
+ matrix of 
+\begin_inset Formula $y$
+\end_inset
+
+ data, the second is either 1 (include a constant) or 0 and the their is
+ a vector of lags to include in the model.
+ The outputs are cell arrays with 
+\begin_inset Formula $P$
+\end_inset
+
+ elements where each element is composed of a 
+\begin_inset Formula $k$
+\end_inset
+
+ by 
+\begin_inset Formula $k$
+\end_inset
+
+ matrix.
+ Suppose 
+\begin_inset Formula $y$
+\end_inset
+
+ was 
+\begin_inset Formula $T$
+\end_inset
+
+ by 2, then
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[parameters,stderr,tstat,pval] = vectorar(y,1,[1 2]);
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters % Tells you this is a cell structure of 2 by 2s
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters =
+\end_layout
+
+\begin_layout Plain Layout
+
+    [2x2 double]    [2x2 double]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters{1} % Access Phi(1)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ans =
+\end_layout
+
+\begin_layout Plain Layout
+
+    0.6885    0.1621
+\end_layout
+
+\begin_layout Plain Layout
+
+    0.1038    0.7500
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters{2} % Access Phi(2)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ans =
+\end_layout
+
+\begin_layout Plain Layout
+
+    0.0267    0.0473
+\end_layout
+
+\begin_layout Plain Layout
+
+    0.0503   -0.0031
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The elements of parameters are identical to the elements of 
+\begin_inset Formula $\PhiB_{j}$
+\end_inset
+
+ above.
+ Thus, the (i,j) element of 
+\begin_inset Formula $\PhiB_{1}$
+\end_inset
+
+ will be contained n the (i,j) element of 
+\family typewriter
+parameters{1}
+\family default
+ and the (i,j) element of 
+\begin_inset Formula $\PhiB_{2}$
+\end_inset
+
+ will be in the (i,j) element of 
+\family typewriter
+parameters{2}
+\family default
+.
+ The other four outputs in the function call above return similar cell structure
+s of standard errors, T-statistics and the corresponding p-values, all with
+ the same ordering.
+\end_layout
+
+\begin_layout Standard
+The full call to 
+\family typewriter
+vectorar
+\family default
+ returns some additional information including the complete parameter covariance
+ matrix.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[parameters,stderr,tstat,pval,const,conststd,r2,errors,s2,paramvec,vcv]
+ ...
+\end_layout
+
+\begin_layout Plain Layout
+
+                  = vectorar(y,1,[1 2]);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The new outputs have the following structure:
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+const
+\family default
+: 
+\begin_inset Formula $k$
+\end_inset
+
+ by 1 vector containing 
+\begin_inset Formula $\PhiB_{0}$
+\end_inset
+
+.
+ If no constant is included in the model, this value will be empty ([]).
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+conststd
+\family default
+: 
+\begin_inset Formula $k$
+\end_inset
+
+ by 1 vector containing the standard errors or the estimated intercept parameter
+s.
+ If no constant is included in the model, this value will be empty ([]).
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+r2
+\family default
+: 
+\begin_inset Formula $k$
+\end_inset
+
+ by 1 vector of 
+\begin_inset Formula $R^{2}$
+\end_inset
+
+ values for each data vector, 
+\begin_inset Formula $y_{1}$
+\end_inset
+
+,
+\begin_inset Formula $y_{2}$
+\end_inset
+
+,
+\begin_inset Formula $\ldots$
+\end_inset
+
+,
+\begin_inset Formula $y_{K}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+errors
+\family default
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 
+\begin_inset Formula $k$
+\end_inset
+
+ matrix of estimated errors.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+s2
+\family default
+: 
+\begin_inset Formula $k$
+\end_inset
+
+ by 
+\begin_inset Formula $k$
+\end_inset
+
+ matrix containing the estimated covariance matrix of the residuals, 
+\begin_inset Formula $\hat{\SigmaB}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+paramvec
+\family default
+: A 
+\begin_inset Formula $K\times$
+\end_inset
+
+ number of lags by 1 (no constant) or 
+\begin_inset Formula $K\times$
+\end_inset
+
+ number of lags +1 by 1 (constant) vector of estimated parameters.
+ 
+\family typewriter
+paramvec
+\family default
+ reports the elements as if you were reading across a VAR.
+ In the bivariate VAR above, the 10 elements of 
+\family typewriter
+paramvec
+\family default
+ are 
+\begin_inset Formula 
+\[
+[\hat{\phi}_{1,0}\,\,\,\hat{\phi}_{11,1}\,\,\,\hat{\phi}_{12,1}\,\,\,\hat{\phi}_{11,2}\,\,\,\hat{\phi}_{12,2}\,\,\,\hat{\phi}_{2,0}\,\,\,\hat{\phi}_{21,1}\,\,\,\hat{\phi}_{22,1}\,\,\,\hat{\phi}_{21,2}\,\,\,\hat{\phi}_{22,2}]'
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+vcv
+\family default
+: A square matrix where each dimension is as large as the length of 
+\family typewriter
+paramvec
+\family default
+.
+ The covariance matrix has the same order as the elements of 
+\family typewriter
+paramvec
+\family default
+.
+ In the bivariate VAR, the (1,1) element of 
+\family typewriter
+vcv
+\family default
+ would contain the estimated variance of 
+\begin_inset Formula $\hat{\phi}_{1,0}$
+\end_inset
+
+, the (1,2) is the covariance between 
+\begin_inset Formula $\hat{\phi}_{1,0}$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{\phi}_{11,1}$
+\end_inset
+
+ and so on.
+ The estimation strategy for 
+\family typewriter
+vcv
+\family default
+ depends on the values on 
+\family typewriter
+het
+\family default
+ and 
+\family typewriter
+uncorr
+\family default
+ (see below).
+ 
+\end_layout
+
+\begin_layout Standard
+The complete specification with all input options is given by 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[parameters] = vectorar(y,constant,lags,het,uncorr);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+y
+\family default
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 
+\begin_inset Formula $k$
+\end_inset
+
+ vector of data.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+constant
+\family default
+: Scalar value of either 1 (include a constant) or 0 (exclude a constant)
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+lags
+\family default
+: Vector of lags to include.
+ A standard Pþorder VAR can be called by setting 
+\family typewriter
+lags
+\family default
+ to [1:P].
+ An irregular Pþorder VAR can be called by leaving out some of the lags.
+ For example [1 2 4] would produce an irregular 4þorder VAR excluding lag
+ 3.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+het
+\family default
+: Scalar value of either 1 (assume heteroskedasticity) or 0 (assume homoskedasti
+city).
+ The default value for this optional parameters is 1.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+uncorr
+\family default
+: Scalar value of either 0 (assume the errors are correlated) or 1 (assume
+ no error correlation).
+ The default value for this optional parameters is 0.
+ 
+\end_layout
+
+\begin_layout Standard
+The primary options are choosing 
+\family typewriter
+het
+\family default
+ and 
+\family typewriter
+uncorr
+\family default
+.
+ Since each can take one of 4 values, there are 4 combination.
+\end_layout
+
+\begin_layout Subsubsection
+Uncorrelated and Homoskedastic
+\end_layout
+
+\begin_layout Standard
+This is the simplest estimator.
+ This estimator assumes that 
+\begin_inset Formula $\SigmaB$
+\end_inset
+
+ is diagonal.
+ The estimated covariance matrix is given by 
+\begin_inset Formula 
+\[
+\hat{\Omega}=\hat{\SigmaB}\otimes(\bX'\bX)^{-1}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\hat{\SigmaB}$
+\end_inset
+
+ is a diagonal matrix with the variance of 
+\begin_inset Formula $\hat{\epsilon}_{i,t}$
+\end_inset
+
+ on the 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+ith
+\end_layout
+
+\end_inset
+
+ diagonal and 
+\begin_inset Formula $\bX$
+\end_inset
+
+ is a 
+\begin_inset Formula $T$
+\end_inset
+
+ by 
+\begin_inset Formula $PK$
+\end_inset
+
+ (or 
+\begin_inset Formula $PK+1$
+\end_inset
+
+ if a constant is included) matrix of regressors in the regular VAR case.
+ To understand the structure of 
+\begin_inset Formula $\bX$
+\end_inset
+
+, decompose it as
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Formula 
+\[
+\bX=\left[\begin{array}{c}
+\bx_{1}\\
+\bx_{2}\\
+\vdots\\
+\bx_{T}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where 
+\begin_inset Formula $\bx_{1}$
+\end_inset
+
+ is the set of regressors in any of the 
+\begin_inset Formula $k$
+\end_inset
+
+ regression equations in a VAR.
+ In the bivariate example above, 
+\begin_inset Formula 
+\[
+\bx_{t}=[1\,\,\, y_{1,t-1}\,\,\, y_{2,t-1}\,\,\, y_{1,t-2}\,\,\, y_{2,t-2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The choice of 
+\begin_inset Formula $\bX$
+\end_inset
+
+ is motivated by noticing that a Pþorder VAR can be consistently estimated
+ using OLS by regressing the 
+\begin_inset Formula $k$
+\end_inset
+
+ 
+\begin_inset Formula $\by_{i}$
+\end_inset
+
+ vector on 
+\begin_inset Formula $\bX$
+\end_inset
+
+, 
+\begin_inset Formula $\hat{\thetaB}_{i}=(\bX'\bX)^{-1}\bX'\by_{i}$
+\end_inset
+
+ where 
+\begin_inset Formula $\hat{\thetaB}_{i}$
+\end_inset
+
+ is the estimated 
+\begin_inset Quotes eld
+\end_inset
+
+row
+\begin_inset Quotes erd
+\end_inset
+
+ of parameters in a VAR.
+ In the bivariate VAR(2) above,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{\Omega}=\left[\begin{array}{cc}
+\hat{\sigma}_{11}(\bX'\bX)^{-1} & \mathbf{0}_{MM}\\
+\mathbf{0}_{MM} & \hat{\sigma}_{22}(\bX'\bX)^{-1}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where 
+\begin_inset Formula $\hat{\sigma}_{ii}$
+\end_inset
+
+ is the estimated variance of 
+\begin_inset Formula $\epsilon_{i,t}$
+\end_inset
+
+.
+ and 
+\begin_inset Formula $M$
+\end_inset
+
+ is the length of 
+\begin_inset Formula $\bx_{t}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Correlated and Homoskedastic
+\end_layout
+
+\begin_layout Standard
+The correlated homoskedastic case is similar to the previous case with the
+ change that 
+\begin_inset Formula $\hat{\SigmaB}$
+\end_inset
+
+ is no longer assumed to be diagonal.
+ Once this change has been made, the variance covariance estimator is identical
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{\Omega}=\hat{\SigmaB}\otimes(\bX'\bX)^{-1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the bivariate VAR(2) above,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{\Omega}=\left[\begin{array}{cc}
+\hat{\sigma}_{11}(\bX'\bX)^{-1} & \hat{\sigma}_{12}(\bX'\bX)^{-1}\\
+\hat{\sigma}_{21}(\bX'\bX)^{-1} & \hat{\sigma}_{22}(\bX'\bX)^{-1}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where 
+\begin_inset Formula $\hat{\sigma}_{ij}$
+\end_inset
+
+ is the estimated covariance between 
+\begin_inset Formula $\epsilon_{i,t}$
+\end_inset
+
+ and 
+\begin_inset Formula $\epsilon_{j,t}$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{\sigma}_{12}=\hat{\sigma}_{21}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Uncorrelated and Heteroskedastic
+\end_layout
+
+\begin_layout Standard
+When residuals are heteroskedastic a White (or sandwich) -style covariance
+ estimator is required.
+ The two parts of the sandwich are denoted 
+\begin_inset Formula $\hat{\bA}$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{\bB}$
+\end_inset
+
+.
+ 
+\begin_inset Formula $\hat{\bA}$
+\end_inset
+
+ is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{\bA}=(\frac{\bX'\bX}{T})\otimes I_{K}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{\bB}=T^{-1}\sum_{t=1}^{T}\epsilonB_{t}\epsilonB_{t}'\otimes\bx_{t}\bx_{t}'
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Once these two components have been computed, 
+\begin_inset Formula 
+\[
+\hat{\OmegaB}=T^{-1}\hat{\bA}^{-1}\hat{\bB}\hat{\bA}^{-1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The assumption that the errors are uncorrelated in this form imposes that
+ 
+\begin_inset Formula $T^{-1}\sum_{t=1}^{T}\epsilon_{i,t}\epsilon_{j,t}\bx_{t}\bx_{t}'\convp\mathbf{0}_{MM}$
+\end_inset
+
+ and so 
+\begin_inset Formula $\hat{\bB}$
+\end_inset
+
+ is a 
+\begin_inset Quotes eld
+\end_inset
+
+block diagonal
+\begin_inset Quotes erd
+\end_inset
+
+ matrix where all of the elements in the off diagonal blocks are 0.
+ In the bivariate VAR(2) above,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{\bA}=\left[\begin{array}{cc}
+\frac{\bX'\bX}{T} & \mathbf{0}_{MM}\\
+\mathbf{0}_{MM} & \frac{\bX'\bX}{T}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+and
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{\bB}=\left[\begin{array}{cc}
+T^{-1}\sum_{t=1}^{T}\epsilon_{1,t}^{2}\otimes\bx_{t}\bx_{t}' & \mathbf{0}_{MM}\\
+\mathbf{0}_{MM} & T^{-1}\sum_{t=1}^{T}\epsilon_{2,t}^{2}\otimes\bx_{t}\bx_{t}'
+\end{array}\right].
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Finally the 
+\begin_inset Formula $T^{-1}$
+\end_inset
+
+ is present int he formula for 
+\begin_inset Formula $\hat{\OmegaB}$
+\end_inset
+
+ since 
+\begin_inset Formula $\hat{\bA}$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{\bB}$
+\end_inset
+
+ both converge to constants although the variance of the estimated coefficients
+ should be decreasing with 
+\begin_inset Formula $T$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Correlated and Heteroskedastic
+\end_layout
+
+\begin_layout Standard
+The correlated heteroskedastic case is essentially identical to the uncorrelated
+ heteroskedastic case where the assumption that 
+\begin_inset Formula $T^{-1}\sum_{t=1}^{T}\epsilon_{i,t}\epsilon_{j,t}\bx_{t}\bx_{t}'\convp\mathbf{0}_{MM}$
+\end_inset
+
+ is not made.
+ In the VAR(2) from above, 
+\begin_inset Formula $\hat{\bA}$
+\end_inset
+
+ is unchanged and 
+\begin_inset Formula $\hat{\bB}$
+\end_inset
+
+ is now
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{\bB}=\left[\begin{array}{cc}
+T^{-1}\sum_{t=1}^{T}\epsilon_{1,t}^{2}\otimes\bx_{t}\bx_{t}' & T^{-1}\sum_{t=1}^{T}\epsilon_{1,t}\epsilon_{2,t}\otimes\bx_{t}\bx_{t}'\\
+T^{-1}\sum_{t=1}^{T}\epsilon_{1,t}\epsilon_{2,t}\otimes\bx_{t}\bx_{t}' & T^{-1}\sum_{t=1}^{T}\epsilon_{2,t}^{2}\otimes\bx_{t}\bx_{t}'
+\end{array}\right].
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the new value of 
+\begin_inset Formula $\hat{\bB}$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{\OmegaB}=T^{-1}\hat{\bA}^{-1}\hat{\bB}\hat{\bA}^{-1}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% To estimate a VAR(1)
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = vectorar(y,1,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% To estimate a regular VAR(P)
+\end_layout
+
+\begin_layout Plain Layout
+
+P=5;parameters = vectorar(y,1,[1:P]);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% To estimate an irregular VAR(4)
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = vectorar(y,1,[1 2 4]);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% To estimate a VAR(1) assuming homoskedastic and correlated errors
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = vectorar(y,1,1,0); % Or
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = vectorar(y,1,1,0,0);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% To estimate a VAR(1) assuming homoskedastic but uncorrelated errors
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = vectorar(y,1,1,0,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% To estimate a VAR(1) assuming heteroskedastic but uncorrelated errors
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = vectorar(y,1,1,[],1);
+\end_layout
+
+\begin_layout Plain Layout
+
+% Or
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = vectorar(y,1,1,1,1);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Estimate a Vector Autoregression and produce the parameter variance-covariance
+ matrix under a
+\end_layout
+
+\begin_layout Plain Layout
+
+variety of assumptions on the covariance of the errors:
+\end_layout
+
+\begin_layout Plain Layout
+
+  * Conditionally Homoskedastic and Uncorrelated
+\end_layout
+
+\begin_layout Plain Layout
+
+  * Conditionally Homoskedastic but Correlated
+\end_layout
+
+\begin_layout Plain Layout
+
+  * Heteroskedastic but Conditionally Uncorrelated
+\end_layout
+
+\begin_layout Plain Layout
+
+  * Heteroskedastic and Correlated
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS]=vectorar(Y,CONSTANT,LAGS)
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS,STDERR,TSTAT,PVAL,CONST,CONSTSTD,R2,ERRORS,S2,PARAMVEC,VEC]
+\end_layout
+
+\begin_layout Plain Layout
+
+       = vectorar(Y,CONSTANT,LAGS,HET,UNCORR)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  Y             - A T by K matrix of data
+\end_layout
+
+\begin_layout Plain Layout
+
+  CONSTANT      - Scalar variable: 1 to include a constant, 0 to exclude
+\end_layout
+
+\begin_layout Plain Layout
+
+  LAGS          - Non-negative integer vector representing the VAR orders
+ to include in the model.
+\end_layout
+
+\begin_layout Plain Layout
+
+  HET           - [OPTIONAL] A scalar integer indicating the type of covariance
+ estimator
+\end_layout
+
+\begin_layout Plain Layout
+
+                     0 - Homoskedastic
+\end_layout
+
+\begin_layout Plain Layout
+
+                     1 - Heteroskedastic [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+  UNCORR        - [OPTIONAL] A scalar integer indicating the assumed structure
+ of the error covariance
+\end_layout
+
+\begin_layout Plain Layout
+
+                    matrix
+\end_layout
+
+\begin_layout Plain Layout
+
+                     0 - Correlated errors  [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                     1 - Uncorrelated errors
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  PARAMETERS    - Cell structure containing K by K matrices in the position
+ of the indicated in
+\end_layout
+
+\begin_layout Plain Layout
+
+                    LAGS.
+  For example if LAGS = [1 3], PARAMETERS{1} would be the K by K
+\end_layout
+
+\begin_layout Plain Layout
+
+                    parameter matrix for the 1st lag and PARAMETERS{3} would
+ be the K by K matrix
+\end_layout
+
+\begin_layout Plain Layout
+
+                    of parameters for the 3rd lag
+\end_layout
+
+\begin_layout Plain Layout
+
+  STDERR        - Cell structure with the same form as PARAMETERS containing
+ parameter standard
+\end_layout
+
+\begin_layout Plain Layout
+
+                    errors estimated according to UNCORR and HET
+\end_layout
+
+\begin_layout Plain Layout
+
+  TSTAT         - Cell structure with the same form as PARAMETERS containing
+ parameter t-stats
+\end_layout
+
+\begin_layout Plain Layout
+
+                    computed using STDERR
+\end_layout
+
+\begin_layout Plain Layout
+
+  PVAL          - P-values of the parameters
+\end_layout
+
+\begin_layout Plain Layout
+
+  CONST         - K by 1 vector of constants
+\end_layout
+
+\begin_layout Plain Layout
+
+  CONSTSTD      - K by 1 vector standard errors corresponding to constant
+\end_layout
+
+\begin_layout Plain Layout
+
+  R2            - K by 1 vector of R-squares
+\end_layout
+
+\begin_layout Plain Layout
+
+  ERRORS        - K by T vector of errors
+\end_layout
+
+\begin_layout Plain Layout
+
+  S2            - K by K matrix containing the estimated error variance
+\end_layout
+
+\begin_layout Plain Layout
+
+  PARAMVEC      - K*((# lags) + CONSTANT)  by 1 vector of estimated parameters.
+  The first (# lags
+\end_layout
+
+\begin_layout Plain Layout
+
+                    + CONSTANT) correspond to the first row in the usual
+ var form:
+\end_layout
+
+\begin_layout Plain Layout
+
+                  [CONST(1) P1(1,1) P1(1,2) ...
+ P1(1,K) P2(1,1) ...
+ P2(1,K) ...]
+\end_layout
+
+\begin_layout Plain Layout
+
+                  The next (# lags + CONSTANT) are the 2nd row
+\end_layout
+
+\begin_layout Plain Layout
+
+                  [CONST(1) P1(2,1) P1(2,2) ...
+ P1(2,K) P2(2,1) ...
+ P2(2,K) ...]
+\end_layout
+
+\begin_layout Plain Layout
+
+                  and so on through the Kth row
+\end_layout
+
+\begin_layout Plain Layout
+
+                  [CONST(K) P1(K,1) P1(K,2) ...
+ P1(K,K) P2(K,1) ...
+ P2(K,K) ...]
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCV           - A K*((# lags) + CONSTANT) by K*((# lags) + CONSTANT) matrix
+ of estimated
+\end_layout
+
+\begin_layout Plain Layout
+
+                    parameter covariances computed using HET and UNCORR
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  Estimates a VAR including any lags.
+\end_layout
+
+\begin_layout Plain Layout
+
+  y(:,t)' = CONST + P(1) * y(:,t-1) + P(2)*y(:,t-2) + ...
+ + P(1)*y(:,t-K)'
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  where P(j) are K by K parameter matrices and CONST is a K by 1 parameter
+ matrix (if CONSTANT==1)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+EXAMPLE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  To fit a VAR(1) with a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+      parameters = vectorar(y,1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+  To fit a VAR(3) with no constant
+\end_layout
+
+\begin_layout Plain Layout
+
+      parameters = armaxfilter(y,0,[1:3])
+\end_layout
+
+\begin_layout Plain Layout
+
+  To fit a VAR that includes lags 1 and 3 with a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+      parameters = armaxfilter(y,1,[1 3])
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also IMPULSERESPONSE, GRANGERCAUSE,  VECTORARVCV
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Granger Causality Testing: 
+\family typewriter
+grangercause
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+VAR! @
+\family typewriter
+grangercause
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+VAR!Granger Causality
+\end_layout
+
+\end_inset
+
+ Granger Causality testing in a VAR.
+ Most of the choices in 
+\family typewriter
+grangercause
+\family default
+ are identical to those in 
+\family typewriter
+vectorar
+\family default
+ and knowledge of the features of 
+\family typewriter
+vectorar
+\family default
+ is recommended.
+ The only new options are the ability to choose one of the three test statistics
+:
+\end_layout
+
+\begin_layout Itemize
+Likelihood Ratio: If the data are assumed to be homoskedastic, the classic
+ likelihood ratio presented in the notes is used.
+ If the data are heteroskedastic, an LM-type test based on the scores under
+ the null but using a covariance estimator computed under the alternative
+ is computed.
+ 
+\end_layout
+
+\begin_layout Itemize
+Lagrange Multiplier: Computes the LM test using the scores and errors estimated
+ under the null.
+ The assumption about the heteroskedasticity of the residuals and whether
+ the residuals are correlated are imposed when estimating the score covariance.
+ 
+\end_layout
+
+\begin_layout Itemize
+Wald: Computes the GC test statistics using a Wald test where the parameter
+ covariance matrix is estimated under the assumptions about heteroskedasticity
+ and correlation of the residuals.
+ For more on covariance matrix estimation, see 
+\family typewriter
+vectorar
+\family default
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Aside from these three changes, the inputs are identical to those in 
+\family typewriter
+vectorar
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[stat,pval]=grangercause(y,constant,lags,het,uncorr,inference)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The function has two outputs, the computed statistics, one for each 
+\begin_inset Formula $y_{i}$
+\end_inset
+
+ begin caused (in rows) and one for each 
+\begin_inset Formula $y_{j}$
+\end_inset
+
+-lags causing.
+ For example in a bivariate VAR(2), 
+\begin_inset Formula 
+\begin{align*}
+\by_{t} & =\PhiB_{0}+\PhiB_{1}\by_{t-1}+\PhiB_{2}\by_{t-2}+\epsilonB_{t}\\
+\\
+\left[\begin{array}{c}
+y_{1,t}\\
+y_{2,t}
+\end{array}\right] & =\left[\begin{array}{c}
+\phi_{1,0}\\
+\phi_{2,0}
+\end{array}\right]+\left[\begin{array}{cc}
+\phi_{11,1} & \phi_{12,1}\\
+\phi_{21,1} & \phi_{22,1}
+\end{array}\right]\left[\begin{array}{c}
+y_{1,t-1}\\
+y_{2,t-1}
+\end{array}\right]+\left[\begin{array}{cc}
+\phi_{11,2} & \phi_{12,2}\\
+\phi_{21,2} & \phi_{22,2}
+\end{array}\right]\left[\begin{array}{c}
+y_{1,t-2}\\
+y_{2,t-1}
+\end{array}\right]+\left[\begin{array}{c}
+\epsilon_{1,t-2}\\
+\epsilon_{2,t-1}
+\end{array}\right]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+the (1,1) value of 
+\family typewriter
+stat
+\family default
+ contains the GC test statistic for the exclusion restriction of 
+\begin_inset Formula $\phi_{11,1}=\phi_{11,2}=0$
+\end_inset
+
+, the (1,2) value contains the test statistic for the exclusion restriction
+ of 
+\begin_inset Formula $\phi_{12,1}=\phi_{12,2}=0$
+\end_inset
+
+ and so on.
+ 
+\family typewriter
+pval
+\family default
+ contains a matching matrix of p-values of the null of no Granger Causality.
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% GC testing in a VAR(1) using the LR assuming hetero-corr residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat, pval] = grangercause(y,1,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+%  GC testing in a regular VAR(P) using the LR assuming hetero-corr residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+P=5;[stat, pval] = grangercause(y,1,[1:P]);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+%  GC testing in an irregular VAR(4) using the LR assuming hetero-corr residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat, pval] = grangercause(y,1,[1 2 4]);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% GC testing in a VAR(1) using the LR assuming homo-corr residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat, pval] = grangercause(y,1,1,0);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% GC testing in a VAR(1) using the LR assuming homo-uncorr residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat, pval] = grangercause(y,1,1,0,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% GC testing in a VAR(1) using the LR assuming hetero-uncorr residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat, pval] = grangercause(y,1,1,1,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+% or
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat, pval] = grangercause(y,1,1,[],1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% GC testing in a VAR(1) using the LM assuming hetero-corr residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat, pval] = grangercause(y,1,1,1,0,2);
+\end_layout
+
+\begin_layout Plain Layout
+
+% or
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat, pval] = grangercause(y,1,1,[],[],2);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% GC testing in a VAR(1) using the Wald assuming hetero-corr residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat, pval] = grangercause(y,1,1,1,0,3);
+\end_layout
+
+\begin_layout Plain Layout
+
+% or
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat, pval] = grangercause(y,1,1,[],[],3);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Granger causality testing with a variance-covariance matrix estimated under
+ a variety of
+\end_layout
+
+\begin_layout Plain Layout
+
+assumptions on the covariance of the errors:
+\end_layout
+
+\begin_layout Plain Layout
+
+  * Conditionally Homoskedastic and Uncorrelated
+\end_layout
+
+\begin_layout Plain Layout
+
+  * Conditionally Homoskedastic but Correlated
+\end_layout
+
+\begin_layout Plain Layout
+
+  * Heteroskedastic but Conditionally Uncorrelated
+\end_layout
+
+\begin_layout Plain Layout
+
+  * Heteroskedastic and Correlated
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [STAT] = grangercause(Y,CONSTANT,LAGS)
+\end_layout
+
+\begin_layout Plain Layout
+
+  [STAT,PVAL] = grangercause(Y,CONSTANT,LAGS,HET,UNCORR,INFERENCE)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  Y             - A T by K matrix of data
+\end_layout
+
+\begin_layout Plain Layout
+
+  CONSTANT      - Scalar variable: 1 to include a constant, 0 to exclude
+\end_layout
+
+\begin_layout Plain Layout
+
+  LAGS          - Non-negative integer vector representing the VAR orders
+ to include in the model.
+\end_layout
+
+\begin_layout Plain Layout
+
+  HET           - [OPTIONAL] A scalar integer indicating the type of covariance
+ estimator
+\end_layout
+
+\begin_layout Plain Layout
+
+                     0 - Homoskedastic
+\end_layout
+
+\begin_layout Plain Layout
+
+                     1 - Heteroskedastic [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+  UNCORR        - [OPTIONAL] A scalar integer indicating the assumed structure
+ of the error
+\end_layout
+
+\begin_layout Plain Layout
+
+                    covariance matrix
+\end_layout
+
+\begin_layout Plain Layout
+
+                     0 - Correlated errors  [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                     1 - Uncorrelated errors
+\end_layout
+
+\begin_layout Plain Layout
+
+  INFERENCE     - [OPTIONAL] Inference method
+\end_layout
+
+\begin_layout Plain Layout
+
+                     1 - Likelihood ratio
+\end_layout
+
+\begin_layout Plain Layout
+
+                     2 - LM test
+\end_layout
+
+\begin_layout Plain Layout
+
+                     3 - Wald test
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  STAT          - K by K matrix of Granger causality statistics computed
+ using the specified
+\end_layout
+
+\begin_layout Plain Layout
+
+                    covariance estimator and inference method STAT(i,j)
+ corresponds to a test that
+\end_layout
+
+\begin_layout Plain Layout
+
+                    y(i) is caused by y(j)
+\end_layout
+
+\begin_layout Plain Layout
+
+  PVAL          - K by K matrix of p-values corresponding to STAT
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  Granger causality tests based on a VAR including any lags.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  y(:,t)' = CONST + P(1) * y(:,y-1) + P(2)*y(:,y-2) + ...
+ + P(1)*y(:,t-K)'
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  where P(j) are K by K parameter matrices and CONST is a K by 1 parameter
+ matrix (if CONSTANT==1)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+EXAMPLE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  Conduct GC testing in a VAR(1) with a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+       parameters = grangercause(y,1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Conduct GC testing in a VAR(3) with no constant
+\end_layout
+
+\begin_layout Plain Layout
+
+       parameters = grangercause(y,0,[1:3])
+\end_layout
+
+\begin_layout Plain Layout
+
+  Conduct GC testing in a VAR that includes lags 1 and 3 with a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+       parameters = grangercause(y,1,[1 3])
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also VECTORAR, VECTORARVCV
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Impulse Response function calculation: 
+\family typewriter
+impulseresponse
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+VAR! @
+\family typewriter
+impulseresponse
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+VAR!Impulse Response
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Impulse response function, standard errors and plotting.
+ 
+\family typewriter
+impulseresponse
+\family default
+ derives heavily from 
+\family typewriter
+vectorar
+\family default
+ and uses much of the same syntax.
+ The important new options to 
+\family typewriter
+impulseresponse
+\family default
+ are the number if impulses to compute, 
+\family typewriter
+leads
+\family default
+, and the assumption used for decomposing the error covariance, 
+\family typewriter
+sqrttype
+\family default
+.
+ 
+\family typewriter
+impulseresponse
+\family default
+ always returns 
+\family typewriter
+leads
+\family default
++1 impulses and standard errors since the 0þis included.
+ 
+\family typewriter
+leads
+\family default
+ is a positive integer.
+ 
+\family typewriter
+sqrttype
+\family default
+ can be any one of:
+\end_layout
+
+\begin_layout Itemize
+0: Use non-scaled (unit) shocks 
+\end_layout
+
+\begin_layout Itemize
+1: Use scaled but assume the correlation is zero.
+ The scaling is the estimated standard deviation from the VAR specification
+ used.
+ This is the 
+\series bold
+default
+\series default
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+2: Use a Choleski decomposition.
+ 
+\end_layout
+
+\begin_layout Itemize
+3: Use a Spectral decomposition.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $k$
+\end_inset
+
+ by 
+\begin_inset Formula $k$
+\end_inset
+
+ positive definite user provided square root matrix.
+ This option was provided to allow the user to impose a block spectral structure
+ on the square root should they choose.
+ 
+\end_layout
+
+\begin_layout Standard
+The general form of 
+\family typewriter
+impulseresponse
+\family default
+ is
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[impulses,impulsesstd,hfig] = impulseresponse(y,constant,lags,leads,...
+\end_layout
+
+\begin_layout Plain Layout
+
+                               sqrttype,graph,het,uncorr)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where 
+\family typewriter
+y
+\family default
+, 
+\family typewriter
+constant
+\family default
+, 
+\family typewriter
+lags
+\family default
+, 
+\family typewriter
+het
+\family default
+ and 
+\family typewriter
+uncorr
+\family default
+ are the same as in 
+\family typewriter
+vectorar
+\family default
+.
+ 
+\family typewriter
+leads
+\family default
+ and 
+\family typewriter
+sqrttype
+\family default
+ are as described above and 
+\family typewriter
+graph
+\family default
+ is a 1 (produce plot) or 0 variable indicating whether a plot with 95%
+ confidence bands should be produced.
+ The outputs are:
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+impulses
+\family default
+: A 
+\begin_inset Formula $k$
+\end_inset
+
+ by 
+\begin_inset Formula $k$
+\end_inset
+
+ by 
+\family typewriter
+leads
+\family default
+ 3-D matrix of impulse responses.
+ The element in position (i,j,l) is the impulse response of 
+\begin_inset Formula $y_{i}$
+\end_inset
+
+ to a shock to 
+\begin_inset Formula $\epsilon_{j}$
+\end_inset
+
+, 
+\begin_inset Formula $l$
+\end_inset
+
+-periods in the future.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+impulsesstd
+\family default
+: A 
+\begin_inset Formula $k$
+\end_inset
+
+ by 
+\begin_inset Formula $k$
+\end_inset
+
+ by 
+\family typewriter
+leads
+\family default
+ 3-D matrix of impulse response standard errors.
+ These correspond directly to the impulse response in the same position.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+hfig
+\family default
+: A handle to the plot produced.
+ Empty if 
+\family typewriter
+graph
+\family default
+ is 0.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% 12 Impulse responses for a VAR(1) assuming hetero-corr residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+[impulses,impulsesstd] = impulseresponse(y,1,1,12);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% 12 Impulse responses for a VAR(P) assuming hetero-corr residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+ P=5;[impulses,impulsesstd] = impulseresponse(y,1,1:P,12);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% 12 Impulse responses for am irregular VAR(P) assuming hetero-corr residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+ P=5;[impulses,impulsesstd] = impulseresponse(y,1,[1 2 4],12);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% 12 Impulse responses for a VAR(1), no graphs
+\end_layout
+
+\begin_layout Plain Layout
+
+[impulses,impulsesstd] = impulseresponse(y,1,1,12,[],0);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% 12 Impulse responses for a VAR(1), Choleski
+\end_layout
+
+\begin_layout Plain Layout
+
+[impulses,impulsesstd] = impulseresponse(y,1,1,12,2);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% 12 Impulse responses for a VAR(1), Spectral
+\end_layout
+
+\begin_layout Plain Layout
+
+[impulses,impulsesstd] = impulseresponse(y,1,1,12,3);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% 12 Impulse responses for a VAR(1), Unit shocks
+\end_layout
+
+\begin_layout Plain Layout
+
+[impulses,impulsesstd] = impulseresponse(y,1,1,12,0);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% 12 Impulse responses for a VAR(1), assuming homoskedastic, uncorrelated
+ residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+[impulses,impulsesstd] = impulseresponse(y,1,1,12,[],[],0,1);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Computes impulse responses for a VAR(P) or irregular VAR(P) and standard
+\end_layout
+
+\begin_layout Plain Layout
+
+errors under a variety of assumptions on the covariance of the errors:
+\end_layout
+
+\begin_layout Plain Layout
+
+  * Conditionally Homoskedastic and Uncorrelated
+\end_layout
+
+\begin_layout Plain Layout
+
+  * Conditionally Homoskedastic but Correlated
+\end_layout
+
+\begin_layout Plain Layout
+
+  * Heteroskedastic but Conditionally Uncorrelated
+\end_layout
+
+\begin_layout Plain Layout
+
+  * Heteroskedastic and Correlated
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [IMPULSES]=impulseresponse(Y,CONSTANT,LAGS,LEADS)
+\end_layout
+
+\begin_layout Plain Layout
+
+  [IMPULSES,IMPULSESTD,HFIG]=impulseresponse(Y,CONSTANT,LAGS,LEADS,SQRTTYPE,GRAP
+H,HET,UNCORR)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  Y           - A T by K matrix of data
+\end_layout
+
+\begin_layout Plain Layout
+
+  CONSTANT    - Scalar variable: 1 to include a constant, 0 to exclude
+\end_layout
+
+\begin_layout Plain Layout
+
+  LAGS        - Non-negative integer vector representing the VAR orders
+ to include in the model.
+\end_layout
+
+\begin_layout Plain Layout
+
+  LEADS       - Number of leads to compute the impulse response function
+\end_layout
+
+\begin_layout Plain Layout
+
+  SQRTTYPE    - [OPTIONAL] Either a scalar or a K by K positive definite
+ matrix.
+ This input
+\end_layout
+
+\begin_layout Plain Layout
+
+                  determines the type of covariance decomposition used.
+  If it is a scalar if must
+\end_layout
+
+\begin_layout Plain Layout
+
+                  be one  of:
+\end_layout
+
+\begin_layout Plain Layout
+
+                    0 - Unit (unscaled) shocks, covariance assumed to be
+ an identity matrix
+\end_layout
+
+\begin_layout Plain Layout
+
+                    1 - [DEFAULT] Scaled but uncorrelated shocks.
+ Scale is based on estimated
+\end_layout
+
+\begin_layout Plain Layout
+
+                      error standard deviations.
+\end_layout
+
+\begin_layout Plain Layout
+
+                    2 - Scaled and correlated shocks, Choleski decomposition.
+ Scale is based on
+\end_layout
+
+\begin_layout Plain Layout
+
+                      estimated error standard deviations.
+\end_layout
+
+\begin_layout Plain Layout
+
+                    3 - Scaled and correlated shocks, spectral decomposition.
+ Scale is based on
+\end_layout
+
+\begin_layout Plain Layout
+
+                      estimated error standard deviations.
+\end_layout
+
+\begin_layout Plain Layout
+
+                 If the input is a K by K positive definite matrix, it is
+ used as the
+\end_layout
+
+\begin_layout Plain Layout
+
+                 covariance square root for computing the impulse response
+ function.
+\end_layout
+
+\begin_layout Plain Layout
+
+  GRAPH       - [OPTIONAL] Logical variable (0 (no graph) or 1 (graph))
+ indicating whether the
+\end_layout
+
+\begin_layout Plain Layout
+
+                  function should produce a bar plot of the sample autocorrelati
+ons and confidence
+\end_layout
+
+\begin_layout Plain Layout
+
+                  intervals.
+ Default is to produce a graphic (GRAPH=1).
+\end_layout
+
+\begin_layout Plain Layout
+
+  HET         - [OPTIONAL] A scalar integer indicating the type of
+\end_layout
+
+\begin_layout Plain Layout
+
+                covariance estimator
+\end_layout
+
+\begin_layout Plain Layout
+
+                   0 - Homoskedastic
+\end_layout
+
+\begin_layout Plain Layout
+
+                   1 - Heteroskedastic [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+  UNCORR      - [OPTIONAL] A scalar integer indicating the assumed structure
+ of the error
+\end_layout
+
+\begin_layout Plain Layout
+
+                  covariance matrix
+\end_layout
+
+\begin_layout Plain Layout
+
+                   0 - Correlated errors  [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                   1 - Uncorrelated errors
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  IMPULSES    - Cell structure containing K by K matrices in the position
+ of the indicated in
+\end_layout
+
+\begin_layout Plain Layout
+
+                  LAGS.
+  For example if LAGS = [1 3], PARAMETERS{1} would be the K by K parameter
+\end_layout
+
+\begin_layout Plain Layout
+
+                  matrix for the 1st lag and PARAMETERS{3} would be the
+ K by K matrix of
+\end_layout
+
+\begin_layout Plain Layout
+
+                  parameters for the 3rd lag
+\end_layout
+
+\begin_layout Plain Layout
+
+  IMPULSESSTD - Cell structure containing K by K matrices in the containing
+ parameter standard
+\end_layout
+
+\begin_layout Plain Layout
+
+                  errors estimated according to UNCORR and HET
+\end_layout
+
+\begin_layout Plain Layout
+
+  HFIG        - Figure handle to the bar plot of the autocorrelations
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  Estimates a VAR including any lags.
+\end_layout
+
+\begin_layout Plain Layout
+
+  y(:,t)' = CONST + P(1) * y(:,y-1) + P(2)*y(:,y-2) + ...
+ + P(1)*y(:,t-K)'
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  where P(j) are K by K parameter matrices and CONST is a K by 1 parameter
+ matrix (if CONSTANT==1)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+EXAMPLE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  To produce the IR for 12 leads form a VAR(1) with a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+      impulses = impulserepsonse(y,1,1,12)
+\end_layout
+
+\begin_layout Plain Layout
+
+  To produce the IR for 12 leads form a VAR(3) without a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+      impulses  = impulserepsonse(y,0,[1:3],12)
+\end_layout
+
+\begin_layout Plain Layout
+
+  To produce the IR for 12 leads form an irregular VAR(3) with only lags
+ 1 and 3 with a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+      impulses  = impulserepsonse(y,1,[1:3],12)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also VECTORAR VECTORARVCV GRANGERCAUSE
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

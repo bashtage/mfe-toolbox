@@ -1,0 +1,8622 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass book
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Volatility Modeling
+\end_layout
+
+\begin_layout Section
+GARCH Model Simulation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+GARCH
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Volatility Simulation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+ARCH/GARCH/AVARCH/TARCH/ZARCH Simulation: 
+\family typewriter
+tarch_simulate
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+GARCH! @
+\family typewriter
+tarch_simulate
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Volatility Simulation! @
+\family typewriter
+GARCH
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+ARCH/GARCH/AVARCH/TARCH/ZARCH model simulation with normal, Student's 
+\begin_inset Formula $t$
+\end_inset
+
+, Generalized Error Distribution, Skew 
+\begin_inset Formula $t$
+\end_inset
+
+ or user supplied innovations.
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% GARCH(1,1) simulation
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = tarch_simulate(1000, [1 .1 .8], 1, 0, 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+% GJR-GARCH(1,1,1) simulation
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = tarch_simulate(1000, [1 .1 .1 .8], 1, 1, 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+% GJR-GARCH(1,1,1) simulation with standardized Student's T innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = tarch_simulate(1000, [1 .1 .1 .8 6], 1, 1, 1, 'STUDENTST')
+\end_layout
+
+\begin_layout Plain Layout
+
+% TARCH(1,1,1) simulation
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = tarch_simulate(1000, [1 .1 .1 .8], 1, 1, 1, [], 1)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = tarch_simulate(T, PARAMETERS, P, O, Q)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+T
+\family default
+: Either a scalar integer or a vector of random numbers.
+ If scalar, 
+\family typewriter
+T
+\family default
+ represents the length of the time series to simulate.
+ If a 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of random numbers, these will be used to construct the simulated
+ time series.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+PARAMETERS
+\family default
+: 1 + 
+\family typewriter
+P
+\family default
++
+\family typewriter
+O
+\family default
++
+\family typewriter
+Q
+\family default
+ by 1 vector of parameters in the order 
+\begin_inset Formula 
+\[
+[\omega\,\alpha_{1}\,\ldots\,\alpha_{P}\,\gamma_{1}\,\ldots\,\gamma_{O}\,\beta_{1}\,\ldots\,\beta_{Q}]'
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+P
+\family default
+: Order of symmetric innovations in model 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+O
+\family default
+: Order of asymmetric innovations in model 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Q
+\family default
+: Order of lagged variances in model 
+\end_layout
+
+\begin_layout Subsubsection
+Optional Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = tarch_simulate(T, PARAMETERS, P, O, Q, ERROR_TYPE, TARCH_TYPE)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+: Sting value indicating distribution of standardized shock.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'NORMAL'
+\end_layout
+
+\end_inset
+
+: Normal 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+: Standardized Student's 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ Parameters should contain 1 additional parameter containing the shape of
+ the distribution.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+: Generalized Error Distribution.
+ Parameters should contain 1 additional parameter containing the shape of
+ the distribution.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+: Skewed 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ Parameters should contain 2 additional parameters containing the skewness
+ and tail parameters, with skewness first.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+TARCHTYPE
+\end_layout
+
+\end_inset
+
+: 1 for AVGARCH/TARCH/ZARCH, 2 for GARCH/GJR-GARCH.
+ 2 is the default.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[SIMULATEDATA, HT] = tarch_simulate(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+SIMULATEDATA
+\family default
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of simulated data 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+HT
+\family default
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector containing the conditional variance of the simulated data.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+TARCH(P,O,Q) time series simulation with multiple error distributions
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [SIMULATEDATA, HT] = tarch_simulate(T, PARAMETERS, P, O, Q, ERROR_TYPE,
+ TARCH_TYPE)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  T             - Length of the time series to be simulated  OR
+\end_layout
+
+\begin_layout Plain Layout
+
+                  T by 1 vector of user supplied random numbers (i.e.
+ randn(1000,1))
+\end_layout
+
+\begin_layout Plain Layout
+
+  PARAMETERS    - a 1+P+O+Q (+1 or 2, depending on error distribution) x
+ 1 parameter vector
+\end_layout
+
+\begin_layout Plain Layout
+
+                  [omega alpha(1) ...
+ alpha(p) gamma(1) ...
+ gamma(o) beta(1) ...
+ beta(q) [nu lambda]]'.
+\end_layout
+
+\begin_layout Plain Layout
+
+  P             - Positive, scalar integer representing the number of symmetric
+ innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+  O             - Non-negative scalar integer representing the number of
+ asymmetric innovations (0
+\end_layout
+
+\begin_layout Plain Layout
+
+                    for symmetric processes)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Q             - Non-negative, scalar integer representing the number of
+ lags of conditional
+\end_layout
+
+\begin_layout Plain Layout
+
+                    variance (0 for ARCH)
+\end_layout
+
+\begin_layout Plain Layout
+
+  ERROR_TYPE    - [OPTIONAL] The error distribution used, valid types are:
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'NORMAL'    - Gaussian Innovations [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'STUDENTST' - T distributed errors
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'GED'       - Generalized Error Distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'SKEWT'     - Skewed T distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+  TARCH_TYPE    - [OPTIONAL] The type of variance process, either
+\end_layout
+
+\begin_layout Plain Layout
+
+                    1 - Model evolves in absolute values
+\end_layout
+
+\begin_layout Plain Layout
+
+                    2 - Model evolves in squares [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  SIMULATEDATA  - A time series with ARCH/GARCH/GJR/TARCH variances
+\end_layout
+
+\begin_layout Plain Layout
+
+  HT            - A vector of conditional variances used in making the time
+ series
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+The conditional variance, h(t), of a TARCH(P,O,Q) process is modeled as
+ follows:
+\end_layout
+
+\begin_layout Plain Layout
+
+    g(h(t)) = omega
+\end_layout
+
+\begin_layout Plain Layout
+
+            + alpha(1)*f(r_{t-1}) + ...
+ + alpha(p)*f(r_{t-p})
+\end_layout
+
+\begin_layout Plain Layout
+
+            + gamma(1)*I(t-1)*f(r_{t-1}) +...+ gamma(o)*I(t-o)*f(r_{t-o})
+\end_layout
+
+\begin_layout Plain Layout
+
+            + beta(1)*g(h(t-1)) +...+ beta(q)*g(h(t-q))
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    where f(x) = abs(x)  if tarch_type=1
+\end_layout
+
+\begin_layout Plain Layout
+
+          g(x) = sqrt(x) if tarch_type=1
+\end_layout
+
+\begin_layout Plain Layout
+
+          f(x) = x^2     if tarch_type=2
+\end_layout
+
+\begin_layout Plain Layout
+
+          g(x) = x       if tarch_type=2
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+NOTE: This program generates 2000 more than required to minimize any starting
+ bias
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also TARCH
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+EGARCH Simulation: 
+\family typewriter
+egarch_simulate
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+GARCH! @
+\family typewriter
+egarch_simulate
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Volatility Simulation! @
+\family typewriter
+EGARCH
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+EGARCH simulation with normal, Student's 
+\begin_inset Formula $t$
+\end_inset
+
+, Generalized Error Distribution, Skew 
+\begin_inset Formula $t$
+\end_inset
+
+ or user supplied innovations.
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Simulate a symmetric EGARCH(1,0,1) process
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = egarch_simulate(1000,[0 .1  .95],1,0,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+% Simulate a standard EGARCH(1,1,1) process
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = egarch_simulate(1000,[0 .1 -.1 .95],1,1,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+% Simulate a standard EGARCH(1,1,1) process with Student's T innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = egarch_simulate(1000,[0 .1 -.1 .95 6],1,1,1,'STUDENTST');
+\end_layout
+
+\begin_layout Plain Layout
+
+% Simulate a standard EGARCH(1,1,1) process with GED innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = egarch_simulate(1000,[0 .1 -.1 .95 1.5],1,1,1,'GED');
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = egarch_simulate(T, PARAMETERS, P, O, Q)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+T
+\family default
+: Either a scalar integer or a vector of random numbers.
+ If scalar, 
+\family typewriter
+T
+\family default
+ represents the length of the time series to simulate.
+ If a 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of random numbers, these will be used to construct the simulated
+ time series.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+PARAMETERS
+\family default
+: 1 + 
+\family typewriter
+P
+\family default
++
+\family typewriter
+O
+\family default
++
+\family typewriter
+Q
+\family default
+ by 1 vector of parameters in the order 
+\begin_inset Formula 
+\[
+[\omega\,\alpha_{1}\,\ldots\,\alpha_{P}\,\gamma_{1}\,\ldots\,\gamma_{O}\,\beta_{1}\,\ldots\,\beta_{Q}]'
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+P
+\family default
+: Order of symmetric innovations in model 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+O
+\family default
+: Order of asymmetric innovations in model 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Q
+\family default
+: Order of lagged variances in model 
+\end_layout
+
+\begin_layout Subsubsection
+Optional Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = egarch_simulate(T, PARAMETERS, P, O, Q, ERROR_TYPE)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+: Sting value indicating distribution of standardized shock.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'NORMAL'
+\end_layout
+
+\end_inset
+
+: Normal 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+: Standardized Student's 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ Parameters should contain 1 additional parameter containing the shape of
+ the distribution.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+: Generalized Error Distribution.
+ Parameters should contain 1 additional parameter containing the shape of
+ the distribution.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+: Skewed 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ Parameters should contain 2 additional parameters containing the skewness
+ and tail parameters, with skewness first.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[SIMULATEDATA, HT] = egarch_simulate(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+SIMULATEDATA
+\family default
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of simulated data 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+HT
+\family default
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector containing the conditional variance of the simulated data.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+EGARCH(P,O,Q) time series simulation with multiple error distributions
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [SIMULATEDATA, HT] = egarch_simulate(T, PARAMETERS, P, O, Q, ERROR_TYPE)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  T             - Length of the time series to be simulated  OR
+\end_layout
+
+\begin_layout Plain Layout
+
+                  T by 1 vector of user supplied random numbers (i.e.
+ randn(1000,1))
+\end_layout
+
+\begin_layout Plain Layout
+
+  PARAMETERS    - a 1+P+O+Q (+1 or 2, depending on error distribution) x
+ 1 parameter vector
+\end_layout
+
+\begin_layout Plain Layout
+
+                  [omega alpha(1) ...
+ alpha(p) gamma(1) ...
+ gamma(o) beta(1) ...
+ beta(q) [nu lambda]]'.
+\end_layout
+
+\begin_layout Plain Layout
+
+  P             - Positive, scalar integer representing the number of symmetric
+ innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+  O             - Non-negative scalar integer representing the number of
+ asymmetric innovations (0
+\end_layout
+
+\begin_layout Plain Layout
+
+                    for symmetric processes)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Q             - Non-negative, scalar integer representing the number of
+ lags of conditional
+\end_layout
+
+\begin_layout Plain Layout
+
+                    variance (0 for ARCH)
+\end_layout
+
+\begin_layout Plain Layout
+
+  ERROR_TYPE    - [OPTIONAL] The error distribution used, valid types are:
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'NORMAL'    - Gaussian Innovations [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'STUDENTST' - T distributed errors
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'GED'       - Generalized Error Distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'SKEWT'     - Skewed T distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  SIMULATEDATA  - A time series with EGARCH variances
+\end_layout
+
+\begin_layout Plain Layout
+
+  HT            - A vector of conditional variances used in making the time
+ series
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  The conditional variance, h(t), of a EGARCH(P,O,Q) process is modeled
+ as follows:
+\end_layout
+
+\begin_layout Plain Layout
+
+  ln(h(t)) = omega
+\end_layout
+
+\begin_layout Plain Layout
+
+           + alpha(1)*(abs(e_{t-1})-C) + ...
+ + alpha(p)*(abs(e_{t-p})-C)+...
+\end_layout
+
+\begin_layout Plain Layout
+
+           + gamma(1)*e_{t-1} +...+ e_{t-o} +...
+\end_layout
+
+\begin_layout Plain Layout
+
+             beta(1)*ln(h(t-1)) +...+ beta(q)*ln(h(t-q))
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+      where: ln is natural log
+\end_layout
+
+\begin_layout Plain Layout
+
+             e_t = r_t/sqrt(h_t)
+\end_layout
+
+\begin_layout Plain Layout
+
+             C   = 1/sqrt(pi/2)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  NOTE: This program generates 2000 more than required to minimize any starting
+ bias
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+EXAMPLES:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also EGARCH
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+APARCH Simulation: 
+\family typewriter
+aparch_simulate
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+GARCH! @
+\family typewriter
+aparch_simulate
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Volatility Simulation! @
+\family typewriter
+APARCH
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+ARARCH simulation with normal, Student's 
+\begin_inset Formula $t$
+\end_inset
+
+, Generalized Error Distribution, Skew 
+\begin_inset Formula $t$
+\end_inset
+
+ or user supplied innovations.
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Simulate a GARCH(1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = aparch_simulate(1000, [.1 .1 .85 2], 1, 0, 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+% Simulate an AVARCH(1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = aparch_simulate(1000, [.1 .1 .85 1], 1, 0, 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+% Simulate a GJR-GARCH(1,1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = aparch_simulate(1000, [.1 .1 .1 .8 2], 1, 1, 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+% Simulate a TARCH(1,1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = aparch_simulate(1000, [.1 .1 .1 .8 1], 1, 1, 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+% Simulate an APARCH(1,1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = aparch_simulate(1000, [.1 .1 .1 .8 .8], 1, 1, 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+% Simulate an APARCH(1,1,1) with Student's T innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = aparch_simulate(1000, [.1 .1 .85 2 6], 1, 0, 1, 'STUDENTST')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = aparch_simulate(T, PARAMETERS, P, O, Q)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+T
+\family default
+: Either a scalar integer or a vector of random numbers.
+ If scalar, 
+\family typewriter
+T
+\family default
+ represents the length of the time series to simulate.
+ If a 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of random numbers, these will be used to construct the simulated
+ time series.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+PARAMETERS
+\family default
+: 1 + 
+\family typewriter
+P
+\family default
++
+\family typewriter
+O
+\family default
++
+\family typewriter
+Q
+\family default
+ by 1 vector of parameters in the order 
+\begin_inset Formula 
+\[
+[\omega\,\alpha_{1}\,\ldots\,\alpha_{P}\,\gamma_{1}\,\ldots\,\gamma_{O}\,\beta_{1}\,\ldots\,\beta_{Q}]'
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+P
+\family default
+: Order of symmetric innovations in model 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+O
+\family default
+: Order of asymmetric innovations in model 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Q
+\family default
+: Order of lagged variances in model 
+\end_layout
+
+\begin_layout Subsubsection
+Optional Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = aparch_simulate(T, PARAMETERS, P, O, Q, ERROR_TYPE)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+: Sting value indicating distribution of standardized shock.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'NORMAL'
+\end_layout
+
+\end_inset
+
+: Normal 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+: Standardized Student's 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ Parameters should contain 1 additional parameter containing the shape of
+ the distribution.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+: Generalized Error Distribution.
+ Parameters should contain 1 additional parameter containing the shape of
+ the distribution.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+: Skewed 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ Parameters should contain 2 additional parameters containing the skewness
+ and tail parameters, with skewness first.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[SIMULATEDATA, HT] = aparch_simulate(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+SIMULATEDATA
+\family default
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of simulated data 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+HT
+\family default
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector containing the conditional variance of the simulated data.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+APARCH(P,O,Q) time series simulation with multiple error distributions
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [SIMULATEDATA, HT] = aparch_simulate(T, PARAMETERS, P, O, Q, ERROR_TYPE)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  T            - Length of the time series to be simulated  OR
+\end_layout
+
+\begin_layout Plain Layout
+
+                 T by 1 vector of user supplied random numbers (i.e.
+ randn(1000,1))
+\end_layout
+
+\begin_layout Plain Layout
+
+  PARAMETERS   - a 1+P+O+Q (+1 or 2, depending on error distribution) x
+ 1 parameter vector
+\end_layout
+
+\begin_layout Plain Layout
+
+                 [omega alpha(1) ...
+ alpha(p) gamma(1) ...
+ gamma(o) beta(1) ...
+ beta(q) delta
+\end_layout
+
+\begin_layout Plain Layout
+
+                 [nu lambda]]'
+\end_layout
+
+\begin_layout Plain Layout
+
+  P            - Positive, scalar integer representing the number of symmetric
+ innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+  O            - Non-negative scalar integer representing the number of
+ asymmetric innovations (0
+\end_layout
+
+\begin_layout Plain Layout
+
+                   for symmetric processes).
+  Must be less than or equal to P
+\end_layout
+
+\begin_layout Plain Layout
+
+  Q            - Non-negative, scalar integer representing the number of
+ lags of conditional
+\end_layout
+
+\begin_layout Plain Layout
+
+                   variance (0 for ARCH)
+\end_layout
+
+\begin_layout Plain Layout
+
+  ERROR_TYPE   - [OPTIONAL] The error distribution used, valid types are:
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'NORMAL'    - Gaussian Innovations [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'STUDENTST' - T distributed errors
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'GED'       - Generalized Error Distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'SKEWT'     - Skewed T distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  SIMULATEDATA - A time series with APARCH variances
+\end_layout
+
+\begin_layout Plain Layout
+
+  HT           - A vector of conditional variances used in making the time
+ series
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  The conditional variance, h(t), of a APARCH(P,O,Q) process is modeled
+ as follows:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   h(t)^(delta/2) = omega
+\end_layout
+
+\begin_layout Plain Layout
+
+            + alpha(1)*(abs(r(t-1))+gamma(1)*r(t-1))^delta + ...
+\end_layout
+
+\begin_layout Plain Layout
+
+              alpha(p)*(abs(r(t-p))+gamma(p)*r(t-p))^delta +
+\end_layout
+
+\begin_layout Plain Layout
+
+              beta(1)*h(t-1)^(delta/2) +...+ beta(q)*h(t-q)^(delta/2)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   Required restrictions on parameters:
+\end_layout
+
+\begin_layout Plain Layout
+
+   delta > 0
+\end_layout
+
+\begin_layout Plain Layout
+
+   -1<gamma<1
+\end_layout
+
+\begin_layout Plain Layout
+
+   -1<lambda<1
+\end_layout
+
+\begin_layout Plain Layout
+
+   nu>2 for T
+\end_layout
+
+\begin_layout Plain Layout
+
+   nu>1 for GED
+\end_layout
+
+\begin_layout Plain Layout
+
+   alpha(i) > 0
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+NOTE: This program generates 2000 more than required to minimize any starting
+ bias
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+EXAMPLES:
+\end_layout
+
+\begin_layout Plain Layout
+
+  Simulate a GARCH(1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+      [SIMULATEDATA, HT] = aparch_simulate(1000, [.1 .1 .85 2], 1, 0, 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Simulate an AVARCH(1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+      [SIMULATEDATA, HT] = aparch_simulate(1000, [.1 .1 .85 1], 1, 0, 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Simulate a GJR-GARCH(1,1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+      [SIMULATEDATA, HT] = aparch_simulate(1000, [.1 .1 -.1 .8 2], 1, 1, 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Simulate a TARCH(1,1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+      [SIMULATEDATA, HT] = aparch_simulate(1000, [.1 .1 -.1 .8 1], 1, 1, 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Simulate an APARCH(1,1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+      [SIMULATEDATA, HT] = aparch_simulate(1000, [.1 .1 -.1 .8 .8], 1, 1, 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Simulate an APARCH(1,1,1) with Student's T innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+      [SIMULATEDATA, HT] = aparch_simulate(1000, [.1 .1 -.1 .85 2 6], 1, 1,
+ 1, 'STUDENTST')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also APARCH, TARCH_SIMULATE, EGARCH_SIMULATE
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+FIGARCH Simulation: 
+\family typewriter
+figarch_simulate
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+GARCH! @
+\family typewriter
+figarch_simulate
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Volatility Simulation! @
+\family typewriter
+FIGARCH
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+FIGARCH(
+\begin_inset Formula $p,d,q$
+\end_inset
+
+) simulation with normal, Student's 
+\begin_inset Formula $t$
+\end_inset
+
+, Generalized Error Distribution, Skew 
+\begin_inset Formula $t$
+\end_inset
+
+ or user supplied innovations for 
+\begin_inset Formula $p\in\{0,1\}$
+\end_inset
+
+ and 
+\begin_inset Formula $q\in\{0,1\}$
+\end_inset
+
+ where 
+\begin_inset Formula $d$
+\end_inset
+
+ is the fractional integration order.
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% FIGARCH(0,d,0) simulation
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = figarch_simulate(2500, [.1 .42],0,0)
+\end_layout
+
+\begin_layout Plain Layout
+
+% FIGARCH(1,d,1) simulation
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = figarch_simulate(2500, [.1 .1 .42 .4],1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+% FIGARCH(0,d,0) simulation with Student's T errors
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = figarch_simulate(2500, [.1 .42],0,0,'STUDENTST')
+\end_layout
+
+\begin_layout Plain Layout
+
+% FIGARCH(0,d,0) simulation with a truncation lag of 5000
+\end_layout
+
+\begin_layout Plain Layout
+
+simulatedData = figarch_simulate(2500, [.1 .42],0,0,[],5000)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = figarch_simulate(T, PARAMETERS, P, Q)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+T
+\family default
+: Either a scalar integer or a vector of random numbers.
+ If scalar, 
+\family typewriter
+T
+\family default
+ represents the length of the time series to simulate.
+ If a 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of random numbers, these will be used to construct the simulated
+ time series.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+PARAMETERS
+\family default
+: 2 + 
+\family typewriter
+P
+\family default
+ + 
+\family typewriter
+Q
+\family default
+ by 1 vector of parameters in the order 
+\begin_inset Formula 
+\[
+[\omega\,\alpha\, d\,\beta]'
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+P
+\family default
+: Order of symmetric innovations in model.
+ Must be 0 or 1.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Q
+\family default
+: Order of lagged variances in model.
+ Must be 0 or 1.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Optional Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = figarch_simulate(T, PARAMETERS, P, Q, ERRORTYPE, TRUNCLAG, BCLENGTH)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+: Sting value indicating distribution of standardized shock.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'NORMAL'
+\end_layout
+
+\end_inset
+
+: Normal 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+: Standardized Student's 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ Parameters should contain 1 additional parameter containing the shape of
+ the distribution.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+: Generalized Error Distribution.
+ Parameters should contain 1 additional parameter containing the shape of
+ the distribution.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+: Skewed 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ Parameters should contain 2 additional parameters containing the skewness
+ and tail parameters, with skewness first.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+TRUNCLAG
+\end_layout
+
+\end_inset
+
+: Truncation point for ARCH(
+\begin_inset Formula $\infty$
+\end_inset
+
+) representation.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+BCLENGTH
+\end_layout
+
+\end_inset
+
+: Length of additional data points.
+ May need to be large if 
+\begin_inset Formula $d$
+\end_inset
+
+ is large.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[SIMULATEDATA, HT, LAMBDA] = figarch_simulate(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+SIMULATEDATA
+\family default
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of simulated data 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+HT
+\family default
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector containing the conditional variance of the simulated data.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+LAMBDA
+\family default
+: 
+\family typewriter
+TRUNCLAG
+\family default
+ by 1 vector containing the ARCH(
+\begin_inset Formula $\infty$
+\end_inset
+
+) weights on lagged squared returns 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+FIGARCH(Q,D,P) time series simulation with multiple error distributions
+ for P={0,1} and Q={0,1}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [SIMULATEDATA, HT, LAMBDA] = figarch_simulate(T, PARAMETERS, P, Q, ERRORTYPE,
+ TRUNCLAG, BCLENGTH)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  T             - Length of the time series to be simulated  OR
+\end_layout
+
+\begin_layout Plain Layout
+
+                    T by 1 vector of user supplied random numbers (i.e.
+ randn(1000,1))
+\end_layout
+
+\begin_layout Plain Layout
+
+  PARAMETERS    - a 2+P+Q (+1 or 2, depending on error distribution) x 1
+ parameter vector
+\end_layout
+
+\begin_layout Plain Layout
+
+                    [omega phi d beta [nu lambda]]'.
+  Parameters should satisfy conditions in
+\end_layout
+
+\begin_layout Plain Layout
+
+                    FIGARCH_ITRANSFORM
+\end_layout
+
+\begin_layout Plain Layout
+
+  P             - 0 or 1 indicating whether the autoregressive term is present
+ in the model (phi)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Q             - 0 or 1 indicating whether the moving average term is present
+ in the model (beta)
+\end_layout
+
+\begin_layout Plain Layout
+
+  ERRORTYPE    - [OPTIONAL] The error distribution used, valid types are:
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'NORMAL'    - Gaussian Innovations [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'STUDENTST' - T distributed errors
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'GED'       - Generalized Error Distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'SKEWT'     - Skewed T distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+  TRUNCLAG     - [OPTIONAL] Truncation lag for use in the construction of
+ lambda.
+ Default value is
+\end_layout
+
+\begin_layout Plain Layout
+
+                   2500.
+\end_layout
+
+\begin_layout Plain Layout
+
+  BCLENGTH     - [OPTIONAL] Number of extra observations to produce to reduce
+ start up bias.
+\end_layout
+
+\begin_layout Plain Layout
+
+                   Default value is 2500.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  SIMULATEDATA  - A time series with ARCH/GARCH/GJR/TARCH variances
+\end_layout
+
+\begin_layout Plain Layout
+
+  HT            - A vector of conditional variances used in making the time
+ series
+\end_layout
+
+\begin_layout Plain Layout
+
+  LAMBDA        - TRUNCLAG by 1 vector of weights used when computing the
+ conditional variances
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+   The conditional variance, h(t), of a FIGARCH(1,d,1) process is modeled
+ as follows:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   h(t) = omega + [1-beta L - phi L (1-L)^d] epsilon(t)^2 + beta * h(t-1)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   which is estimated using an ARCH(oo) representation,
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   h(t) = omega + sum(lambda(i) * epsilon(t-1)^2)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   where lambda(i) is a function of the fractional differencing parameter,
+ phi and beta
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+EXAMPLES:
+\end_layout
+
+\begin_layout Plain Layout
+
+  FIGARCH(0,d,0) simulation
+\end_layout
+
+\begin_layout Plain Layout
+
+      simulatedData = figarch_simulate(2500, [.1 .42],0,0)
+\end_layout
+
+\begin_layout Plain Layout
+
+  FIGARCH(1,d,1) simulation
+\end_layout
+
+\begin_layout Plain Layout
+
+      simulatedData = figarch_simulate(2500, [.1 .1 .42 .4],1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+  FIGARCH(0,d,0) simulation with Student's T errors
+\end_layout
+
+\begin_layout Plain Layout
+
+      simulatedData = figarch_simulate(2500, [.1 .42],0,0,'STUDENTST')
+\end_layout
+
+\begin_layout Plain Layout
+
+  FIGARCH(0,d,0) simulation with a truncation lag of 5000
+\end_layout
+
+\begin_layout Plain Layout
+
+      simulatedData = figarch_simulate(2500, [.1 .42],0,0,[],5000)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ See also FIGARCH, FIGARCH_TRANSFORM, FIGARCH_ITRANSFORM
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+GARCH Model Estimation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+GARCH
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Volatility Modeling
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Generalized Autoregressive Conditional Heteroskedasticity|see
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+GARCH
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+ARCH/GARCH/GJR-GARCH/TARCH/AVGARCH/ZARCH Estimation: 
+\family typewriter
+tarch
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+GARCH! @
+\family typewriter
+tarch
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Volatility Modeling! @
+\family typewriter
+GARCH
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Many ARCH-family models can be estimated using the function 
+\family typewriter
+tarch
+\family default
+.
+ This function allows estimation of ARCH, GARCH, TARCH, ZARCH and AVGARCH
+ models all by restricting the lags included in the model.
+\end_layout
+
+\begin_layout Standard
+The evolution of the conditional variance in the generic process is given
+ by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\sigma_{\delta}^{2}=\omega+\sum_{p=1}^{P}\alpha_{p}|\epsilon_{t-p}|^{\delta}+\sum_{o=1}^{O}\gamma_{o}|\epsilon_{t-o}|^{\delta}I_{[\epsilon_{t-o}<0]}+\sum_{q=1}^{Q}\beta_{q}\sigma_{t-q}^{\delta}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is either 1 (TARCH, AVGARCH or ZARCH) or 2 (ARCH, GARCH or GJR-GARCH).
+ The basic form of 
+\family typewriter
+tarch
+\family default
+ is
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+parameters = tarch(resid,p,o,q)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where 
+\family typewriter
+resid
+\family default
+ is a 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of mean 0 residuals from some conditional mean model and 
+\family typewriter
+p
+\family default
+, 
+\family typewriter
+o
+\family default
+ and 
+\family typewriter
+q
+\family default
+ are the (scalar integer) orders for the symmetric, asymmetric and lagged
+ variance terms respectively.
+ This function only estimated 
+\shape italic
+regular
+\shape default
+ models so it is necessary to include the first lag to include the second
+ of any variable.
+ The output parameters are ordered
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left[\omega\,\,\,\alpha_{1}\,\,\,\ldots\,\,\,\alpha_{p}\,\,\,\gamma_{1}\,\,\,\ldots\,\,\,\gamma_{o}\,\,\,\beta_{1}\,\,\,\ldots\beta_{q}\right]'
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the distribution is specified as something other than a normal, the type
+ hyper-parameters, 
+\begin_inset Formula $\nu$
+\end_inset
+
+ and 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ are appended to parameters
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left[\omega\,\,\,\alpha_{1}\,\,\,\ldots\,\,\,\alpha_{p}\,\,\,\gamma_{1}\,\,\,\ldots\,\,\,\gamma_{o}\,\,\,\beta_{1}\,\,\,\ldots\beta_{q}\,\,\,\nu\right]'
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+or
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left[\omega\,\,\,\alpha_{1}\,\,\,\ldots\,\,\,\alpha_{p}\,\,\,\gamma_{1}\,\,\,\ldots\,\,\,\gamma_{o}\,\,\,\beta_{1}\,\,\,\ldots\beta_{q}\,\,\,\nu\,\,\,\lambda\right]'
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The complete input specification is given by
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = tarch(EPSILON,P,O,Q,ERROR_TYPE,TARCH_TYPE,STARTINGVALS,OPTIONS)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+ERROR_TYPE
+\family default
+: The variable specifies the error distribution as a string and can take
+ the values 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\family typewriter
+'NORMAL'
+\family default
+: Normal errors 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+'STUDENTST'
+\family default
+: Standardized Students T errors 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+'GED'
+\family default
+: Generalized Error Distribution errors 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+'SKEWT'
+\family default
+: Hansen's Skew-T errors 
+\end_layout
+
+\begin_layout Standard
+\noindent
+if omitted or blank, the default is 
+\family typewriter
+'NORMAL'
+\family default
+.
+ Specifying 
+\family typewriter
+'STUDENTST'
+\family default
+ or 
+\family typewriter
+'GED'
+\family default
+ will result in one extra output (
+\begin_inset Formula $\nu$
+\end_inset
+
+).
+ Specifying 
+\family typewriter
+'SKEWT'
+\family default
+ will result in 2, 
+\begin_inset Formula $\nu$
+\end_inset
+
+ (first additional output) and 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ (second additional output).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\family typewriter
+TARCH_TYPE
+\family default
+: This variable is either 1 or 2.
+ 1 indicates a ZARCH-subfamily model should be estimated while 2 indicates
+ a GJR-GARCH-subfamily model should be estimated.
+ If not input, or if 
+\family typewriter
+tarch_type
+\family default
+ is empty ([]), the default is 2.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+STARTINGVALS
+\family default
+: A 
+\family typewriter
+1+p+o+q
+\family default
+ vector of starting values.
+ If 
+\family typewriter
+ERROR_TYPE
+\family default
+ is 
+\family typewriter
+'STUDENTST'
+\family default
+ or 
+\family typewriter
+'GED'
+\family default
+, an additional starting value is needed.
+ If 
+\family typewriter
+ERROR_TYPE
+\family default
+ is 
+\family typewriter
+'SKEWT'
+\family default
+ two additional starting values are needed.
+ If 
+\family typewriter
+startingvals
+\family default
+ is empty or omitted, a simple grid search is used for starting values.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+OPTIONS
+\family default
+: A valid 
+\family typewriter
+fminunc
+\family default
+ options structure.
+ The defaults are listed in the comments.
+ This options is useful for preventing output from being displayed if calling
+ the routine many times.
+ 
+\end_layout
+
+\begin_layout Standard
+The complete output specification is given by
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[PARAMETERS,LL,HT,VCVROBUST,VCV,SCORES,DIAGNOSTICS] = tarch(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+PARAMETERS
+\family default
+: A 
+\family typewriter
+1+p+o+q
+\family default
+ vector of estimated parameters.
+ If 
+\family typewriter
+ERROR_TYPE
+\family default
+ is 
+\family typewriter
+'STUDENTST'
+\family default
+ or 
+\family typewriter
+'GED'
+\family default
+, an additional parameter (
+\begin_inset Formula $\nu$
+\end_inset
+
+) is returned.
+ If 
+\family typewriter
+ERROR_TYPE
+\family default
+ is 
+\family typewriter
+'SKEWT'
+\family default
+, two additional parameters will be returned, 
+\begin_inset Formula $\nu$
+\end_inset
+
+ (first additional output) and 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ (second additional output).
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+LL
+\family default
+: Log-likelihood at the optimum.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+HT
+\family default
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of fit conditional variances 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+VCVROBUST
+\family default
+: The Bollerslev-Wooldridge robust covariance matrix of the estimated parameters.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+VCV
+\family default
+: The maximum likelihood covariance matrix (inverse Hessian) of the estimated
+ parameters.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+SCORES
+\family default
+: A 
+\begin_inset Formula $T$
+\end_inset
+
+ by number of parameters matrix of scores of the parameters.
+ Used in some diagnostic tests.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+DIAGNOSTICS
+\family default
+: A structure that contains information about the status of the optimizer.
+ Useful for checking if there are convergence problems.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Some behind the scenes choices
+\end_layout
+
+\begin_layout Standard
+This function has a number of behind the scenes choices that have been made
+ based on my experience.
+ These include:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Parameter restrictions
+\series default
+: The estimation routine used, 
+\family typewriter
+fminunc
+\family default
+, is unconstrained but this is deceptive.
+ The parameters are constrained to satisfy: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\alpha_{p}>0$
+\end_inset
+
+, 
+\begin_inset Formula $p=1,2,\ldots P$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\alpha_{p}+\gamma_{o}>0$
+\end_inset
+
+, 
+\begin_inset Formula $p=1,2,\ldots P$
+\end_inset
+
+, 
+\begin_inset Formula $o=1,2,\ldots O$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\beta_{q}>0$
+\end_inset
+
+, 
+\begin_inset Formula $q=1,2,\ldots Q$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\sum_{p=1}^{P}\alpha+0.5\sum_{o=1}^{O}\gamma+\sum_{q=1}^{Q}\beta<1$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\nu>2.1$
+\end_inset
+
+ for a Student's 
+\begin_inset Formula $T$
+\end_inset
+
+ or Skew 
+\begin_inset Formula $T$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\nu>1.05$
+\end_inset
+
+ for a GED 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $-.995<\lambda<.995$
+\end_inset
+
+ for a Skew 
+\begin_inset Formula $T$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\noindent
+Some of these are necessary but the 
+\begin_inset Formula $\beta_{q}>0$
+\end_inset
+
+ is not when 
+\begin_inset Formula $Q>1$
+\end_inset
+
+.
+ This may lead to issues in estimating models with 
+\begin_inset Formula $Q>1$
+\end_inset
+
+ and the function will return constrained QML estimates.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+Starting Values
+\series default
+: The starting values are computed using a grid of reasonable values (experience
+ driven).
+ The log-likelihood is evaluated on this grid and the best fit is used to
+ start.
+ If the optimizer fails to converge, other starting values will be tried
+ to see of a convergent LL can be found.
+ This said, 
+\family typewriter
+tarch
+\family default
+ will never return parameter estimates from anything but the largest LL.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Back Casts
+\series default
+: Back casts are computed using a local algorithm using 
+\begin_inset Formula $T^{1/2}$
+\end_inset
+
+ data points, 
+\begin_inset Formula $backcast=\sum_{i=1}^{\lfloor T^{1/2}\rfloor}w_{i}|r_{i}|^{\delta}$
+\end_inset
+
+ where 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is 1 or 2 depending on the model specification.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Covariance Estimates
+\series default
+: The covariance estimated are produces using 2-sided numerical scores and
+ Hessian.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% ARCH(5) estimation
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = tarch(y,5,0,0);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% GARCH(1,1) estimation
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = tarch(y,1,0,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% GJR-GARCH(1,1,1) estimation
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = tarch(y,1,1,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% ZARCH(1,1,1) estimation
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = tarch(y,1,1,1,[],1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% ZARCH(1,1,1) estimation with SKEWT errors
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = tarch(y,1,1,1,'SKEWT',1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% ZARCH(1,1,1) estimation with user supplied options
+\end_layout
+
+\begin_layout Plain Layout
+
+options = optimset('fminunc');
+\end_layout
+
+\begin_layout Plain Layout
+
+options.Display = 'iter';
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = tarch(y,1,1,1,[],[],[],options);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% ZARCH(1,1,1) estimation with user supplied starting values
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = tarch(y,1,1,1,[],[],[.1 .1 .1 .8]');
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+TARCH(P,O,Q) parameter estimation with different error distributions:
+\end_layout
+
+\begin_layout Plain Layout
+
+Normal, Students-T, Generalized Error Distribution, Skewed T
+\end_layout
+
+\begin_layout Plain Layout
+
+Estimation of ARCH or GARCH models if o=0 and tarch_type=2
+\end_layout
+
+\begin_layout Plain Layout
+
+Estimation of TARCH or GJR asymmetric models if o>0 and tarch_type=1 or
+ 2
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS] = tarch(EPSILON,P,O,Q)
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS,LL,HT,VCVROBUST,VCV,SCORES,DIAGNOSTICS] =
+\end_layout
+
+\begin_layout Plain Layout
+
+                                  tarch(EPSILON,P,O,Q,ERROR_TYPE,TARCH_TYPE,STAR
+TINGVALS,OPTIONS)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  EPSILON      - A column of mean zero data
+\end_layout
+
+\begin_layout Plain Layout
+
+  P            - Positive, scalar integer representing the number of symmetric
+ innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+  O            - Non-negative scalar integer representing the number of
+ asymmetric innovations (0
+\end_layout
+
+\begin_layout Plain Layout
+
+                   for symmetric processes)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Q            - Non-negative, scalar integer representing the number of
+ lags of conditional
+\end_layout
+
+\begin_layout Plain Layout
+
+                   variance (0 for ARCH)
+\end_layout
+
+\begin_layout Plain Layout
+
+  ERROR_TYPE   - [OPTIONAL] The error distribution used, valid types are:
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'NORMAL'    - Gaussian Innovations [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'STUDENTST' - T distributed errors
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'GED'       - Generalized Error Distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'SKEWT'     - Skewed T distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+  TARCH_TYPE   - [OPTIONAL] The type of variance process, either
+\end_layout
+
+\begin_layout Plain Layout
+
+                   1 - Model evolves in absolute values
+\end_layout
+
+\begin_layout Plain Layout
+
+                   2 - Model evolves in squares [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+  STARTINGVALS - [OPTIONAL] A (1+p+o+q), plus 1 for STUDENTST OR GED (nu),
+ plus 2 for SKEWT
+\end_layout
+
+\begin_layout Plain Layout
+
+                   (nu,lambda), vector of starting values.
+\end_layout
+
+\begin_layout Plain Layout
+
+                    [omega alpha(1) ...
+ alpha(p) gamma(1) ...
+ gamma(o) beta(1) ...
+ beta(q) [nu lambda]]'.
+\end_layout
+
+\begin_layout Plain Layout
+
+  OPTIONS      - [OPTIONAL] A user provided options structure.
+ Default options are below.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  PARAMETERS   - A 1+p+o+q column vector of parameters with
+\end_layout
+
+\begin_layout Plain Layout
+
+                 [omega alpha(1) ...
+ alpha(p) gamma(1) ...
+ gamma(o) beta(1) ...
+ beta(q) [nu lambda]]'.
+\end_layout
+
+\begin_layout Plain Layout
+
+  LL           - The log likelihood at the optimum
+\end_layout
+
+\begin_layout Plain Layout
+
+  HT           - The estimated conditional variances
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCVROBUST    - Robust parameter covariance matrix
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCV          - Non-robust standard errors (inverse Hessian)
+\end_layout
+
+\begin_layout Plain Layout
+
+  SCORES       - Matrix of scores (# of params by t)
+\end_layout
+
+\begin_layout Plain Layout
+
+  DIAGNOSTICS  - Structure of optimization output information.
+  Useful to check for convergence problems
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+The following (generally wrong) constraints are used:
+\end_layout
+
+\begin_layout Plain Layout
+
+  (1) omega > 0
+\end_layout
+
+\begin_layout Plain Layout
+
+  (2) alpha(i) >= 0 for i = 1,2,...,p
+\end_layout
+
+\begin_layout Plain Layout
+
+  (3) gamma(i) + alpha(i) > 0 for i=1,...,o
+\end_layout
+
+\begin_layout Plain Layout
+
+  (3) beta(i)  >= 0 for i = 1,2,...,q
+\end_layout
+
+\begin_layout Plain Layout
+
+  (4) sum(alpha(i) + 0.5*gamma(j) + beta(k)) < 1 for i = 1,2,...p and
+\end_layout
+
+\begin_layout Plain Layout
+
+  j = 1,2,...o, k=1,2,...,q
+\end_layout
+
+\begin_layout Plain Layout
+
+  (5) nu>2 of Students T and nu>1 for GED
+\end_layout
+
+\begin_layout Plain Layout
+
+  (6) -.99<lambda<.99 for Skewed T
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  The conditional variance, h(t), of a TARCH(P,O,Q) process is modeled as
+ follows:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   g(h(t)) = omega
+\end_layout
+
+\begin_layout Plain Layout
+
+           + alpha(1)*f(r_{t-1}) + ...
+ + alpha(p)*f(r_{t-p})+...
+\end_layout
+
+\begin_layout Plain Layout
+
+           + gamma(1)*I(t-1)*f(r_{t-1}) +...+ gamma(o)*I(t-o)*f(r_{t-o})+...
+\end_layout
+
+\begin_layout Plain Layout
+
+           beta(1)*g(h(t-1)) +...+ beta(q)*g(h(t-q))
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    where f(x) = abs(x)  if tarch_type=1
+\end_layout
+
+\begin_layout Plain Layout
+
+         g(x) = sqrt(x) if tarch_type=1
+\end_layout
+
+\begin_layout Plain Layout
+
+         f(x) = x^2     if tarch_type=2
+\end_layout
+
+\begin_layout Plain Layout
+
+         g(x) = x       if tarch_type=2
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  Default Options
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset('fminunc');
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset(options , 'TolFun'      , 1e-005);
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset(options , 'TolX'        , 1e-005);
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset(options , 'Display'     , 'iter');
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset(options , 'Diagnostics' , 'on');
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset(options , 'LargeScale'  , 'off');
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset(options , 'MaxFunEvals' , '400*numberOfVariables');
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also TARCH_LIKELIHOOD, TARCH_CORE, TARCH_PARAMETER_CHECK, TARCH_STARTING_VAL
+UES,
+\end_layout
+
+\begin_layout Plain Layout
+
+TARCH_TRANSFORM, TARCH_ITRANSFORM
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+You should use the MEX files (or compile if not using Win64 Matlab) as they
+ provide speed ups of
+\end_layout
+
+\begin_layout Plain Layout
+
+approx 100 times relative to the m file.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+EGARCH Estimation: 
+\family typewriter
+egarch
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+GARCH! @
+\family typewriter
+egarch
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Volatility Modeling! @
+\family typewriter
+EGARCH
+\end_layout
+
+\end_inset
+
+ EGARCH estimation is 
+\shape italic
+identical
+\shape default
+ to the estimation of GJR-GARCH models except uses the function 
+\family typewriter
+egarch
+\family default
+ and no parameter constraints are imposed.
+ The EGARCH model estimated is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\sigma_{\delta}^{2}=\omega+\sum_{p=1}^{P}\alpha_{p}|\epsilon_{t-p}|^{\delta}+\sum_{o=1}^{O}\gamma_{o}|\epsilon_{t-o}|^{\delta}I_{[\epsilon_{t-o}<0]}+\sum_{q=1}^{Q}\beta_{q}\sigma_{t-q}^{\delta}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is estimated along with the other parameters.
+ The basic form of 
+\family typewriter
+egarch
+\family default
+ is
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+parameters = egarch(resid,p,o,q)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where the inputs and outputs are identical to 
+\family typewriter
+tarch
+\family default
+.
+ The extended inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+parameters = egarch(resid,p,o,q,error_type,startingvals,options)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+and the extended outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[parameters,ll,ht,vcvrobust,vcv,scores,diagnostics] = egarch(resid,p,o,q)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+are also identical with the exclusion of 
+\family typewriter
+tarch_type
+\family default
+ which is not available.
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Symmetric EGARCH(1,0,1) estimation
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = egarch(y,1,0,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% Standard EGARCH(1,1,1) estimation
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = egarch(y,1,1,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% EGARCH(1,1,1) estimation with SKEWT errors
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = egarch(y,1,1,1,'SKEWT');
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% EGARCH(1,1,1) estimation with user supplied options
+\end_layout
+
+\begin_layout Plain Layout
+
+options = optimset('fmincon');
+\end_layout
+
+\begin_layout Plain Layout
+
+options.Display = 'iter';
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = egarch(y,1,1,1,[],[],options);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% EGARCH(1,1,1) estimation with user supplied starting values
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = egarch(y,1,1,1,[],[.1 .1 -.1 .8]');
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+EGARCH(P,O,Q) parameter estimation with different error distributions:
+\end_layout
+
+\begin_layout Plain Layout
+
+Normal, Students-T, Generalized Error Distribution, Skewed T
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS] = egarch(DATA,P,O,Q)
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS,LL,HT,VCVROBUST,VCV,SCORES,DIAGNOSTICS]
+\end_layout
+
+\begin_layout Plain Layout
+
+                                = egarch(DATA,P,O,Q,ERROR_TYPE,STARTINGVALS,OPTI
+ONS)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  DATA          - A column of mean zero data
+\end_layout
+
+\begin_layout Plain Layout
+
+  P             - Positive, scalar integer representing the number of symmetric
+ innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+  O             - Non-negative scalar integer representing the number of
+ asymmetric innovations (0
+\end_layout
+
+\begin_layout Plain Layout
+
+                    for symmetric processes)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Q             - Non-negative, scalar integer representing the number of
+ lags of conditional
+\end_layout
+
+\begin_layout Plain Layout
+
+                  variance (0 for ARCH)
+\end_layout
+
+\begin_layout Plain Layout
+
+  ERROR_TYPE    - [OPTIONAL] The error distribution used, valid types are:
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'NORMAL'    - Gaussian Innovations [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'STUDENTST' - T distributed errors
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'GED'       - Generalized Error Distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'SKEWT'     - Skewed T distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+  STARTINGVALS  - [OPTIONAL] A (1+p+o+q), plus 1 for STUDENTST OR GED (nu),
+\end_layout
+
+\begin_layout Plain Layout
+
+                  plus 2 for SKEWT (nu,lambda), vector of starting values.
+\end_layout
+
+\begin_layout Plain Layout
+
+                  [omega alpha(1)...alpha(p) gamma(1)...gamma(o) beta(1)...beta(q)
+ [nu lambda]]'.
+\end_layout
+
+\begin_layout Plain Layout
+
+  OPTIONS       - [OPTIONAL] A user provided options structure.
+ Default options are below.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  PARAMETERS    - A 1+p+o+q column vector of parameters with
+\end_layout
+
+\begin_layout Plain Layout
+
+                  [omega alpha(1)...alpha(p) gamma(1)...gamma(o) beta(1)...beta(q)
+ [nu lambda]]'.
+\end_layout
+
+\begin_layout Plain Layout
+
+  LL            - The log likelihood at the optimum
+\end_layout
+
+\begin_layout Plain Layout
+
+  HT            - The estimated conditional variances
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCVROBUST     - Robust parameter covariance matrix
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCV           - Non-robust standard errors (inverse Hessian)
+\end_layout
+
+\begin_layout Plain Layout
+
+  SCORES        - Matrix of scores (# of params by t)
+\end_layout
+
+\begin_layout Plain Layout
+
+  DIAGNOSTICS   - Structure of optimization output information.
+  Useful to check for convergence
+\end_layout
+
+\begin_layout Plain Layout
+
+                    problems
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  (1) Roots of the characteristic polynomial of beta are restricted to be
+ less than 1
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  The conditional variance, h(t), of an EGARCH(P,O,Q) process is modeled
+ as follows:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  ln(h(t)) = omega
+\end_layout
+
+\begin_layout Plain Layout
+
+           + alpha(1)*(abs(e_{t-1})-C) + ...
+ + alpha(p)*(abs(e_{t-p})-C)+...
+\end_layout
+
+\begin_layout Plain Layout
+
+           + gamma(1)*e_{t-1} +...+ e_{t-o} +...
+\end_layout
+
+\begin_layout Plain Layout
+
+             beta(1)*ln(h(t-1)) +...+ beta(q)*ln(h(t-q))
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+      where: ln is natural log
+\end_layout
+
+\begin_layout Plain Layout
+
+             e_t = r_t/sqrt(h_t)
+\end_layout
+
+\begin_layout Plain Layout
+
+             C   = 1/sqrt(pi/2)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  Default Options
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset('fmincon');
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset(options , 'TolFun'      , 1e-005);
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset(options , 'TolX'        , 1e-005);
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset(options , 'Display'     , 'iter');
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset(options , 'LargeScale'  , 'off');
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset(options , 'MaxFunEvals' , 200*(2+p+q));
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset(options , 'MaxSQPIter'  , 500);
+\end_layout
+
+\begin_layout Plain Layout
+
+   options  =  optimset(options , 'Algorithm'   ,'active-set');
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also EGARCH_LIKELIHOOD, EGARCH_CORE, EGARCH_PARAMETER_CHECK, EGARCH_STARTING
+_VALUES,
+\end_layout
+
+\begin_layout Plain Layout
+
+          EGARCH_TRANSFORM, EGARCH_ITRANSFORM, EGARCH_NLCOM
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+You should use the MEX files (or compile if not using Win64 Matlab) as they
+ provide speed ups of
+\end_layout
+
+\begin_layout Plain Layout
+
+approx 100 times relative to the m file
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+APARCH Estimation: 
+\family typewriter
+aparch
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+GARCH! @
+\family typewriter
+tarch
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Volatility Modeling! @
+\family typewriter
+GARCH
+\end_layout
+
+\end_inset
+
+ APARCH estimation, like EGARCH estimation, is 
+\shape italic
+identical
+\shape default
+ to the estimation of GJR-GARCH models except that it uses the function
+ 
+\family typewriter
+aparch
+\family default
+, one extra parameter is returned and there is a user option to provide
+ a fixed value of 
+\begin_inset Formula $\delta$
+\end_inset
+
+ (in which case the number of parameters returned is the same as 
+\family typewriter
+tarch
+\family default
+).
+ The APARCH model estimated is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\sigma_{t}^{\delta}=\omega+\sum_{j=1}^{\max(P,O)}\alpha_{j}\left(|\epsilon_{t-j}|+\gamma_{j}\epsilon_{t-j}\right)^{\delta}+\sum_{q=1}^{Q}\beta_{q}\sigma_{t-q}^{\delta}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+The basic form of is
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+parameters = aparch(resid,p,o,q)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where the inputs are nearly identical to 
+\family typewriter
+tarch
+\family default
+ and the output parameters are ordered
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left[\omega\,\,\,\alpha_{1}\,\,\,\ldots\,\,\,\alpha_{p}\,\,\,\gamma_{1}\,\,\,\ldots\,\,\,\gamma_{o}\,\,\,\beta_{1}\,\,\,\ldots\beta_{q}\,\,\,\delta\right]'
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the distribution is specified as something other than a normal, the type
+ hyper-parameters, 
+\begin_inset Formula $\nu$
+\end_inset
+
+ and 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ are appended to parameters
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left[\omega\,\,\,\alpha_{1}\,\,\,\ldots\,\,\,\alpha_{p}\,\,\,\gamma_{1}\,\,\,\ldots\,\,\,\gamma_{o}\,\,\,\beta_{1}\,\,\,\ldots\beta_{q}\,\,\,\delta\,\,\,\nu\right]'
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+or
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left[\omega\,\,\,\alpha_{1}\,\,\,\ldots\,\,\,\alpha_{p}\,\,\,\gamma_{1}\,\,\,\ldots\,\,\,\gamma_{o}\,\,\,\beta_{1}\,\,\,\ldots\beta_{q}\,\,\,\delta\,\,\,\nu\,\,\,\lambda\right]'
+\]
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The extended inputs are
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = aparch(DATA,P,O,Q,ERRORTYPE,USERDELTA,STARTINGVALS,OPTIONS)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where 
+\family typewriter
+USERDELTA
+\family default
+ is an input that lets the model be estimated for a fixed value of 
+\begin_inset Formula $\delta$
+\end_inset
+
+.
+ This may be useful for testing against TARCH and GJR-GARCH.
+ 
+\family typewriter
+TARCH_TYPE
+\family default
+ is not applicable and hence not available.
+ The extended outputs,
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[parameters,ll,ht,vcvrobust,vcv,scores,diagnostics] = aparch(resid,p,o,q)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+are identical.
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Symmetric APARCH(1,0,1) estimation
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = aparch(y,1,0,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% Standard APARCH(1,1,1) estimation
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = aparch(y,1,1,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% APARCH(1,1,1) estimation with SKEWT errors
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = aparch(y,1,1,1,'SKEWT');
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% APARCH(1,1,1) estimation with fixed delta of 1.5
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = aparch(y,1,1,1,[],1.5);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% APARCH(1,1,1) estimation with user supplied options
+\end_layout
+
+\begin_layout Plain Layout
+
+options = optimset('fmincon');
+\end_layout
+
+\begin_layout Plain Layout
+
+options.Display = 'iter';
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = aparch(y,1,1,1,[],[],[],options);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% APARCH(1,1,1) estimation with user supplied starting values
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = aparch(y,1,1,1,[],[],[.1 .1 -.1 .8 1]');
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+APARCH(P,O,Q) parameter estimation with different error distributions:
+\end_layout
+
+\begin_layout Plain Layout
+
+Normal, Students-T, Generalized Error Distribution, Skewed T
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS] = aparch(DATA,P,O,Q)
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS,LL,HT,VCVROBUST,VCV,SCORES,DIAGNOSTICS]
+\end_layout
+
+\begin_layout Plain Layout
+
+                   = aparch(DATA,P,O,Q,ERRORTYPE,USERDELTA,STARTINGVALS,OPTIONS)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  DATA         - A column of mean zero data
+\end_layout
+
+\begin_layout Plain Layout
+
+  P            - Positive, scalar integer representing the number of symmetric
+ innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+  O            - Non-negative scalar integer representing the number of
+ asymmetric innovations (0
+\end_layout
+
+\begin_layout Plain Layout
+
+                   for symmetric processes)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Q            - Non-negative, scalar integer representing the number of
+ lags of conditional
+\end_layout
+
+\begin_layout Plain Layout
+
+                   variance (0 for ARCH)
+\end_layout
+
+\begin_layout Plain Layout
+
+  ERRORTYPE    - [OPTIONAL] The error distribution used, valid types are:
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'NORMAL'    - Gaussian Innovations [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'STUDENTST' - T distributed errors
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'GED'       - Generalized Error Distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'SKEWT'     - Skewed T distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+  USERDELTA    - [OPTIONAL] A scalar value between 0.3 and 4 to use for delta
+ in the estimation.
+\end_layout
+
+\begin_layout Plain Layout
+
+                   When the user provides a fixed value for delta, the vector
+ of PARAMETERS has
+\end_layout
+
+\begin_layout Plain Layout
+
+                   one less element.
+  This is useful for testing an unrestricted APARCH against
+\end_layout
+
+\begin_layout Plain Layout
+
+                   TARCH or GJR-GARCH alternatives
+\end_layout
+
+\begin_layout Plain Layout
+
+  STARTINGVALS - [OPTIONAL] A (1+p+o+q+1), plus 1 for STUDENTST OR GED (nu),
+  plus 2 for SKEWT
+\end_layout
+
+\begin_layout Plain Layout
+
+                   (nu,lambda), vector of starting values.
+\end_layout
+
+\begin_layout Plain Layout
+
+                 [omega alpha(1)...alpha(p) gamma(1)...gamma(o) beta(1)...beta(q)
+ delta [nu lambda]]'.
+\end_layout
+
+\begin_layout Plain Layout
+
+  OPTIONS      - [OPTIONAL] A user provided options structure.
+ Default options are below.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  PARAMETERS   - A 1+p+o+q+1 (+1 or 2) column vector of parameters with
+\end_layout
+
+\begin_layout Plain Layout
+
+                 [omega alpha(1)...alpha(p) gamma(1)...gamma(o) beta(1)...beta(q)
+ delta [nu lambda]]'.
+\end_layout
+
+\begin_layout Plain Layout
+
+  LL           - The log likelihood at the optimum
+\end_layout
+
+\begin_layout Plain Layout
+
+  HT           - The estimated conditional variances
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCVROBUST    - Robust parameter covariance matrix
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCV          - Non-robust standard errors (inverse Hessian)
+\end_layout
+
+\begin_layout Plain Layout
+
+  SCORES       - Matrix of scores (# of params by t)
+\end_layout
+
+\begin_layout Plain Layout
+
+  DIAGNOSTICS  - Structure of optimization output information.
+  Useful to check for convergence
+\end_layout
+
+\begin_layout Plain Layout
+
+                   problems
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  The following (generally wrong) constraints are used:
+\end_layout
+
+\begin_layout Plain Layout
+
+   (1) omega > 0
+\end_layout
+
+\begin_layout Plain Layout
+
+   (2) alpha(i) >= 0 for i = 1,2,...,p
+\end_layout
+
+\begin_layout Plain Layout
+
+   (3) 1<gamma<1 for i=1,...,o
+\end_layout
+
+\begin_layout Plain Layout
+
+   (3) beta(i)  >= 0 for i = 1,2,...,q
+\end_layout
+
+\begin_layout Plain Layout
+
+   (4) delta>.3
+\end_layout
+
+\begin_layout Plain Layout
+
+   (5) sum(alpha(i) + beta(k)) < 1 for i = 1,2,...p and k=1,2,...,q
+\end_layout
+
+\begin_layout Plain Layout
+
+   (6) nu>2 of Students T and nu>1 for GED
+\end_layout
+
+\begin_layout Plain Layout
+
+   (7) -.99<lambda<.99 for Skewed T
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   The conditional variance, h(t), of a APARCH(P,O,Q) process is modeled
+ as follows:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   h(t)^(delta/2) = omega
+\end_layout
+
+\begin_layout Plain Layout
+
+            + alpha(1)*(abs(r(t-1))+gamma(1)*r(t-1))^delta + ...
+\end_layout
+
+\begin_layout Plain Layout
+
+              alpha(p)*(abs(r(t-p))+gamma(p)*r(t-p))^delta +
+\end_layout
+
+\begin_layout Plain Layout
+
+              beta(1)*h(t-1)^(delta/2) +...+ beta(q)*h(t-q)^(delta/2)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  Default Options
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset('fmincon');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'TolFun'      , 1e-005);
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'TolX'        , 1e-005);
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'Display'     , 'iter');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'Diagnostics' , 'on');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'LargeScale'  , 'off');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'MaxFunEvals' , '400*numberOfVariables');
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ See also APARCH_LIKELIHOOD, APARCH_CORE, APARCH_PARAMETER_CHECK, APARCH_STARTIN
+G_VALUES,
+\end_layout
+
+\begin_layout Plain Layout
+
+ APARCH_TRANSFORM, APARCH_ITRANSFORM
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ You should use the MEX files (or compile if not using Win64 Matlab) as
+ they provide speed ups of
+\end_layout
+
+\begin_layout Plain Layout
+
+ approx 100 times relative to the m file
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+AGARCH and NAGARCH estimation: 
+\family typewriter
+agarch
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+GARCH! @
+\family typewriter
+agarch
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Volatility Modeling! @
+\family typewriter
+AGARCH
+\end_layout
+
+\end_inset
+
+ AGARCH and models have volatility dynamics which follow
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+h_{t}=\omega+\sum_{p=1}^{P}\left(r_{t-p}-\gamma\right)^{2}+\sum_{q=1}^{Q}h_{t-q}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+while NAGARCH models include the level of volatility in the asymmetry,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+h_{t}=\omega+\sum_{p=1}^{P}\left(r_{t-p}-\gamma\sqrt{h_{t-p}}\right)^{2}+\sum_{q=1}^{Q}h_{t-q}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Estimate an AGARCH(1,1) model
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = agarch(y,1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+% Estimate a NAGARCH(1,1) model
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = agarch(y,1,1,'NAGARCH')
+\end_layout
+
+\begin_layout Plain Layout
+
+% Estimate a NAGARCH(1,1) model with Student's t innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = agarch(y,1,1,'NAGARCH','STUDENTST')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = agarch(EPSILON,P,Q)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+EPSILON
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of mean 0 data 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+P
+\end_layout
+
+\end_inset
+
+: Order of squared innovations in model 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+Q
+\end_layout
+
+\end_inset
+
+: Order of lagged variance in model 
+\end_layout
+
+\begin_layout Subsubsection
+Optional Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = agarch(EPSILON,P,Q,MODEL_TYPE,ERROR_TYPE,STARTINGVALS,OPTIONS)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+MODELTYPE
+\end_layout
+
+\end_inset
+
+: String value, either 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'AGARCH'
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'NAGARCH'
+\end_layout
+
+\end_inset
+
+.
+ 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'AGARCH'
+\end_layout
+
+\end_inset
+
+ is the default.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+: The variable specifies the error distribution as a string and can take
+ the values 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'NORMAL'
+\end_layout
+
+\end_inset
+
+: Normal errors 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+: Standardized Students T errors 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+: Generalized Error Distribution errors 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+: Hansen's Skew-T errors 
+\end_layout
+
+\begin_layout Standard
+\noindent
+if omitted or blank, the default is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'NORMAL'
+\end_layout
+
+\end_inset
+
+.
+ Specifying 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+ will result in one extra output (
+\begin_inset Formula $\nu$
+\end_inset
+
+).
+ Specifying 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+ will result in 2, 
+\begin_inset Formula $\nu$
+\end_inset
+
+ (first additional output) and 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ (second additional output).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+STARTINGVALS
+\end_layout
+
+\end_inset
+
+: 2 + 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+P
+\end_layout
+
+\end_inset
+
+ + 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+Q
+\end_layout
+
+\end_inset
+
+ by 1 vector of starting values.
+ If not provided, a grid search is performed using common values.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+OPTIONS
+\end_layout
+
+\end_inset
+
+: Options structure for 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+fminunc
+\end_layout
+
+\end_inset
+
+ optimization.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[PARAMETERS,LL,HT,VCVROBUST,VCV,SCORES,DIAGNOSTICS] = agarch(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+PARAMETERS
+\end_layout
+
+\end_inset
+
+: A 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+2+p+q
+\end_layout
+
+\end_inset
+
+ vector of estimated parameters.
+ If 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+ is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+, an additional parameter (
+\begin_inset Formula $\nu$
+\end_inset
+
+) is returned.
+ If 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+ is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+, two additional parameters will be returned, 
+\begin_inset Formula $\nu$
+\end_inset
+
+ (first additional output) and 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ (second additional output).
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+LL
+\end_layout
+
+\end_inset
+
+: Log-likelihood at the optimum.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+HT
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of fit conditional variances 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+VCVROBUST
+\end_layout
+
+\end_inset
+
+: The Bollerslev-Wooldridge robust covariance matrix of the estimated parameters.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+VCV
+\end_layout
+
+\end_inset
+
+: The maximum likelihood covariance matrix (inverse Hessian) of the estimated
+ parameters.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+SCORES
+\end_layout
+
+\end_inset
+
+: A 
+\begin_inset Formula $T$
+\end_inset
+
+ by number of parameters matrix of scores of the parameters.
+ Used in some diagnostic tests.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+DIAGNOSTICS
+\end_layout
+
+\end_inset
+
+: A structure that contains information about the status of the optimizer.
+ Useful for checking if there are convergence problems.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+AGARCH(P,Q) and NAGARCH(P,Q) with different error distributions:
+\end_layout
+
+\begin_layout Plain Layout
+
+Normal, Students-T, Generalized Error Distribution, Skewed T
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS] = agarch(EPSILON,P,Q)
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS,LL,HT,VCVROBUST,VCV,SCORES,DIAGNOSTICS]
+\end_layout
+
+\begin_layout Plain Layout
+
+                               = agarch(EPSILON,P,Q,MODEL_TYPE,ERROR_TYPE,STARTI
+NGVALS,OPTIONS)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  EPSILON      - A column of mean zero data
+\end_layout
+
+\begin_layout Plain Layout
+
+  P            - Positive, scalar integer representing the number of symmetric
+ innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+  Q            - Non-negative, scalar integer representing the number of
+ lags of conditional
+\end_layout
+
+\begin_layout Plain Layout
+
+                   variance (0 for ARCH-type model)
+\end_layout
+
+\begin_layout Plain Layout
+
+  MODEL_TYPE   - [OPTIONAL] The type of variance process, either
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'AGARCH'  - Asymmetric GARCH, Engle (1990) [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'NAGARCH' - Nonlinear Asymmetric GARCH, Engle & Ng (1993)
+\end_layout
+
+\begin_layout Plain Layout
+
+  ERROR_TYPE   - [OPTIONAL] The error distribution used, valid types are:
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'NORMAL'    - Gaussian Innovations [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'STUDENTST' - T distributed errors
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'GED'       - Generalized Error Distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'SKEWT'     - Skewed T distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+  STARTINGVALS - [OPTIONAL] A (2+p+q), plus 1 for STUDENTST OR GED (nu),
+  plus 2 for SKEWT
+\end_layout
+
+\begin_layout Plain Layout
+
+                   (nu,lambda), vector of starting values.
+\end_layout
+
+\begin_layout Plain Layout
+
+                 [omega alpha(1) ...
+ alpha(p) gamma beta(1) ...
+ beta(q) [nu lambda]]'.
+\end_layout
+
+\begin_layout Plain Layout
+
+  OPTIONS      - [OPTIONAL] A user provided options structure.
+ Default options are below.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  PARAMETERS   - A 2+p+q column vector of parameters with
+\end_layout
+
+\begin_layout Plain Layout
+
+                 [omega alpha(1) ...
+ alpha(p) gamma beta(1) ...
+ beta(q) [nu lambda]]'.
+\end_layout
+
+\begin_layout Plain Layout
+
+  LL           - The log likelihood at the optimum
+\end_layout
+
+\begin_layout Plain Layout
+
+  HT           - The estimated conditional variances
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCVROBUST    - Robust parameter covariance matrix
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCV          - Non-robust standard errors (inverse Hessian)
+\end_layout
+
+\begin_layout Plain Layout
+
+  SCORES       - Matrix of scores (# of params by t)
+\end_layout
+
+\begin_layout Plain Layout
+
+  DIAGNOSTICS  - Structure of optimization output information.
+  Useful to check for convergence
+\end_layout
+
+\begin_layout Plain Layout
+
+                    problems
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  The following (generally wrong) constraints are used:
+\end_layout
+
+\begin_layout Plain Layout
+
+   (1) omega > 0
+\end_layout
+
+\begin_layout Plain Layout
+
+   (2) alpha(i) >= 0 for i = 1,2,...,p
+\end_layout
+
+\begin_layout Plain Layout
+
+   (3) beta(i)  >= 0 for i = 1,2,...,q
+\end_layout
+
+\begin_layout Plain Layout
+
+   (4) -q(.01,EPSILON)<gamma<q(.99,EPSILON) for AGARCH
+\end_layout
+
+\begin_layout Plain Layout
+
+   (5) sum(alpha(i) + beta(k)) < 1 for i = 1,2,...p and k=1,2,...,q for
+\end_layout
+
+\begin_layout Plain Layout
+
+   AGARCH and sum(alpha(i)*(1+gamma^2) + beta(k)) < 1 for NAGARCH
+\end_layout
+
+\begin_layout Plain Layout
+
+   (6) nu>2 of Students T and nu>1 for GED
+\end_layout
+
+\begin_layout Plain Layout
+
+   (7) -.99<lambda<.99 for Skewed T
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   The conditional variance, h(t), of a AGARCH(P,Q) process is given by:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    h(t)  = omega
+\end_layout
+
+\begin_layout Plain Layout
+
+            + alpha(1)*(r_{t-1}-gamma)^2 + ...
+ + alpha(p)*(r_{t-p}-gamma)^2
+\end_layout
+
+\begin_layout Plain Layout
+
+            + beta(1)*h(t-1) +...+ beta(q)*h(t-q)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   The conditional variance, h(t), of a NAGARCH(P,Q) process is given by:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    h(t)  = omega
+\end_layout
+
+\begin_layout Plain Layout
+
+            + alpha(1)*(r_{t-1}-gamma*sqrt(h(t-1)))^2 + ...
+ + alpha(p)*(r_{t-p}-gamma*sqrt(h(t-p)))^2
+\end_layout
+
+\begin_layout Plain Layout
+
+            + beta(1)*h(t-1) +...+ beta(q)*h(t-q)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  Default Options
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset('fminunc');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'TolFun'      , 1e-005);
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'TolX'        , 1e-005);
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'Display'     , 'iter');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'Diagnostics' , 'on');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'LargeScale'  , 'off');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'MaxFunEvals' , '200*numberOfVariables');
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ See also AGARCH_LIKELIHOOD, AGARCH_CORE, AGARCH_PARAMETER_CHECK, AGARCH_TRANSFO
+RM, AGARCH_ITRANSFORM
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ You should use the MEX files (or compile if not using Win64 Matlab) as
+ they provide speed ups of
+\end_layout
+
+\begin_layout Plain Layout
+
+ approx 10 times relative to the m file
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+IGARCH estimation 
+\family typewriter
+igarch
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+GARCH! @
+\family typewriter
+igarch
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Volatility Modeling! @
+\family typewriter
+IGARCH
+\end_layout
+
+\end_inset
+
+ IGARCH and IAVARCH estimation both with and without a constant.
+ IGARCH is the integrated version of a GARCH model with the sum of the coefficie
+nts on the dynamic parameters is forced to sum to 1.
+ IAVARCH is the equivalent for AVARCH.
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% IGARCH(1,1) with a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = igarch(y,1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+% IAVARCH(1,1) with a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+igarch(y,1,1,[],1)
+\end_layout
+
+\begin_layout Plain Layout
+
+% IGARCH(1,1) without a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = igarch(y,1,1,[],[],0)
+\end_layout
+
+\begin_layout Plain Layout
+
+% IGARCH(1,1) with a constant and Student's t innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = igarch(y,1,1,'STUDENTST')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs]  = igarch(EPSILON,P,Q)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+EPSILON
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of mean 0 data 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+P
+\end_layout
+
+\end_inset
+
+: Order of squared innovations in model 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+Q
+\end_layout
+
+\end_inset
+
+: Order of lagged variance in model 
+\end_layout
+
+\begin_layout Subsubsection
+Optional Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs]  = igarch(EPSILON,P,Q,ERRORTYPE,IGARCHTYPE,CONSTANT,STARTINGVALS,OPTIO
+NS)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+: The variable specifies the error distribution as a string and can take
+ the values 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'NORMAL'
+\end_layout
+
+\end_inset
+
+: Normal errors 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+: Standardized Students T errors 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+: Generalized Error Distribution errors 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+: Hansen's Skew-T errors 
+\end_layout
+
+\begin_layout Standard
+\noindent
+if omitted or blank, the default is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'NORMAL'
+\end_layout
+
+\end_inset
+
+.
+ Specifying 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+ will result in one extra output (
+\begin_inset Formula $\nu$
+\end_inset
+
+).
+ Specifying 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+ will result in 2, 
+\begin_inset Formula $\nu$
+\end_inset
+
+ (first additional output) and 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ (second additional output).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+IGARCHTYPE
+\end_layout
+
+\end_inset
+
+: This variable is either 1 or 2.
+ 1 indicates a AVARCH-subfamily model should be estimated while 2 indicates
+ a GARCH-subfamily model should be estimated.
+ If not input, or if 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarchtype
+\end_layout
+
+\end_inset
+
+ is empty ([]), the default is 2.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+CONSTANT
+\end_layout
+
+\end_inset
+
+: Logical value indicating whether a constant should be included in the
+ model.
+ The default is 1.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+STARTINGVALS
+\end_layout
+
+\end_inset
+
+: A 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+CONSTANT+P+Q-1
+\end_layout
+
+\end_inset
+
+ vector of starting values.
+ If 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+ is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+, an additional starting value is needed.
+ If 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+ is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+ two additional starting values are needed.
+ If 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+startingvals
+\end_layout
+
+\end_inset
+
+ is empty or omitted, a simple grid search is used for starting values.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+OPTIONS
+\end_layout
+
+\end_inset
+
+: A valid 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+fminunc
+\end_layout
+
+\end_inset
+
+ options structure.
+ The defaults are listed in the comments.
+ This options is useful for preventing output from being displayed if calling
+ the routine many times.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[PARAMETERS,LL,HT,VCVROBUST,VCV,SCORES,DIAGNOSTICS]  = igarch(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+PARAMETERS
+\end_layout
+
+\end_inset
+
+: A 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+CONSTANT+P+Q-1
+\end_layout
+
+\end_inset
+
+ vector of estimated parameters.
+ If 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+ is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+, an additional parameter (
+\begin_inset Formula $\nu$
+\end_inset
+
+) is returned.
+ If 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+ is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+, two additional parameters will be returned, 
+\begin_inset Formula $\nu$
+\end_inset
+
+ (first additional output) and 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ (second additional output).
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+LL
+\end_layout
+
+\end_inset
+
+: Log-likelihood at the optimum.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+HT
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of fit conditional variances 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+VCVROBUST
+\end_layout
+
+\end_inset
+
+: The Bollerslev-Wooldridge robust covariance matrix of the estimated parameters.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+VCV
+\end_layout
+
+\end_inset
+
+: The maximum likelihood covariance matrix (inverse Hessian) of the estimated
+ parameters.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+SCORES
+\end_layout
+
+\end_inset
+
+: A 
+\begin_inset Formula $T$
+\end_inset
+
+ by number of parameters matrix of scores of the parameters.
+ Used in some diagnostic tests.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+DIAGNOSTICS
+\end_layout
+
+\end_inset
+
+: A structure that contains information about the status of the optimizer.
+ Useful for checking if there are convergence problems.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+IGARCH(P,Q) parameter estimation with different error distributions
+\end_layout
+
+\begin_layout Plain Layout
+
+Normal, Students-T, Generalized Error Distribution, Skewed T
+\end_layout
+
+\begin_layout Plain Layout
+
+Estimation of IGARCH models  if IGARCHTYPE=2
+\end_layout
+
+\begin_layout Plain Layout
+
+Estimation of IAVARCH if IGARCHTYPE=1
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS] = igarch(EPSILON,P,O,Q)
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS,LL,HT,VCVROBUST,VCV,SCORES,DIAGNOSTICS]
+\end_layout
+
+\begin_layout Plain Layout
+
+                        = igarch(EPSILON,P,Q,ERRORTYPE,IGARCHTYPE,CONSTANT,START
+INGVALS,OPTIONS)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  EPSILON      - A column of mean zero data
+\end_layout
+
+\begin_layout Plain Layout
+
+  P            - Positive, scalar integer representing the number of innovations
+\end_layout
+
+\begin_layout Plain Layout
+
+  Q            - Positive, scalar integer representing the number of lags
+ of conditional variance
+\end_layout
+
+\begin_layout Plain Layout
+
+  ERRORTYPE    - [OPTIONAL] The error distribution used, valid types are:
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'NORMAL'    - Gaussian Innovations [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'STUDENTST' - T distributed errors
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'GED'       - Generalized Error Distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+                   'SKEWT'     - Skewed T distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+  IGARCHTYPE    - [OPTIONAL] The type of variance process, either
+\end_layout
+
+\begin_layout Plain Layout
+
+                   1 - Model evolves in absolute values
+\end_layout
+
+\begin_layout Plain Layout
+
+                   2 - Model evolves in squares [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+  CONSTANT     - [OPTIONAL] Logical value indicating whether model should
+ include a constant.
+\end_layout
+
+\begin_layout Plain Layout
+
+                   Default is true (include).
+\end_layout
+
+\begin_layout Plain Layout
+
+  STARTINGVALS - [OPTIONAL] A (CONSTANT+p+q), plus 1 for STUDENTST OR GED
+ (nu), plus 2 for SKEWT
+\end_layout
+
+\begin_layout Plain Layout
+
+                   (nu,lambda), vector of starting values.
+\end_layout
+
+\begin_layout Plain Layout
+
+                   [omega alpha(1) ...
+ alpha(p) beta(1) ...
+ beta(q) [nu lambda]]'.
+\end_layout
+
+\begin_layout Plain Layout
+
+  OPTIONS      - [OPTIONAL] A user provided options structure.
+ Default options are below.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  PARAMETERS   - A CONSTANT+p+q column vector of parameters with
+\end_layout
+
+\begin_layout Plain Layout
+
+                   [omega alpha(1) ...
+ alpha(p) beta(1) ...
+ beta(q-1) [nu lambda]]'.
+\end_layout
+
+\begin_layout Plain Layout
+
+                   Note that the final beta is redundant and so excluded
+\end_layout
+
+\begin_layout Plain Layout
+
+  LL           - The log likelihood at the optimum
+\end_layout
+
+\begin_layout Plain Layout
+
+  HT           - The estimated conditional variances
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCVROBUST    - Robust parameter covariance matrix
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCV          - Non-robust standard errors (inverse Hessian)
+\end_layout
+
+\begin_layout Plain Layout
+
+  SCORES       - Matrix of scores (# of params by t)
+\end_layout
+
+\begin_layout Plain Layout
+
+  DIAGNOSTICS  - Structure of optimization output information.
+  Useful to check for convergence problems
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  The following (generally wrong) constraints are used:
+\end_layout
+
+\begin_layout Plain Layout
+
+   (1) omega > 0 if CONSTANT
+\end_layout
+
+\begin_layout Plain Layout
+
+   (2) alpha(i) >= 0 for i = 1,2,...,p
+\end_layout
+
+\begin_layout Plain Layout
+
+   (3) beta(i)  >= 0 for i = 1,2,...,q
+\end_layout
+
+\begin_layout Plain Layout
+
+   (4) sum(alpha(i) + beta(j)) = 1 for i = 1,2,...p and j = 1,2,...q
+\end_layout
+
+\begin_layout Plain Layout
+
+   (5) nu>2 of Students T and nu>1 for GED
+\end_layout
+
+\begin_layout Plain Layout
+
+   (6) -.99<lambda<.99 for Skewed T
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   The conditional variance, h(t), of an IGARCH(P,Q) process is modeled
+\end_layout
+
+\begin_layout Plain Layout
+
+   as follows:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    g(h(t)) = omega
+\end_layout
+
+\begin_layout Plain Layout
+
+            + alpha(1)*f(r_{t-1}) + ...
+ + alpha(p)*f(r_{t-p})+...
+\end_layout
+
+\begin_layout Plain Layout
+
+            beta(1)*g(h(t-1)) +...+ beta(q)*g(h(t-q))
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    where f(x) = abs(x)  if IGARCHTYPE=1
+\end_layout
+
+\begin_layout Plain Layout
+
+          g(x) = sqrt(x) if IGARCHTYPE=1
+\end_layout
+
+\begin_layout Plain Layout
+
+          f(x) = x^2     if IGARCHTYPE=2
+\end_layout
+
+\begin_layout Plain Layout
+
+          g(x) = x       if IGARCHTYPE=2
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  Default Options
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset('fminunc');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'TolFun'      , 1e-005);
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'TolX'        , 1e-005);
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'Display'     , 'iter');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'Diagnostics' , 'on');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'LargeScale'  , 'off');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'MaxFunEvals' , '400*numberOfVariables');
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also IGARCH_LIKELIHOOD, IGARCH_CORE, IGARCH_PARAMETER_CHECK, IGARCH_STARTING
+_VALUES,
+\end_layout
+
+\begin_layout Plain Layout
+
+IGARCH_TRANSFORM, IGARCH_ITRANSFORM
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+You should use the MEX file for igarch_core (or compile if not using Win64
+ Matlab)
+\end_layout
+
+\begin_layout Plain Layout
+
+as they provide speed ups of approx 100 times relative to the m file
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+FIGARCH estimation 
+\family typewriter
+figarch
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+GARCH! @
+\family typewriter
+figarch
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Volatility Modeling! @
+\family typewriter
+FIGARCH
+\end_layout
+
+\end_inset
+
+ FIGARCH(
+\begin_inset Formula $p,d,q$
+\end_inset
+
+) estimation for 
+\begin_inset Formula $p\in\{0,1\}$
+\end_inset
+
+ and 
+\begin_inset Formula $q\in\{0,1\}$
+\end_inset
+
+.
+ FIGARCH is a fractionally integrated version of GARCH, which is usually
+ represented using its ARCH(
+\begin_inset Formula $\infty$
+\end_inset
+
+) respresentation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+h_{t}=\bar{\omega}+\sum_{i=1}^{\infty}\lambda_{i}\epsilon_{t-i}^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula 
+\begin{align*}
+\delta_{1} & =d\\
+\lambda_{1} & =\phi-\beta+d\\
+\delta_{i} & =\frac{i-1-d}{i}\delta_{i-1},\,\,\, i=2,\ldots\\
+\lambda_{i} & =\beta\lambda_{i-1}+\delta_{i}-\phi\delta_{i-1},\,\,\, i=2,\ldots\\
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% FIGARCH(0,d,0)
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = figarch(y,0,0)
+\end_layout
+
+\begin_layout Plain Layout
+
+% FIGARCH(1,d,0)
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = figarch(y,1,0)
+\end_layout
+
+\begin_layout Plain Layout
+
+% FIGARCH(0,d,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = figarch(y,0,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+% FIGARCH(1,d,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = figarch(y,1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+% FIGARCH(1,d,1) with Student's t Errors
+\end_layout
+
+\begin_layout Plain Layout
+
+parameters = figarch(y,1,1,'STUDENTST')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs]  = figarch(EPSILON,P,Q)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+EPSILON
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of mean 0 data 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+P
+\end_layout
+
+\end_inset
+
+: Order of the short memory autoregressive process.
+ Must be 0 or 1.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+Q
+\end_layout
+
+\end_inset
+
+: Order of the moving average process.
+ Must be 0 or 1.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Optional Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs]  = figarch(EPSILON,P,Q,ERRORTYPE,TRUNCLAG,STARTINGVALS,OPTIONS)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+: The variable specifies the error distribution as a string and can take
+ the values 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'NORMAL'
+\end_layout
+
+\end_inset
+
+: Normal errors 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+: Standardized Students T errors 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+: Generalized Error Distribution errors 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+: Hansen's Skew-T errors 
+\end_layout
+
+\begin_layout Standard
+\noindent
+if omitted or blank, the default is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'NORMAL'
+\end_layout
+
+\end_inset
+
+.
+ Specifying 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+ will result in one extra output (
+\begin_inset Formula $\nu$
+\end_inset
+
+).
+ Specifying 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+ will result in 2, 
+\begin_inset Formula $\nu$
+\end_inset
+
+ (first additional output) and 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ (second additional output).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+TRUNCLAG
+\end_layout
+
+\end_inset
+
+: Truncation point for ARCH(
+\begin_inset Formula $\infty$
+\end_inset
+
+) representation.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+STARTINGVALS
+\end_layout
+
+\end_inset
+
+: A 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+2+P+Q
+\end_layout
+
+\end_inset
+
+ vector of starting values.
+ If 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+ is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+, an additional starting value is needed.
+ If 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+ is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+ two additional starting values are needed.
+ If 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+startingvals
+\end_layout
+
+\end_inset
+
+ is empty or omitted, a simple grid search is used for starting values.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+OPTIONS
+\end_layout
+
+\end_inset
+
+: A valid 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+fminunc
+\end_layout
+
+\end_inset
+
+ options structure.
+ The defaults are listed in the comments.
+ This options is useful for preventing output from being displayed if calling
+ the routine many times.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[PARAMETERS,LL,HT,VCVROBUST,VCV,SCORES,DIAGNOSTICS]  = figarch(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+PARAMETERS
+\end_layout
+
+\end_inset
+
+: A 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+2+P+Q
+\end_layout
+
+\end_inset
+
+ vector of estimated parameters.
+ If 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+ is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTST'
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'GED'
+\end_layout
+
+\end_inset
+
+, an additional parameter (
+\begin_inset Formula $\nu$
+\end_inset
+
+) is returned.
+ If 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ERRORTYPE
+\end_layout
+
+\end_inset
+
+ is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'SKEWT'
+\end_layout
+
+\end_inset
+
+, two additional parameters will be returned, 
+\begin_inset Formula $\nu$
+\end_inset
+
+ (first additional output) and 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ (second additional output).
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+LL
+\end_layout
+
+\end_inset
+
+: Log-likelihood at the optimum.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+HT
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of fit conditional variances 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+VCVROBUST
+\end_layout
+
+\end_inset
+
+: The Bollerslev-Wooldridge robust covariance matrix of the estimated parameters.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+VCV
+\end_layout
+
+\end_inset
+
+: The maximum likelihood covariance matrix (inverse Hessian) of the estimated
+ parameters.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+SCORES
+\end_layout
+
+\end_inset
+
+: A 
+\begin_inset Formula $T$
+\end_inset
+
+ by number of parameters matrix of scores of the parameters.
+ Used in some diagnostic tests.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+DIAGNOSTICS
+\end_layout
+
+\end_inset
+
+: A structure that contains information about the status of the optimizer.
+ Useful for checking if there are convergence problems.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+FIGARCH(Q,D,P) parameter estimation for P={0,1} and Q={0,1} with different
+ error distributions:
+\end_layout
+
+\begin_layout Plain Layout
+
+Normal, Students-T, Generalized Error Distribution, Skewed T
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS] = figarch(EPSILON,P,Q)
+\end_layout
+
+\begin_layout Plain Layout
+
+  [PARAMETERS,LL,HT,VCVROBUST,VCV,SCORES,DIAGNOSTICS]
+\end_layout
+
+\begin_layout Plain Layout
+
+                                      = figarch(EPSILON,P,Q,ERRORTYPE,STARTINGVA
+LS,OPTIONS)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  EPSILON       - T by 1 Column vector of mean zero residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+  P             - 0 or 1 indicating whether the autoregressive term is present
+ in the model (phi)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Q             - 0 or 1 indicating whether the moving average term is present
+ in the model (beta)
+\end_layout
+
+\begin_layout Plain Layout
+
+  ERRORTYPE     - [OPTIONAL] The error distribution used, valid types are:
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'NORMAL'    - Gaussian Innovations [DEFAULT]
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'STUDENTST' - T distributed errors
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'GED'       - Generalized Error Distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+                    'SKEWT'     - Skewed T distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+  TRUNCLAG      - [OPTIONAL] Number of weights to compute in ARCH(oo) representa
+tion.
+\end_layout
+
+\begin_layout Plain Layout
+
+                     Default is 1000.
+\end_layout
+
+\begin_layout Plain Layout
+
+  STARTINGVALS  - [OPTIONAL] A (2+p+q), plus 1 for STUDENTST OR GED (nu),
+ plus 2 for SKEWT
+\end_layout
+
+\begin_layout Plain Layout
+
+                     (nu,lambda), vector of starting values.
+ [omega phi d beta [nu lambda]]'.
+  If
+\end_layout
+
+\begin_layout Plain Layout
+
+                     not provided, FIGARCH_STARTING_VALUES attempts to find
+ reasonable values.
+\end_layout
+
+\begin_layout Plain Layout
+
+  OPTIONS       - [OPTIONAL] A user provided options structure.
+ Default options are below.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  PARAMETERS    - A 2+p+q column vector of parameters with [omega phi d
+ beta [nu lambda]]'.
+\end_layout
+
+\begin_layout Plain Layout
+
+  LL            - The log likelihood at the optimum
+\end_layout
+
+\begin_layout Plain Layout
+
+  HT            - The estimated conditional variances
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCVROBUST     - Robust parameter covariance matrix
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCV           - Non-robust standard errors (inverse Hessian)
+\end_layout
+
+\begin_layout Plain Layout
+
+  SCORES        - Matrix of scores (# of params by t)
+\end_layout
+
+\begin_layout Plain Layout
+
+  DIAGNOSTICS   - Structure of optimization output information.
+  Useful to check for convergence
+\end_layout
+
+\begin_layout Plain Layout
+
+                    problems .
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  The following (generally wrong) constraints are used:
+\end_layout
+
+\begin_layout Plain Layout
+
+   (1) omega > 0
+\end_layout
+
+\begin_layout Plain Layout
+
+   (2) 0<= d <= 1
+\end_layout
+
+\begin_layout Plain Layout
+
+   (3) 0 <= phi <= (1-d)/2
+\end_layout
+
+\begin_layout Plain Layout
+
+   (3) 0 <= beta <= d + phi
+\end_layout
+
+\begin_layout Plain Layout
+
+   (5) nu>2 of Students T and nu>1 for GED
+\end_layout
+
+\begin_layout Plain Layout
+
+   (6) -.99<lambda<.99 for Skewed T
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   The conditional variance, h(t), of a FIGARCH(1,d,1) process is modeled
+ as follows:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   h(t) = omega + [1-beta L - phi L  (1-L)^d] epsilon(t)^2 + beta * h(t-1)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   where L is the lag operator which is estimated using an ARCH(oo) representati
+on,
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   h(t) = omega + sum(lambda(i) * epsilon(t-1)^2)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+   where lambda(i) is a function of the fractional differencing parameter,
+ phi and beta.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  Default Options
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset('fminunc');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'TolFun'      , 1e-005);
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'TolX'        , 1e-005);
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'Display'     , 'iter');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'Diagnostics' , 'on');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'LargeScale'  , 'off');
+\end_layout
+
+\begin_layout Plain Layout
+
+    options  =  optimset(options , 'MaxFunEvals' , '400*numberOfVariables');
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also TARCH, APARCH, EGARCH, AGARCH, FIGARCH_LIKELIHOOD, FIGARCH_PARAMETER_CH
+ECK,
+\end_layout
+
+\begin_layout Plain Layout
+
+FIGARCH_WEIGHTS FIGARCH_STARTING_VALUES, FIGARCH_TRANSFORM, FIGARCH_ITRANSFORM
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,3072 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass book
+\begin_preamble
+\usepackage{SheppardCommonNew}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyheadoffset[LE,RO]{15pt}
+\addtolength{\headheight}{\baselineskip}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyhf{}
+\newcommand{\helv}{%
+\sffamily\fontseries{b}\fontsize{9}{11}\selectfont}
+\fancyhf{}
+\fancyhead[LE,RO]{\helv \thepage}
+\fancyhead[LO]{\helv \rightmark}
+\fancyhead[RE]{\helv \leftmark}
+\fancypagestyle{plain}{%
+\fancyhead{} % get rid of headers
+\renewcommand{\headrulewidth}{0pt} % and the line
+}
+\setcounter{tocdepth}{1}
+
+
+\usepackage{sectsty}
+\allsectionsfont{\sffamily}
+%\allsectionsfont{\usefont{OT1}{phv}{b}{n}\selectfont}
+
+\setlength{\cftbeforechapskip}{3ex}
+\setlength{\cftbeforesecskip}{0.2ex}
+\renewcommand{\cftchapfont}{\sffamily\fontseries{b}\selectfont}
+\renewcommand{\cftsecfont}{\sffamily\selectfont}
+\renewcommand{\cftsubsecfont}{\sffamily\selectfont}
+\renewcommand{\cftchappagefont}{\sffamily\fontseries{b}\selectfont}
+\renewcommand{\cftsecpagefont}{\sffamily\selectfont}
+\renewcommand{\cftsubsecpagefont}{\sffamily\selectfont}
+\renewcommand{\cfttoctitlefont}{\sffamily\fontseries{b}\selectfont}
+\renewcommand{\cftloftitlefont}{\sffamily\fontseries{b}\selectfont}
+\renewcommand{\cftlottitlefont}{\sffamily\fontseries{b}\selectfont}
+\renewcommand{\cftfigpagefont}{\sffamily\selectfont}
+\renewcommand{\cftfigfont}{\sffamily\selectfont}
+\renewcommand{\cfttabfont}{\sffamily\selectfont}
+\renewcommand{\cfttabpagefont}{\sffamily\selectfont}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package none
+\inputencoding auto
+\fontencoding default
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 11
+\spacing single
+\use_hyperref true
+\pdf_title "MFE MATLAB Function Reference"
+\pdf_author "Kevin Sheppard"
+\pdf_subject "MATLAB Reference for Financial Econometrics"
+\pdf_keywords "MATLAB, Financial Econometrics"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref section
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\use_mhchem 0
+\use_mathdots 0
+\cite_engine natbib_authoryear
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+
+\family sans
+MFE MATLAB Function Reference Financial Econometrics
+\end_layout
+
+\begin_layout Date
+
+\family sans
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Author
+
+\family sans
+Kevin Sheppard
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Greyedout
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset FormulaMacro
+\newcommand{\bV}{\mathbf{V}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bS}{\mathbf{S}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bP}{\mathbf{P}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bW}{\mathbf{W}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bN}{\mathbf{N}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bR}{\mathbf{R}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\br}{\mathbf{r}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bs}{\mathbf{s}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bb}{\mathbf{b}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bI}{\mathbf{I}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\be}{\mathbf{e}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bY}{\mathbf{Y}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\by}{\mathbf{y}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bX}{\mathbf{X}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bK}{\mathbf{K}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bE}{\mathbf{E}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bF}{\mathbf{F}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bw}{\mathbf{w}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bZ}{\mathbf{Z}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bA}{\mathbf{A}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\ba}{\mathbf{a}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bU}{\mathbf{U}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bu}{\mathbf{u}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bv}{\mathbf{v}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bB}{\mathbf{B}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\fb}{\mathbf{f}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bg}{\mathbf{g}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bG}{\mathbf{G}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bc}{\mathbf{c}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bx}{\mathbf{x}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bz}{\mathbf{z}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bd}{\mathbf{d}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bD}{\mathbf{D}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bM}{\mathbf{M}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bQ}{\mathbf{Q}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bC}{\mathbf{C}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bp}{\mathbf{p}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bH}{\mathbf{H}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\iotaB}{\boldsymbol{\iota}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\etaB}{\boldsymbol{\eta}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\zetaB}{\boldsymbol{\zeta}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\deltaB}{\boldsymbol{\delta}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\varthetaB}{\boldsymbol{\vartheta}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\psiB}{\boldsymbol{\psi}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\nuB}{\boldsymbol{\nu}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\alphaB}{\boldsymbol{\alpha}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\betaB}{\boldsymbol{\beta}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\omegaB}{\boldsymbol{\omega}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\rhoB}{\boldsymbol{\rho}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\betahatB}{\hat{\boldsymbol{\beta}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\betatildeB}{\tilde{\boldsymbol{\beta}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\piB}{\boldsymbol{\pi}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\PiB}{\boldsymbol{\Pi}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\xiB}{\boldsymbol{\xi}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\XiB}{\boldsymbol{\Xi}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\upsilonB}{\boldsymbol{\upsilon}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\UpsilonB}{\boldsymbol{\Upsilon}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\epsilonB}{\boldsymbol{\epsilon}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\epsilonhatB}{\hat{\boldsymbol{\epsilon}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\varsigmaB}{\boldsymbol{\varsigma}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\muB}{\boldsymbol{\mu}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\kappaB}{\boldsymbol{\kappa}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\tauB}{\boldsymbol{\tau}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\lambdaB}{\boldsymbol{\lambda}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\LambdaB}{\boldsymbol{\Lambda}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\gammaB}{\boldsymbol{\gamma}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\GammaB}{\boldsymbol{\Gamma}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\SigmaB}{\boldsymbol{\Sigma}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\sigmaB}{\boldsymbol{\sigma}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\PhiB}{\boldsymbol{\Phi}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\phiB}{\boldsymbol{\phi}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\OmegaB}{\boldsymbol{\Omega}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\thetaB}{\boldsymbol{\theta}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\ThetaB}{\boldsymbol{\Theta}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\PsiB}{\boldsymbol{\Psi}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset FormulaMacro
+\newcommand{\RSSU}{\mathrm{RSS}_{\mathrm{\tiny{U}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\SSEU}{\mathrm{SSE}_{\mathrm{\tiny{U}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\TSSU}{\mathrm{TSS}_{\mathrm{\tiny{U}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\RSSC}{\mathrm{RSS}_{\mathrm{\tiny{C}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\SSEC}{\mathrm{SSE}_{\mathrm{\tiny{C}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\TSSC}{\mathrm{TSS}_{\mathrm{\tiny{C}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\RSS}{\mathrm{RSS}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\SSE}{\mathrm{SSE}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\TSS}{\mathrm{TSS}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\SigmaBXy}{\SigmaB_{\mathrm{\tiny{\mathbf{Xy}}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\SigmaBXX}{\SigmaB_{\mathrm{\tiny{\mathbf{XX}}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\SigmaBZX}{\SigmaB_{\mathrm{\tiny{\mathbf{ZX}}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\SigmahatBXX}{\hat{\SigmaB}_{\mathrm{\tiny{\mathbf{XX}}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\SigmahatBZX}{\hat{\SigmaB}_{\mathrm{\tiny{\mathbf{ZX}}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\SigmaBXoneXone}{\SigmaB_{\mathrm{\tiny{\mathbf{X}_{1}\mathbf{X}_{1}}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\SigmaBXoneXtwo}{\SigmaB_{\mathrm{\tiny{\mathbf{X}_{1}\mathbf{X}_{2}}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\SigmaBXtwoXtwo}{\SigmaB_{\mathrm{\tiny{\mathbf{X}_{2}\mathbf{X}_{2}}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\SSER}{\mathrm{SSE_{\mathrm{\tiny{R}}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\Rtwo}{\mathrm{R}^{2}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\RtwoU}{\mathrm{R}_{\mathrm{\tiny U}}^{2}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\RtwoC}{\mathrm{R}_{\mathrm{\tiny C}}^{2}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\RbartwoC}{\bar{\mathrm{R}}_{\mathrm{\tiny C}}^{2}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\RbartwoU}{\bar{\mathrm{R}}_{\mathrm{\tiny U}}^{2}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\RR}{R$^{2}$}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\RRbar}{$\bar{\mathrm{R}}^{2}$}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\Px}{\mathbf{P_{X}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\Mx}{\mathbf{M_{X}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset FormulaMacro
+\newcommand{\convp}{\stackrel{p}{\rightarrow}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\convd}{\stackrel{d}{\rightarrow}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\convas}{\stackrel{a.s.}{\rightarrow}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\convms}{\stackrel{m.s.}{\rightarrow}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\simA}{\stackrel{\mathrm{{\tiny{\ensuremath{A}}}}}{\sim}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\simIID}{\stackrel{\text{{\tiny{i.i.d.}}}}{\sim}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset FormulaMacro
+\newcommand{\iid}{$\text{i.i.d.}\,$}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\iidnosp}{$\text{i.i.d.}$}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset FormulaMacro
+\newcommand{\naive}{na\"{i}ve }
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\Q}{\mathbb{Q}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\MLE}{{\mathrm{{\tiny MLE}}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\IV}{\mathrm{{\tiny IV}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\GLS}{\mathrm{{\tiny GLS}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\FGLS}{\mathrm{{\tiny FGLS}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\yr}{$_{\mathrm{{\tiny{1YR}}}\ensuremath{}}$}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\tsone}{\footnotesize}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\tstwo}{\scriptsize}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\sk}{s\! k}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\JB}{J\! B}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\HIT}{H\! I\! T}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\ES}{ES}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\VaR}{V\! a\! R}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset FormulaMacro
+\newcommand{\Corr}{\mathrm{Corr}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\Cov}{\mathrm{Cov}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\V}{\mathrm{V}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\E}{\mathrm{E}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\renewcommand{\V}{\mathrm{V}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\B}{\mathrm{B}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\Bias}{\mathrm{Bias}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\MSE}{\mathrm{MSE}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\avar}{\mathrm{avar}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\plim}{\mathrm{plim}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset FormulaMacro
+\newcommand{\ith}{i$^{\text{th}}$ }
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\sth}{s$^{\text{th}}$ }
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\jth}{j$^{\text{th}}$ }
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\ijth}{ij$^{\text{th}}$ }
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\rd}{$^{\text{rd}}$ }
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\nd}{$^{\text{nd}}$ }
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\st}{$^{\text{st}}$ }
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\th}{$^{\text{th}}$ }
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset FormulaMacro
+\newcommand{\argmin}{\mathop{\rm argmin}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\vech}{\mathop{\rm vech}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\argmax}{\mathop{\rm argmax}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\sgn}{\mathop{\rm sgn}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\vec}{\text{{\rm vec}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\diag}{\mathrm{diag}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\rank}{\mathrm{rank}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\tr}{\mathrm{tr}}
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="1" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset VSpace vfill
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\family sans
+\size footnotesize
+©
+\family default
+\size default
+2001-2012 Kevin Sheppard 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+frontmatter
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Notes
+\end_layout
+
+\begin_layout Subsection*
+License
+\end_layout
+
+\begin_layout Standard
+This software and documentation is provided "as is", without warranty of
+ any kind, express or implied, including but not limited to the warranties
+ of merchantability, fitness for a particular purpose and non-infringement.
+ In no event shall the authors or copyright holders be liable for any claim,
+ damages or other liability, whether in an action of contract, tort or otherwise
+, arising from, out of or in connection with the software or the use or
+ other dealings in the software.
+\end_layout
+
+\begin_layout Subsection*
+Copyright
+\end_layout
+
+\begin_layout Standard
+Except where explicitly noted, all contents of the toolbox and this documentatio
+n are 
+\size footnotesize
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\family sans
+©
+\family default
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\size default
+2001-2009 Kevin Sheppard.
+\end_layout
+
+\begin_layout Standard
+\noindent
+MATLAB
+\begin_inset Formula $^{\text{{\tiny®}}}$
+\end_inset
+
+ is a registered trademark The Mathworks, Inc.
+\end_layout
+
+\begin_layout Subsection*
+Bug Reports and Feedback
+\end_layout
+
+\begin_layout Standard
+I welcome bug reports and feedback about the software.
+ The best type of bug report should include the command run that produced
+ the errors, a description of the data used (a zipped .MAT file with the
+ data may be useful) and the version of MATLAB run.
+ I am usually working on a recent version of MATLAB (currently R2009b, 7.9)
+ and while I try to ensure some backward compatibility, it is likely that
+ this code will not run flawlessly on ancient versions of MATLAB.
+\end_layout
+
+\begin_layout Standard
+Please do not ask me for code or advice finding code that I do not provide,
+ unless that code is directly related to my own original research (e.g.
+ certain correlation models).
+ Also, please do not ask for help with your homework.
+\end_layout
+
+\begin_layout Subsection*
+Notable Missing Documentation
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+pca
+\end_layout
+
+\end_inset
+
+: Principal Component Analysis 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+dccmvgarch
+\end_layout
+
+\end_inset
+
+: DCC Multivariate GARCH 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+scalarvtvech
+\end_layout
+
+\end_inset
+
+: Scalar BEKK Multivariate GARCH 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+mainmatter
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Chapter
+Included but not documented functions
+\end_layout
+
+\begin_layout Standard
+The toolbox comes with a large number of functions that are used to support
+ other functions, for example functions that are used to compute numerical
+ Hessians.
+ Please consult the help contained within the function for more details.
+\end_layout
+
+\begin_layout Subsection*
+Data Files
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+GDP.mat
+\family default
+ - US GDP data and dates from FRED II 
+\end_layout
+
+\begin_layout Subsection*
+General Support Functions
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+convertmaroots
+\end_layout
+
+\end_inset
+
+ - Convert MA roots to their invertible counterpart 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+gradient2sided
+\end_layout
+
+\end_inset
+
+ - 2 sided numerical gradient calculation 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+hessian2sided
+\end_layout
+
+\end_inset
+
+ - 2 sided numerical Hessian calculation 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+inversearroots
+\end_layout
+
+\end_inset
+
+ - Compute inverse AR roots 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ivech
+\end_layout
+
+\end_inset
+
+ - Inverse 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+vech
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+mprint
+\end_layout
+
+\end_inset
+
+ - Pretty printing of matrices 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+newlagmatrix
+\end_layout
+
+\end_inset
+
+ - Convert a vector to lagged values 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+pca
+\end_layout
+
+\end_inset
+
+ - Principal component analysis 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+robustvcv
+\end_layout
+
+\end_inset
+
+ - Automatic sandwich covariance estimation using numerical derivatives
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+standardize
+\end_layout
+
+\end_inset
+
+ - Standardizes residuals 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+vech
+\end_layout
+
+\end_inset
+
+ - Half-vec operator for a symmetric matrix.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Private Support Functions
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarchcore
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarchdisplay
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarchitransform
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarchlikelihood
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarchparametercheck
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarchstartingvalues
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarchtransform
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+agarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparchcore
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparchitransform
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparchlikelihood
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparchloglikelihood
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparchparametercheck
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparchstartingvalues
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparchtransform
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+aparch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+armaxerrors
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+armaxfilter
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+armaxfiltercore
+\end_layout
+
+\end_inset
+
+- 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+armaxfilter
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+armaxfilterlikelihood
+\end_layout
+
+\end_inset
+
+- 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+armaxfilter
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+augdfcv
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+augdf
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+augdfcvsimtieup
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+augdf
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarchcore
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarchdisplay
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarchitransform
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarchlikelihood
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarchnlcon
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarchparametercheck
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarchstartingvalues
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarchtransform
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+egarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarchcore
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarchdisplay
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarchitransform
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarchlikelihood
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarchparametercheck
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarchstartingvalues
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarchtransform
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+igarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarchcore
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarchdisplay
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarchitransform
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarchlikelihood
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarchparametercheck
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarchstartingvalues
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarchtransform
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tarch
+\end_layout
+
+\end_inset
+
+ support function.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Distributions and Random Variables
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+betainv
+\end_layout
+
+\end_inset
+
+ - Beta inverse CDF 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+betapdf
+\end_layout
+
+\end_inset
+
+ - Beta PDF 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+gedcdf
+\end_layout
+
+\end_inset
+
+ - Generalized Error Distribution CDF 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+gedinv
+\end_layout
+
+\end_inset
+
+ - Generalized Error Distribution inverse CDF 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+gedloglik
+\end_layout
+
+\end_inset
+
+ - Generalized Error Distribution Loglikelihood CDF 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+gedpdf
+\end_layout
+
+\end_inset
+
+ - Generalized Error Distribution PDF 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+gedrnd
+\end_layout
+
+\end_inset
+
+ - Generalized Error Random Number Generator PDF 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+mvnormloglik
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+skewtcdf
+\end_layout
+
+\end_inset
+
+ - Skew 
+\begin_inset Formula $t$
+\end_inset
+
+ CDF 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+skewtinv
+\end_layout
+
+\end_inset
+
+ - Skew 
+\begin_inset Formula $t$
+\end_inset
+
+ inverse CDF 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+skewtloglik
+\end_layout
+
+\end_inset
+
+ - Skew 
+\begin_inset Formula $t$
+\end_inset
+
+ Loglikelihood 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+skewtpdf
+\end_layout
+
+\end_inset
+
+ - Skew 
+\begin_inset Formula $t$
+\end_inset
+
+ PDF 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+skewtrnd
+\end_layout
+
+\end_inset
+
+ - Skew 
+\begin_inset Formula $t$
+\end_inset
+
+ Random Number Generator 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+stdtcdf
+\end_layout
+
+\end_inset
+
+ - Standardized 
+\begin_inset Formula $t$
+\end_inset
+
+ CDF 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+stdtinv
+\end_layout
+
+\end_inset
+
+ - Standardized 
+\begin_inset Formula $t$
+\end_inset
+
+ inverse CDF 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+stdtloglik
+\end_layout
+
+\end_inset
+
+ - Standardized 
+\begin_inset Formula $t$
+\end_inset
+
+ Loglikelihood 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+stdtpdf
+\end_layout
+
+\end_inset
+
+ - Standardized 
+\begin_inset Formula $t$
+\end_inset
+
+ PDF 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+stdtrnd
+\end_layout
+
+\end_inset
+
+ - Standardized 
+\begin_inset Formula $t$
+\end_inset
+
+ Random Number Generator 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+tdisinv
+\end_layout
+
+\end_inset
+
+ - Student's 
+\begin_inset Formula $t$
+\end_inset
+
+ inverse CDF 
+\end_layout
+
+\begin_layout Subsection*
+MATLAB Compatability
+\end_layout
+
+\begin_layout Standard
+These functions are work-a-like functions of a few MATLAB provided functions
+ so that the statistics toolbox may not be needed in some cases.
+ If you have the Statistics toolbox, you should not use these functions.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+chi2cdf
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+kurtosis
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+iscompatible
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+normcdf
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+norminv
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+normloglik
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+normpdf
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "chapters/cross_sectional_analysis.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "chapters/stationary_time_series.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "chapters/nonstationary_time_series.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "chapters/vector_autoregressions.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "chapters/volatility_modeling.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "chapters/density_estimation.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "chapters/bootstrap_and_multiple_hypothesis_tests.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "chapters/density_estimation.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "chapters/helper_functions.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "master"
+options "agsm"
+
+\end_inset
+
+
+\begin_inset CommandInset index_print
+LatexCommand printindex
+type "idx"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

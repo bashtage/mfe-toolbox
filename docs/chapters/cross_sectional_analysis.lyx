@@ -1,0 +1,727 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass book
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Cross Sectional Analysis
+\end_layout
+
+\begin_layout Section
+Regression
+\end_layout
+
+\begin_layout Subsection
+Regression: 
+\family typewriter
+ols
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Regression! @
+\family typewriter
+ols
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Regression
+\end_layout
+
+\end_inset
+
+ Regression with both classical (homoskedastic) and White (heteroskedasticity
+ robust) variance covariance estimation, with an option to exclude the intercept.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\betahatB=\left(\bX'\bX\right)\bX'\by
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where 
+\begin_inset Formula $\bX$
+\end_inset
+
+ is an 
+\begin_inset Formula $n$
+\end_inset
+
+ by 
+\begin_inset Formula $k$
+\end_inset
+
+ matrix of regressors and 
+\begin_inset Formula $\by$
+\end_inset
+
+ is an 
+\begin_inset Formula $n$
+\end_inset
+
+ by 1 vector of regressands.
+ If the intercept is included, the 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+RR
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+RRbar
+\end_layout
+
+\end_inset
+
+ are calculated using centered versions, 
+\begin_inset Formula 
+\[
+\RtwoC=1-\frac{\hat{\epsilonB}'\hat{\epsilonB}}{\tilde{\by}'\tilde{\by}}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\tilde{\by}=\by-\bar{y}$
+\end_inset
+
+ are the demeaned regressands and 
+\begin_inset Formula $\hat{\epsilonB}=\by-\bX\betahatB$
+\end_inset
+
+ are the estimated residuals.
+ If the intercept is excluded, these are computed using uncentered estimators,
+ 
+\begin_inset Formula 
+\[
+\RtwoU=1-\frac{\hat{\epsilonB}'\hat{\epsilonB}}{\by'\by}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Set up some experimental data
+\end_layout
+
+\begin_layout Plain Layout
+
+n = 100; y = randn(n,1); X = randn(n, 2);
+\end_layout
+
+\begin_layout Plain Layout
+
+% Regression with a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+b = ols(y,X)
+\end_layout
+
+\begin_layout Plain Layout
+
+% Regression through the origin (uncentered)
+\end_layout
+
+\begin_layout Plain Layout
+
+b = ols(y,X,0)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = ols(Y,X)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The required inputs are: 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Y
+\family default
+: An 
+\begin_inset Formula $n$
+\end_inset
+
+ by 1 vector containing the regressand.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+X
+\family default
+: An 
+\begin_inset Formula $n$
+\end_inset
+
+ by 
+\begin_inset Formula $k$
+\end_inset
+
+ vector containing the regressors.
+ 
+\family typewriter
+X
+\family default
+ should be full rank and 
+\shape italic
+should not
+\shape default
+ contain a constant column.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Optional Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = ols(Y,X,C)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The optional inputs are: 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+C
+\family default
+: A scalar (0 or 1) indicating whether the regression should include a constant.
+ If 1 the 
+\begin_inset Formula $\bX$
+\end_inset
+
+ data are augmented by a columns of 1s before the regression coefficients
+ are estimated.
+ If omitted or empty, the default value is 1.
+ 
+\family typewriter
+C
+\family default
+ determines whether centered or uncentered estimators of 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+RR
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+RRbar
+\end_layout
+
+\end_inset
+
+ are computed.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+ols
+\family default
+ provides many other outputs than the estimated parameters.
+ The full 
+\family typewriter
+ols
+\family default
+ command can return
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[B,TSTAT,S2,VCV,VCVWHITE,R2,RBAR,YHAT] = ols(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The outputs are: 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+B
+\family default
+: 
+\begin_inset Formula $k$
+\end_inset
+
+ by 1 vector of estimated parameters.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+TSTAT
+\family default
+: 
+\begin_inset Formula $k$
+\end_inset
+
+ by 1 vector of t-stats computed using heteroskedasticity robust standard
+ errors.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+S2
+\family default
+: Estimated variance of the regression error.
+ Computed using a degree of freedom adjustment (
+\begin_inset Formula $n-k$
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+VCV
+\family default
+: Classical variance-covariance matrix of the estimated parameters.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+VCVWHITE
+\family default
+: White's heteroskedasticity robust variance-covariance matrix.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+R2
+\family default
+: 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+RR
+\end_layout
+
+\end_inset
+
+.
+ Centered if 
+\family typewriter
+C
+\family default
+ is 1 or omitted.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+RBAR
+\family default
+: 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+RRbar
+\end_layout
+
+\end_inset
+
+.
+ Centered if 
+\family typewriter
+C
+\family default
+ is 1 or omitted.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+YHAT
+\family default
+: Fit values of 
+\family typewriter
+Y
+\family default
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Linear regression estimation with homoskedasticity and White heteroskedasticity
+ robust standard
+\end_layout
+
+\begin_layout Plain Layout
+
+errors.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [B,TSTAT,S2,VCV,VCV_WHITE,R2,RBAR,YHAT] = ols(Y,X,C)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  Y        - N by 1 vector of dependent data
+\end_layout
+
+\begin_layout Plain Layout
+
+  X        - N by K vector of independent data
+\end_layout
+
+\begin_layout Plain Layout
+
+  C        - 1 or 0 to indicate whether a constant should be included (1:
+ include constant)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  B        - A K(+1 is C=1) vector of parameters.
+  If a constant is included, it is the first
+\end_layout
+
+\begin_layout Plain Layout
+
+               parameter.
+\end_layout
+
+\begin_layout Plain Layout
+
+  TSTAT    - A K(+1) vector of t-statistics computed using White heteroskedastic
+ity robust
+\end_layout
+
+\begin_layout Plain Layout
+
+               standard errors.
+\end_layout
+
+\begin_layout Plain Layout
+
+  S2       - Estimated error variance of the regression.
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCV      - Variance covariance matrix of the estimated parameters.
+  (Homoskedasticity assumed)
+\end_layout
+
+\begin_layout Plain Layout
+
+  VCVWHITE - Heteroskedasticity robust VCV of the estimated parameters.
+\end_layout
+
+\begin_layout Plain Layout
+
+  R2       - R-squared of the regression.
+  Centered if C=1.
+\end_layout
+
+\begin_layout Plain Layout
+
+  RBAR     - Adjusted R-squared.
+ Centered if C=1.
+\end_layout
+
+\begin_layout Plain Layout
+
+  YHAT     - Fit values of the dependent variable
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  The model estimated is Y = X*B + epsilon where Var(epsilon)=S2
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+EXAMPLES:
+\end_layout
+
+\begin_layout Plain Layout
+
+  Estimate a regression with a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+      b = ols(y,x)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Estimate a regression without a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+      b = ols(y,x,0)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also OLSNW
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

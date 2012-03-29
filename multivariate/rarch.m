@@ -73,7 +73,7 @@ end
 if p<1 || floor(p)~=p
     error('P must be a positive scalar.')
 end
-if q<=0 || floor(q)~=q
+if q<0 || floor(q)~=q
     error('Q must be a non-negative scalar.')
 end
 

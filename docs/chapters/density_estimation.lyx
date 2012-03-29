@@ -1,0 +1,2061 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass book
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Density Estimation
+\end_layout
+
+\begin_layout Section
+Kernel Density Estimation: 
+\family typewriter
+pltdens
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Density Estimation
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+GARCH! @
+\family typewriter
+pltdens
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Density Estimation! @
+\family typewriter
+pltdens
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Kernel density estimation is a useful tool to visualize the distribution
+ of returns which would having to make strong parametric assumptions.
+ Let 
+\begin_inset Formula $\{y_{t}\}_{t=1}^{T}$
+\end_inset
+
+ be a set of 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+iid
+\end_layout
+
+\end_inset
+
+ data.
+ The kernel density around a point 
+\begin_inset Formula $x$
+\end_inset
+
+ is defined
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{f}(x)=\sum_{t=1}^{t}K\left(\frac{y_{t}-x}{h}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where 
+\begin_inset Formula $h$
+\end_inset
+
+ is the bandwidth, a parameter that controls the width of the window.
+ 
+\family typewriter
+pltdens
+\family default
+ supports a number of Kernels 
+\end_layout
+
+\begin_layout Itemize
+Gaussian 
+\begin_inset Formula 
+\[
+K(z)=\frac{1}{\sqrt{2\pi}}\exp(-z^{2}/2)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Epanechnikov 
+\begin_inset Formula 
+\[
+K(z)=\left\{ \begin{array}{lr}
+\frac{3}{4}(1-z^{2}) & -1\leq z\leq1\\
+0 & \text{ otherwise}
+\end{array}\right.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Quartic (Biweight) 
+\begin_inset Formula 
+\[
+K(z)=\left\{ \begin{array}{lr}
+\frac{15}{16}(1-z^{2})^{2} & -1\leq z\leq1\\
+0 & \text{ otherwise}
+\end{array}\right.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Triweight 
+\begin_inset Formula 
+\[
+K(z)=\left\{ \begin{array}{lr}
+\frac{35}{32}(1-z^{2})^{3} & -1\leq z\leq1\\
+0 & \text{ otherwise}
+\end{array}\right.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+iid
+\end_layout
+
+\end_inset
+
+ data Silverman's bandwidth, 
+\begin_inset Formula $1.06\hat{\sigma}^{2}T^{-\frac{1}{5}}$
+\end_inset
+
+ has good properties and is used by default.
+ The function can be used two ways.
+ The first is to produce the kernel density plot and is simply
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+pltdens(y)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+The second computes the weights but does not produce a plot 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[h,f,y] = pltdens(y);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Data on the S&P 500 were used to produce 3 kernel densities, one with Silverman'
+s BW, on over-smoothed (
+\begin_inset Formula $h$
+\end_inset
+
+ large) and one under-smoothed (
+\begin_inset Formula $h$
+\end_inset
+
+ small).
+ The results of this code is contained in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Fig:KernelDens"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[h,f,y] = pltdens(SP500);
+\end_layout
+
+\begin_layout Plain Layout
+
+disp(h)
+\end_layout
+
+\begin_layout Plain Layout
+
+[hover,fover,yover] = pltdens(SP500,.01);
+\end_layout
+
+\begin_layout Plain Layout
+
+[hunder,funder,yunder] = pltdens(SP500,.0001);
+\end_layout
+
+\begin_layout Plain Layout
+
+fig = figure(1);
+\end_layout
+
+\begin_layout Plain Layout
+
+clf
+\end_layout
+
+\begin_layout Plain Layout
+
+set(fig,'PaperOrientation','landscape','PaperSize',[11 8.5],...
+\end_layout
+
+\begin_layout Plain Layout
+
+ 'InvertHardCopy','off','PaperPositionMode','auto',...
+\end_layout
+
+\begin_layout Plain Layout
+
+ 'Position',[117 158 957 764],'Color',[1 1 1]);
+\end_layout
+
+\begin_layout Plain Layout
+
+hfig = plot(y,f,yover,fover,yunder,funder);
+\end_layout
+
+\begin_layout Plain Layout
+
+axis tight
+\end_layout
+
+\begin_layout Plain Layout
+
+for i=1:3;set(hfig(i),'LineWidth',2);end
+\end_layout
+
+\begin_layout Plain Layout
+
+legend('Silvermann','Over smoothed','Under smoothed')
+\end_layout
+
+\begin_layout Plain Layout
+
+set(gca,'FontSize',14)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+h =
+\end_layout
+
+\begin_layout Plain Layout
+
+.0027
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement !t
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename kerneldensity.pdf
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace -100pt*
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+A plot with kernel densities using Silverman's BW and over- and under- smoothed.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Fig:KernelDens"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Produce a kernel plot
+\end_layout
+
+\begin_layout Plain Layout
+
+pltdens(y)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% Compute weights but do not produce a plot
+\end_layout
+
+\begin_layout Plain Layout
+
+[h,f,y] = pltdens(y);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% Produce the plot manually
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(y,f)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% Specify a custom bandwidth
+\end_layout
+
+\begin_layout Plain Layout
+
+pltdens(y,3);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+PURPOSE: Draw a nonparametric density estimate.
+\end_layout
+
+\begin_layout Plain Layout
+
+--------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE: [h,f,y] = pltdens(x,h,p,kernel)
+\end_layout
+
+\begin_layout Plain Layout
+
+       or pltdens(x) which uses gaussian kernel default
+\end_layout
+
+\begin_layout Plain Layout
+
+where:
+\end_layout
+
+\begin_layout Plain Layout
+
+       x is a vector
+\end_layout
+
+\begin_layout Plain Layout
+
+       h is the kernel bandwidth
+\end_layout
+
+\begin_layout Plain Layout
+
+         default=1.06 * std(x) * n^(-1/5); Silverman page 45
+\end_layout
+
+\begin_layout Plain Layout
+
+       p is 1 if the density is 0 for negative values
+\end_layout
+
+\begin_layout Plain Layout
+
+       k is the kernel type:
+\end_layout
+
+\begin_layout Plain Layout
+
+          =1 Gaussian (default)
+\end_layout
+
+\begin_layout Plain Layout
+
+          =2 Epanechnikov
+\end_layout
+
+\begin_layout Plain Layout
+
+          =3 Biweight
+\end_layout
+
+\begin_layout Plain Layout
+
+          =4 Triangular
+\end_layout
+
+\begin_layout Plain Layout
+
+  A jittered plot of the
+\end_layout
+
+\begin_layout Plain Layout
+
+  observations is shown below the density.
+\end_layout
+
+\begin_layout Plain Layout
+
+--------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+RETURNS:
+\end_layout
+
+\begin_layout Plain Layout
+
+       h = the interval used
+\end_layout
+
+\begin_layout Plain Layout
+
+       f = the density
+\end_layout
+
+\begin_layout Plain Layout
+
+       y = the domain of support
+\end_layout
+
+\begin_layout Plain Layout
+
+       plot(y,f) will produce a plot of the density
+\end_layout
+
+\begin_layout Plain Layout
+
+--------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+SEE ALSO hist, histo
+\end_layout
+
+\begin_layout Plain Layout
+
+--------------------------------------------------
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Distributional Fit Testing
+\end_layout
+
+\begin_layout Subsection
+Jarque-Bera Test: 
+\family typewriter
+jarquebera
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Distributional Testing! @
+\family typewriter
+jarquebera
+\end_layout
+
+\end_inset
+
+ Jarque-Bera test for normality, defined as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left(T-K\right)\left(\frac{\sk^{2}}{6}+\frac{\left(\kappa-3\right)^{2}}{24}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where 
+\begin_inset Formula $\sk$
+\end_inset
+
+ is the sample skewness and 
+\begin_inset Formula $\kappa$
+\end_inset
+
+ is the sample kurtosis.
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Jarque-Bera test on normal data
+\end_layout
+
+\begin_layout Plain Layout
+
+x = randn(100,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+[statistic, pval] = jarquebera(x);
+\end_layout
+
+\begin_layout Plain Layout
+
+% Jarque-Bera test on regression errors
+\end_layout
+
+\begin_layout Plain Layout
+
+% where there were 4 regressors (4 mean parameters + 1 variance)
+\end_layout
+
+\begin_layout Plain Layout
+
+y=randn(100,1);x = randn(100,4); e = y - x*(x
+\end_layout
+
+\begin_layout Plain Layout
+
+[statistic, pval] = jarquebera(e, 5)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = jarquebera(DATA)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+DATA
+\family default
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of data to be tested.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Optional Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = jarquebera(DATA,K,ALPHA)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+K
+\family default
+: Degree of freedom adjustment.
+ Default is 2.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+ALPHA
+\family default
+: Size of the test to use.
+ Default is 5%.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[STATISTIC,PVAL,H] = jarquebera(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+STATISTIC
+\family default
+: Jarque-Bera test statistic.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+PVAL
+\family default
+: P-value evaluated using the asymptotic 
+\begin_inset Formula $\chi_{2}^{2}$
+\end_inset
+
+ distribution.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+H
+\family default
+: Logical indicating whether the test rejects at 
+\family typewriter
+ALPHA
+\family default
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Computes the Jarque-Bera test for normality using the skewness and kurtosis
+ to determine if a
+\end_layout
+
+\begin_layout Plain Layout
+
+distribution is normal.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [STATISTIC] = jarquebera(DATA)
+\end_layout
+
+\begin_layout Plain Layout
+
+  [STATISTIC,PVAL,H] = jarquebera(DATA,K,ALPHA)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  DATA        - A set of data to be tested for deviations from normality
+\end_layout
+
+\begin_layout Plain Layout
+
+  K           - [OPTIONAL] The number of dependant variables if any used
+ in constructing the errors
+\end_layout
+
+\begin_layout Plain Layout
+
+                  (if omitted K=2)
+\end_layout
+
+\begin_layout Plain Layout
+
+  ALPHA       - [OPTIONAL] The level of the test used for the null of normality.
+  Default is .05
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  STATISTIC - A scalar representing the statistic
+\end_layout
+
+\begin_layout Plain Layout
+
+  PVAL      - A scalar pval of the null
+\end_layout
+
+\begin_layout Plain Layout
+
+  H         - A hypothesis dummy (0 for fail to reject the null of normality,
+ 1 otherwise)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  The data entered can be mean 0 or not.
+  In either case the sample mean is subtracted and the
+\end_layout
+
+\begin_layout Plain Layout
+
+  data are standardized by the sample standard deviation before computing
+ the statistic .
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+EXAMPLES:
+\end_layout
+
+\begin_layout Plain Layout
+
+  J-B test on normal data
+\end_layout
+
+\begin_layout Plain Layout
+
+      x = randn(100,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+      [statistic, pval] = jarquebeta(x);
+\end_layout
+
+\begin_layout Plain Layout
+
+  J-B test on regression errors where there were 4 regressors (4 mean parameters
+ + 1 variance)
+\end_layout
+
+\begin_layout Plain Layout
+
+      x = randn(100,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+      [statistic, pval] = jarquebeta(x, 5)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Kolmogorov-Smirnov Test: 
+\family typewriter
+kolmogorov
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Distributional Testing! @
+\family typewriter
+kolmogorov
+\end_layout
+
+\end_inset
+
+ Kolmogorov-Smirnov test for correct unconditional distribution.
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Test data for uniformity
+\end_layout
+
+\begin_layout Plain Layout
+
+stat = kolmogorov(x)
+\end_layout
+
+\begin_layout Plain Layout
+
+% Test standard normal data
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat,pval] = kolmogorov(x,[],'normcdf')
+\end_layout
+
+\begin_layout Plain Layout
+
+% Test normal mean 1, standard deviation 2 data
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat,pval] = kolmogorov(x,[],'normcdf',1,2)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = kolmogorov(X)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+X
+\family default
+: Data to be tested.
+ 
+\family typewriter
+X
+\family default
+ should have been transformed such that it is uniform (under the hypothesized
+ distribution).
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Optional Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = kolmogorov(X,ALPHA,DIST,VARARGIN)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+ALPHA
+\family default
+: Size of the test to use.
+ Default is 5%.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+DIST
+\family default
+: A string or function handle containing the name of a CDF to use to transform
+ 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+X
+\end_layout
+
+\end_inset
+
+ to be uniform (under the hypothesized distribution).
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+VARARGIN
+\family default
+: Optional arguments needed by 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+DIST
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[STAT,PVAL,H] = kolmogorov(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+STATISTIC
+\family default
+: Kolmogorov-Smirnov test statistic.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+PVAL
+\family default
+: P-value evaluated using a Monte Carlo distribution.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+H
+\family default
+: Logical indicating whether the test rejects at 
+\family typewriter
+ALPHA
+\family default
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Performs a Kolmogorov-Smirnov test that the data are from a specified distributi
+on
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [STAT,PVAL,H] = kolmogorov(X,ALPHA,DIST,VARARGIN)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  X        -  A set of random variable to be tested for distributional correctne
+ss
+\end_layout
+
+\begin_layout Plain Layout
+
+  ALPHA    -  [OPTIONAL] The size for the test or use for computing H.
+  0.05 if not entered or
+\end_layout
+
+\begin_layout Plain Layout
+
+                empty.
+\end_layout
+
+\begin_layout Plain Layout
+
+  DIST     -  [OPTIONAL] A char string of the name of the CDF, i.e.
+ 'normcdf' for the normal,
+\end_layout
+
+\begin_layout Plain Layout
+
+                'stdtcdf' for standardized Student's T, etc.
+  If not provided or empty, data are
+\end_layout
+
+\begin_layout Plain Layout
+
+                assumed to have a uniform distribution (i.e.
+ that data have already been fed
+\end_layout
+
+\begin_layout Plain Layout
+
+                through a probability integral transform)
+\end_layout
+
+\begin_layout Plain Layout
+
+  VARARGIN -  [OPTIONAL] Arguments passed to the CDF, such as the mean and
+ variance for a normal
+\end_layout
+
+\begin_layout Plain Layout
+
+                or a d.f.
+ for T.
+  The VARARGIN should be such that DIST(X,VARARGIN) is a valid
+\end_layout
+
+\begin_layout Plain Layout
+
+                function with the correct inputs.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  STAT     - The KS statistic
+\end_layout
+
+\begin_layout Plain Layout
+
+  PVAL     - The asymptotic probability of significance
+\end_layout
+
+\begin_layout Plain Layout
+
+  H        - 1 for reject the null that the distribution is correct, using
+ the size provided (or
+\end_layout
+
+\begin_layout Plain Layout
+
+               .05 if not), 0 otherwise
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+EXAMPLES:
+\end_layout
+
+\begin_layout Plain Layout
+
+Test data for uniformity
+\end_layout
+
+\begin_layout Plain Layout
+
+    stat = kolmogorov(x);
+\end_layout
+
+\begin_layout Plain Layout
+
+Test standard normal data
+\end_layout
+
+\begin_layout Plain Layout
+
+    [stat,pval] = kolmogorov(x,[],'normcdf');
+\end_layout
+
+\begin_layout Plain Layout
+
+Test normal mean 1, standard deviation 2 data
+\end_layout
+
+\begin_layout Plain Layout
+
+    [stat,pval] = kolmogorov(x,[],'normcdf',1,2);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also BERKOWITZ
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Berkowitz Test: 
+\family typewriter
+berkowitz
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Distributional Testing! @
+\family typewriter
+berkowitz
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+citet*{Berkowitz::2001}
+\end_layout
+
+\end_inset
+
+ test for correct fit in conditional density models.
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Test uniform data from a TS model
+\end_layout
+
+\begin_layout Plain Layout
+
+stat = berkowitz(x);
+\end_layout
+
+\begin_layout Plain Layout
+
+% Test standard normal data from a TS model
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat,pval] = berkowitz(x,'TS',[],'normcdf');
+\end_layout
+
+\begin_layout Plain Layout
+
+% Test normal mean 1, standard deviation 2 data from a TS model
+\end_layout
+
+\begin_layout Plain Layout
+
+[stat,pval] = berkowitz(x,'TS',[],'normcdf',1,2);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = berkowitz(X)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+X
+\family default
+: Data to be tested.
+ 
+\family typewriter
+X
+\family default
+ should have been transformed such that it is uniform (under the hypothesized
+ distribution).
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Optional Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = berkowitz(X,TYPE,ALPHA,DIST,VARARGIN)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+TYPE
+\family default
+: String either 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'TS'
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'CS'
+\end_layout
+
+\end_inset
+
+.
+ Determines whether the test statistics looks at the AR(1) coefficient (
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'TS'
+\end_layout
+
+\end_inset
+
+ does, 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'CS'
+\end_layout
+
+\end_inset
+
+ does not).
+ Default is 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'TS'
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+ALPHA
+\family default
+: Size of the test to use.
+ Default is 5%.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+DIST
+\family default
+: A string or function handle containing the name of a CDF to use to transform
+ 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+X
+\end_layout
+
+\end_inset
+
+ to be uniform (under the hypothesized distribution).
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+VARARGIN
+\family default
+: Optional arguments needed by 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+DIST
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[STAT,PVAL,H] = berkowitz(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+STATISTIC
+\family default
+: Berkowitz test statistic.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+PVAL
+\family default
+: P-value evaluated using the asymptotic 
+\begin_inset Formula $\chi_{q}^{2}$
+\end_inset
+
+ distribution where 
+\begin_inset Formula $q=2$
+\end_inset
+
+ or 
+\begin_inset Formula $q=3$
+\end_inset
+
+, depending on 
+\family typewriter
+TYPE
+\family default
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+H
+\family default
+: Logical indicating whether the test rejects at 
+\family typewriter
+ALPHA
+\family default
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Performs a Kolmogorov-Smirnov-like test using the Berkowitz transformation
+ to a univariate normal
+\end_layout
+
+\begin_layout Plain Layout
+
+that the data are from a specified distribution.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [STAT,PVAL,H] = berkowitz(X,TYPE,ALPHA,DIST,VARARGIN)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  X        -  A set of random variable to be tested for distributional correctne
+ss
+\end_layout
+
+\begin_layout Plain Layout
+
+  TYPE     -  [OPTIONAL] A char string, either 'CS' if the data are cross-sectio
+nal or 'TS' for
+\end_layout
+
+\begin_layout Plain Layout
+
+                time series.
+  The TS checks for autocorrelation in the prob integral transforms
+\end_layout
+
+\begin_layout Plain Layout
+
+                while the CS does not.
+  'TS' is the default value.
+\end_layout
+
+\begin_layout Plain Layout
+
+  ALPHA    -  [OPTIONAL] The size for the test or use for computing H.
+ 0.05 if not entered or
+\end_layout
+
+\begin_layout Plain Layout
+
+                empty.
+\end_layout
+
+\begin_layout Plain Layout
+
+  DIST     -  [OPTIONAL] A char string of the name of the CDF of X, i.e.
+ 'normcdf' for the normal,
+\end_layout
+
+\begin_layout Plain Layout
+
+                'stdtcdf' for standardized Studnet's T, etc.
+  If not provided or empty, data are
+\end_layout
+
+\begin_layout Plain Layout
+
+                assumed to have a uniform distribution (i.e.
+ that data have already been fed
+\end_layout
+
+\begin_layout Plain Layout
+
+                through a probability integral transform)
+\end_layout
+
+\begin_layout Plain Layout
+
+  VARARGIN -  [OPTIONAL] Arguments passed to the CDF, such as the mean and
+ variance for a normal
+\end_layout
+
+\begin_layout Plain Layout
+
+                or a d.f.
+ for T.
+  The VARARGIN should be such that DIST(X,VARARGIN) is a valid
+\end_layout
+
+\begin_layout Plain Layout
+
+                function with the correct inputs.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  STAT     - The Berkowitz statistic computed as a likelihood ratio of normals
+\end_layout
+
+\begin_layout Plain Layout
+
+  PVAL     - The asymptotic probability of significance
+\end_layout
+
+\begin_layout Plain Layout
+
+  H        - 1 for reject the null that the distribution is correct using
+ the size provided (or
+\end_layout
+
+\begin_layout Plain Layout
+
+               .05 if not), 0 otherwise
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+EXAMPLES:
+\end_layout
+
+\begin_layout Plain Layout
+
+Test uniform data from a TS model
+\end_layout
+
+\begin_layout Plain Layout
+
+  stat = berkowitz(x);
+\end_layout
+
+\begin_layout Plain Layout
+
+Test standard normal data from a TS model
+\end_layout
+
+\begin_layout Plain Layout
+
+  [stat,pval] = berkowitz(x,'TS',[],'normcdf');
+\end_layout
+
+\begin_layout Plain Layout
+
+Test normal mean 1, standard deviation 2 data from a TS model
+\end_layout
+
+\begin_layout Plain Layout
+
+  [stat,pval] = berkowitz(x,'TS',[],'normcdf',1,2);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also KOLMOGOROV
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

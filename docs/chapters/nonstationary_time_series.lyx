@@ -1,0 +1,966 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass book
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Nonstationary Time Series
+\end_layout
+
+\begin_layout Section
+Unit Root Testing
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Unit Roots
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Dickey-Fuller
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Unit Roots!Augmented Dickey-Fuller test
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Dickey-Fuller! Augmented Dickey-Fuller test
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Unit Roots! @
+\family typewriter
+augdf
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Dickey-Fuller! @
+\family typewriter
+augdf
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Subsection
+Augmented Dickey-Fuller testing: 
+\family typewriter
+augdf
+\end_layout
+
+\begin_layout Standard
+Estimates an Augmented Dickey-Fuller regression and returns the appropriate
+ p-value for the assumption made on the model and data generating process.
+ The estimated model is 
+\begin_inset Formula 
+\[
+y_{t}=\alpha+\rho y_{t-1}+\gamma t+\delta_{1}\Delta y_{t-1}+...+\delta_{P}\Delta y_{t-p}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The deterministic terms, 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ may be included or excluded depending on which case it used and the number
+ of lags used in the estimation can be specified.
+ 
+\family typewriter
+augdf
+\family default
+ supports 4 cases: 
+\end_layout
+
+\begin_layout Itemize
+Case 0: DGP and estimated model contain no deterministic trends 
+\end_layout
+
+\begin_layout Itemize
+Case 1: DGP contains no deterministic time trend but estimated model includes
+ a constant and a time-trend 
+\end_layout
+
+\begin_layout Itemize
+Case 2: DGP contains a constant or a time trend.
+ Estimated model includes both a constant and a time trend.
+ 
+\end_layout
+
+\begin_layout Itemize
+Case 3: DGP and estimated model contain a constant 
+\end_layout
+
+\begin_layout Standard
+A basic DF with no deterministic component can be estimated 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[ADFstat, ADFpval] = augdf(y,0,0)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Other versions including lags in the ADF and deterministic trends can be
+ estimated using 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+lags = 10; %set the number of ADF lags
+\end_layout
+
+\begin_layout Plain Layout
+
+p = 1;% Case 1
+\end_layout
+
+\begin_layout Plain Layout
+
+[ADFstat, ADFpval] = augdf(y,p,lags)
+\end_layout
+
+\begin_layout Plain Layout
+
+p = 2;
+\end_layout
+
+\begin_layout Plain Layout
+
+[ADFstat, ADFpval] = augdf(y,p,lags)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+P-values were computed form 2 million simulations using gaussian errors.
+ The function 
+\family typewriter
+augdfcv
+\family default
+ returns the appropriate critical values and p-values for the choice of
+ case and size of the data sample (
+\begin_inset Formula $T$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+x = cumsum(randn(1000,1));  % Define x to be a 1000 by 1 random walk
+\end_layout
+
+\begin_layout Plain Layout
+
+[ADFstat, ADFpval] = augdf(x,0,0) % Results will vary based rand.
+ num.
+ used
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ADFstat =
+\end_layout
+
+\begin_layout Plain Layout
+
+   -0.3941
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ADFpval =
+\end_layout
+
+\begin_layout Plain Layout
+
+    0.5472
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[ADFstat, ADFpval] = augdf(x,1,0) % Assume a constant
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ADFstat =
+\end_layout
+
+\begin_layout Plain Layout
+
+   -2.3527
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ADFpval =
+\end_layout
+
+\begin_layout Plain Layout
+
+    0.1584
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+x = cumsum(1+randn(1000,1));  % Define x to be a 1000 by 1 random walk
+\end_layout
+
+\begin_layout Plain Layout
+
+% Case 3, Results will vary based on the random numbers used
+\end_layout
+
+\begin_layout Plain Layout
+
+[ADFstat, ADFpval] = augdf(x,3,0)
+\end_layout
+
+\begin_layout Plain Layout
+
+ADFstat =
+\end_layout
+
+\begin_layout Plain Layout
+
+    0.6028
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ADFpval =
+\end_layout
+
+\begin_layout Plain Layout
+
+    0.7267
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+x = cumsum(randn(1000,1));  % Define x to be a 1000 by 1 random walk
+\end_layout
+
+\begin_layout Plain Layout
+
+[ADFstat, ADFpval, critval] = augdf(x,1,0) % Get the critical values
+\end_layout
+
+\begin_layout Plain Layout
+
+%  for the 1%, 5%, 10%, 90%, 95% and 99% of the case-specific distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ADFstat =
+\end_layout
+
+\begin_layout Plain Layout
+
+   -3.3738
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ADFpval =
+\end_layout
+
+\begin_layout Plain Layout
+
+   -0.0139
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+critval =
+\end_layout
+
+\begin_layout Plain Layout
+
+   -3.4494
+\end_layout
+
+\begin_layout Plain Layout
+
+   -2.8739
+\end_layout
+
+\begin_layout Plain Layout
+
+   -2.5769
+\end_layout
+
+\begin_layout Plain Layout
+
+   -0.4366
+\end_layout
+
+\begin_layout Plain Layout
+
+   -0.0758
+\end_layout
+
+\begin_layout Plain Layout
+
+    0.6123
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Dickey-Fuller and Augmented Dickey Fuller testing
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+ [ADFSTAT,PVAL,CRITVAL] = augdf(Y,P,LAGS)
+\end_layout
+
+\begin_layout Plain Layout
+
+ [ADFSTAT,PVAL,CRITVAL,RESID] = augdf(Y,P,LAGS)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+ Y         - A T by 1 vector of data
+\end_layout
+
+\begin_layout Plain Layout
+
+ P         - Order of the polynomial of include in the ADF regression:
+\end_layout
+
+\begin_layout Plain Layout
+
+               0 : No deterministic terms
+\end_layout
+
+\begin_layout Plain Layout
+
+               1 : Constant
+\end_layout
+
+\begin_layout Plain Layout
+
+               2 : Time Trend
+\end_layout
+
+\begin_layout Plain Layout
+
+               3 : Constant, DGP assumed to have a time trend
+\end_layout
+
+\begin_layout Plain Layout
+
+ LAGS      - The number of lags to include in the ADF test (0 for DF test)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+ ADFSTAT   - Dickey-Fuller statistic
+\end_layout
+
+\begin_layout Plain Layout
+
+ PVAL      - Probability the series is a unit root
+\end_layout
+
+\begin_layout Plain Layout
+
+ CRITVALS  - A 6 by 1 vector with the [.01 .05 .1 .9 .95 .99] values from the
+ DF distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+ RESID     - Residual (adjusted for lags) from the ADF regression
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also AUGDFAUTOLAG
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Augmented Dickey-Fuller testing with automated lag selection: 
+\family typewriter
+augdfautolag
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Unit Roots
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Dickey-Fuller
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Unit Roots! Automatic lag selections
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Dickey-Fuller! Automatic lag selections
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Unit Roots! @
+\family typewriter
+augdfautolag
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Dickey-Fuller! @
+\family typewriter
+augdfautolag
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Information Criteria!Akaike
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Information Criteria!Schwartz/Bayes
+\end_layout
+
+\end_inset
+
+ Conducts an ADF test using up to a maximum number of lags where the lag
+ length is automatically selected according to the AIC or BIC.
+ All of the actual testing is done by 
+\family typewriter
+augdf
+\family default
+.
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Simulate an MA(3)
+\end_layout
+
+\begin_layout Plain Layout
+
+x = armaxfilter_simulate(1000,0, 0, [], 3, [.8 .3 .9]);
+\end_layout
+
+\begin_layout Plain Layout
+
+x = cumsum(x);  % Integrate x
+\end_layout
+
+\begin_layout Plain Layout
+
+maxlag = 24;
+\end_layout
+
+\begin_layout Plain Layout
+
+% Default is to use AIC
+\end_layout
+
+\begin_layout Plain Layout
+
+[ADFstat, ADFpval, critval,resid, lags] = augdfautolag(x,1,maxlag);
+\end_layout
+
+\begin_layout Plain Layout
+
+lags
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+lags =
+\end_layout
+
+\begin_layout Plain Layout
+
+     15
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% Can also use BIC
+\end_layout
+
+\begin_layout Plain Layout
+
+[ADFstat, ADFpval, critval,resid, lags]  = augdfautolag(x,1,maxlag,'BIC');
+\end_layout
+
+\begin_layout Plain Layout
+
+lags
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+lags =
+\end_layout
+
+\begin_layout Plain Layout
+
+     9
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Dickey-Fuller and Augmented Dickey Fuller with automatic lag selection
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+ [ADFSTAT,PVAL,CRITVAL] = augdfautolag(Y,P,LAGS,IC)
+\end_layout
+
+\begin_layout Plain Layout
+
+ [ADFSTAT,PVAL,CRITVAL,RESID,LAGS] = augdfautolag(Y,P,LAGS,IC)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+ Y         - A T by 1 vector of data
+\end_layout
+
+\begin_layout Plain Layout
+
+ P         - Order of the polynomial of include in the ADF regression:
+\end_layout
+
+\begin_layout Plain Layout
+
+               0 : No deterministic terms
+\end_layout
+
+\begin_layout Plain Layout
+
+               1 : Constant
+\end_layout
+
+\begin_layout Plain Layout
+
+               2 : Time Trend
+\end_layout
+
+\begin_layout Plain Layout
+
+               3 : Constant, DGP assumed to have a time trend
+\end_layout
+
+\begin_layout Plain Layout
+
+ MAXLAGS   - The maximum number of lags to include in the ADF test
+\end_layout
+
+\begin_layout Plain Layout
+
+ IC        - [OPTIONAL] String, either 'AIC' (default) or 'BIC' to choose
+ the criteria to select
+\end_layout
+
+\begin_layout Plain Layout
+
+               the model
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+ ADFSTAT   - Dickey-Fuller statistic
+\end_layout
+
+\begin_layout Plain Layout
+
+ PVAL      - Probability the series is a unit root
+\end_layout
+
+\begin_layout Plain Layout
+
+ CRITVALS  - A 6 by 1 vector with the [.01 .05 .1 .9 .95 .99] values from the
+ DF distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+ LAGS      - The selected number of lags
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also AUGDF
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

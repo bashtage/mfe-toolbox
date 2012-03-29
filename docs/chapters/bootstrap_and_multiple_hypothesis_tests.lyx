@@ -1,0 +1,2201 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass book
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Bootstrap and Multiple Hypothesis Tests
+\end_layout
+
+\begin_layout Section
+Bootstraps
+\end_layout
+
+\begin_layout Subsection
+Block Bootstrap: 
+\family typewriter
+block_bootstrap
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Bootstrap! @
+\family typewriter
+block_bootstrap
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Bootstrap!Block
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% 1000 block bootstraps with a block size of 12
+\end_layout
+
+\begin_layout Plain Layout
+
+bsData = block_bootstrap(data, 1000, 12)
+\end_layout
+
+\begin_layout Plain Layout
+
+% Vector block bootstraps with a block size of 12
+\end_layout
+
+\begin_layout Plain Layout
+
+[t,k] = size(data,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+bsIndex = block_bootstrap(1:t, 1000, 12)
+\end_layout
+
+\begin_layout Plain Layout
+
+for i=1:1000
+\end_layout
+
+\begin_layout Plain Layout
+
+    bsData = data(bsIndex(:,i),:);
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Statistics here
+\end_layout
+
+\begin_layout Plain Layout
+
+end
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[BSDATA, INDICES]=block_bootstrap(DATA,B,W)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+DATA
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of data.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+B
+\end_layout
+
+\end_inset
+
+: Positive integer containing the number of bootstrap replications.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+W
+\end_layout
+
+\end_inset
+
+: Positive integer containing the window size 
+\end_layout
+
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[BSDATA, INDICES]=block_bootstrap(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+BSDATA
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+B
+\end_layout
+
+\end_inset
+
+ matrix of bootstrapped data.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+INDICES
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+B
+\end_layout
+
+\end_inset
+
+ vector of bootstrap indices such that 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+BSDATA = DATA(INDICES)
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Implements a circular block bootstrap for bootstrapping stationary, dependant
+ series
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [BSDATA, INDICES]=block_bootstrap(DATA,B,W)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  DATA   - T by 1 vector of data to be bootstrapped
+\end_layout
+
+\begin_layout Plain Layout
+
+  B      - Number of bootstraps
+\end_layout
+
+\begin_layout Plain Layout
+
+  W      - Block length
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  BSDATA  - T by B matrix of bootstrapped data
+\end_layout
+
+\begin_layout Plain Layout
+
+  INDICES - T by B matrix of locations of the original BSDATA=DATA(indexes);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  To generate bootstrap sequences for other uses, such as bootstrapping
+ vector processes,
+\end_layout
+
+\begin_layout Plain Layout
+
+  simpleset DATA to (1:N)'
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also stationary_bootstrap
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Stationary Bootstrap: 
+\family typewriter
+stationary_bootstrap
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Bootstrap! @
+\family typewriter
+stationary_bootstrap
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Bootstrap!Stationary
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% 1000 block bootstraps with an average block size of 12
+\end_layout
+
+\begin_layout Plain Layout
+
+bsData = stationary_bootstrap(data, 1000, 12)
+\end_layout
+
+\begin_layout Plain Layout
+
+% Vector block bootstraps with a block size of 12
+\end_layout
+
+\begin_layout Plain Layout
+
+[t,k] = size(data,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+bsIndex = stationary_bootstrap(1:t, 1000, 12)
+\end_layout
+
+\begin_layout Plain Layout
+
+for i=1:1000
+\end_layout
+
+\begin_layout Plain Layout
+
+    bsData = data(bsIndex(:,i),:);
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Statistics here
+\end_layout
+
+\begin_layout Plain Layout
+
+end
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[BSDATA, INDICES]=stationary_bootstrap(DATA,B,W)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+DATA
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of data.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+B
+\end_layout
+
+\end_inset
+
+: Positive integer containing the number of bootstrap replications.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+W
+\end_layout
+
+\end_inset
+
+: Positive integer containing the average window size.
+ The probability of ending the block is 
+\begin_inset Formula $p=w^{-1}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[BSDATA, INDICES]=stationary_bootstrap(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+BSDATA
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+T
+\end_layout
+
+\end_inset
+
+ by 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+B
+\end_layout
+
+\end_inset
+
+ matrix of bootstrapped data.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+INDICES
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+T
+\end_layout
+
+\end_inset
+
+ by B vector of bootstrap indices such that 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+BSDATA = DATA(INDICES)
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Implements the stationay bootstrap for bootstrapping stationary, dependant
+ series
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [BSDATA, INDICES] = stationary_bootstrap(DATA,B,W)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  DATA   - T by 1 vector of data to be bootstrapped
+\end_layout
+
+\begin_layout Plain Layout
+
+  B      - Number of bootstraps
+\end_layout
+
+\begin_layout Plain Layout
+
+  W      - Average block length.
+ P, the probability of starting a new block is defined P=1/W
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  BSDATA  - T by B matrix of bootstrapped data
+\end_layout
+
+\begin_layout Plain Layout
+
+  INDICES - T by B matrix of locations of the original BSDATA=DATA(indexes);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  To generate bootstrap sequences for other uses, such as bootstrapping
+ vector processes, simply
+\end_layout
+
+\begin_layout Plain Layout
+
+  set DATA to (1:N)'
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also block_bootstrap
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Multiple Hypothesis Tests
+\end_layout
+
+\begin_layout Subsection
+Reality Check and Test for Superior Predictive Accuracy 
+\family typewriter
+bsds
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Multiple Hypothesis Tests! @
+\family typewriter
+bsds
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Multiple Hypothesis Tests! @Reality Check
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Multiple Hypothesis Tests! @SPA
+\end_layout
+
+\end_inset
+
+ Implementation of the 
+\begin_inset CommandInset citation
+LatexCommand citeauthor
+key "White::2000"
+
+\end_inset
+
+'s 
+\begin_inset CommandInset citation
+LatexCommand citeyearpar
+key "White::2000"
+
+\end_inset
+
+ Reality Check and 
+\begin_inset CommandInset citation
+LatexCommand citeauthor
+key "Hansen::2005"
+
+\end_inset
+
+'s 
+\begin_inset CommandInset citation
+LatexCommand citeyearpar
+key "Hansen::2005"
+
+\end_inset
+
+ the Test for Superior Predictive Accuracy (SPA).
+ BSDS refers to 
+\begin_inset Quotes eld
+\end_inset
+
+bootstrap data snooper
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Standard Reality Check with 1000 bootstrap replications and a window size
+ of 12
+\end_layout
+
+\begin_layout Plain Layout
+
+bench = randn(1000,1).^2;
+\end_layout
+
+\begin_layout Plain Layout
+
+models = randn(1000,100).^2;
+\end_layout
+
+\begin_layout Plain Layout
+
+[c,realityCheckPval] = bsds(bench, models, 1000, 12)
+\end_layout
+
+\begin_layout Plain Layout
+
+% Standard Reality Check with 1000 bootstrap replications, a window size
+ of 12
+\end_layout
+
+\begin_layout Plain Layout
+
+% and a circular block bootstrap
+\end_layout
+
+\begin_layout Plain Layout
+
+[c,realityCheckPval] = bsds(bench, models, 1000, 12, 'BLOCK')
+\end_layout
+
+\begin_layout Plain Layout
+
+%   Hansen's P-values
+\end_layout
+
+\begin_layout Plain Layout
+
+SPAPval = bsds(bench, models, 1000, 12)
+\end_layout
+
+\begin_layout Plain Layout
+
+% Both Pvals on "goods"
+\end_layout
+
+\begin_layout Plain Layout
+
+bench = .01 + randn(1000,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+models = randn(1000,100);
+\end_layout
+
+\begin_layout Plain Layout
+
+[SPAPval,realityCheckPval] = bsds(-bench, -models, 1000, 12)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = bsds_studentized(BENCH,MODELS,B,W)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+BENCH
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 1 vector of benchmark losses.
+ If 
+\begin_inset Quotes eld
+\end_inset
+
+goods
+\begin_inset Quotes erd
+\end_inset
+
+ (e..g returns) , multiply by -1.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+MODELS
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 
+\begin_inset Formula $M$
+\end_inset
+
+ matrix of model losses.
+ If 
+\begin_inset Quotes eld
+\end_inset
+
+goods
+\begin_inset Quotes erd
+\end_inset
+
+ (e..g returns) , multiply by -1.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+B
+\end_layout
+
+\end_inset
+
+: Scalar integer number of bootstrap replications to perform.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+W
+\end_layout
+
+\end_inset
+
+: Scalar integer containing the average window length (stationary bootstrap)
+ or window length (block bootstrap).
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Optional Inputs
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = bsds_studentized(BENCH,MODELS,B,W,TYPE,BOOT)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+TYPE
+\end_layout
+
+\end_inset
+
+: String value, either 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STUDENTIZED'
+\end_layout
+
+\end_inset
+
+ (default) or 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STANDATRD'
+\end_layout
+
+\end_inset
+
+.
+ Studentized conducts the test using studentized data and should be more
+ powerful.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+BOOT
+\end_layout
+
+\end_inset
+
+: String value, either 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STATIONARY'
+\end_layout
+
+\end_inset
+
+ (default) or 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'BLOCK'
+\end_layout
+
+\end_inset
+
+.
+ Determines the type of bootstrap used.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[C,U,L] = bsds_studentized(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+C
+\end_layout
+
+\end_inset
+
+: Hansen's consistent p-val, which adjusts teh Reality Check p-val in the
+ case of high variance but low mean models.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+U
+\end_layout
+
+\end_inset
+
+: White's Reality Check p-val.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+L
+\end_layout
+
+\end_inset
+
+: Hansen's lower p-val.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Calculate Whites and Hansens p-vals for out-performance using unmodified
+ data or studentized
+\end_layout
+
+\begin_layout Plain Layout
+
+residuals,  the latter often providing better power, particularly when the
+ losses functions are
+\end_layout
+
+\begin_layout Plain Layout
+
+heteroskedastic
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [C] = bsds_studentized(BENCH,MODELS,B,W)
+\end_layout
+
+\begin_layout Plain Layout
+
+  [C,U,L] = bsds_studentized(BENCH,MODELS,B,W,TYPE,BOOT)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  BENCH  - Losses from the benchmark model
+\end_layout
+
+\begin_layout Plain Layout
+
+  MODELS - Losses from each of the models used for comparrison
+\end_layout
+
+\begin_layout Plain Layout
+
+  B      - Number of Bootstrap replications
+\end_layout
+
+\begin_layout Plain Layout
+
+  W      - Desired block length
+\end_layout
+
+\begin_layout Plain Layout
+
+  TYPE   - String, either 'STANDARD' or 'STUDENTIZED'.
+  'STUDENTIZED' is the default, and
+\end_layout
+
+\begin_layout Plain Layout
+
+             generally leads to better power.
+\end_layout
+
+\begin_layout Plain Layout
+
+  BOOT   - [OPTIONAL] 'STATIONARY' or 'BLOCK'.
+  Stationary is used as the default.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  C      - Consistent P-val(Hansen)
+\end_layout
+
+\begin_layout Plain Layout
+
+  U      - Upper P-val(White) (Original RC P-vals)
+\end_layout
+
+\begin_layout Plain Layout
+
+  L      - Lower P-val(Hansen)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  This version of the BSDS operates on quantities that should be 'bads',
+ such as losses.
+  The null
+\end_layout
+
+\begin_layout Plain Layout
+
+  hypothesis is that the average performance of  the benchmark is as small
+ as the minimum average
+\end_layout
+
+\begin_layout Plain Layout
+
+  performance across the models.
+  The alternative is that the minimum average loss across the
+\end_layout
+
+\begin_layout Plain Layout
+
+  models is smaller than the the average performance of the benchmark.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  If the quantities of interest are 'goods', such as returns, simple call
+ bsds_studentized with
+\end_layout
+
+\begin_layout Plain Layout
+
+  -1*BENCH and -1*MODELS
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+EXAMPLES:
+\end_layout
+
+\begin_layout Plain Layout
+
+  Standard Reality Check with 1000 bootstrap replications and a window size
+ of 12
+\end_layout
+
+\begin_layout Plain Layout
+
+      bench = randn(1000,1).^2;
+\end_layout
+
+\begin_layout Plain Layout
+
+      models = randn(1000,100).^2;
+\end_layout
+
+\begin_layout Plain Layout
+
+      [c,realityCheckPval] = bsds(bench, models, 1000, 12)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Standard Reality Check with 1000 bootstrap replications, a window size
+ of 12 and a circular
+\end_layout
+
+\begin_layout Plain Layout
+
+  block bootstrap
+\end_layout
+
+\begin_layout Plain Layout
+
+      [c,realityCheckPval] = bsds(bench, models, 1000, 12, 'BLOCK')
+\end_layout
+
+\begin_layout Plain Layout
+
+  Hansen's P-values
+\end_layout
+
+\begin_layout Plain Layout
+
+      SPAPval = bsds(bench, models, 1000, 12)
+\end_layout
+
+\begin_layout Plain Layout
+
+  Both Pvals on "goods"
+\end_layout
+
+\begin_layout Plain Layout
+
+      bench = .01 + randn(1000,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+      models = randn(1000,100);
+\end_layout
+
+\begin_layout Plain Layout
+
+      [SPAPval,realityCheckPval] = bsds(-bench, -models, 1000, 12)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also MCS
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Model Confidence Set 
+\family typewriter
+mcs
+\end_layout
+
+\begin_layout Standard
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Multiple Hypothesis Tests! @
+\family typewriter
+mcs
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Multiple Hypothesis Tests! @Model Confidence Set
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Implementation of 
+\begin_inset CommandInset citation
+LatexCommand citeauthor*
+key "HansenLundeNason::2005"
+
+\end_inset
+
+'s 
+\begin_inset CommandInset citation
+LatexCommand citeyearpar
+key "HansenLundeNason::2005"
+
+\end_inset
+
+ Model Confidence Set (MCS).
+\end_layout
+
+\begin_layout Subsubsection
+Examples
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% MCS with 5% size, 1000 bootstrap replications and an average block length
+ of 12
+\end_layout
+
+\begin_layout Plain Layout
+
+losses = bsxfun(@plus,chi2rnd(5,[1000 10]),linspace(.1,1,10));
+\end_layout
+
+\begin_layout Plain Layout
+
+[includedR, pvalsR] = mcs(losses, .05, 1000, 12)
+\end_layout
+
+\begin_layout Plain Layout
+
+% MCS on "goods"
+\end_layout
+
+\begin_layout Plain Layout
+
+gains = bsxfun(@plus,chi2rnd(5,[1000 10]),linspace(.1,1,10));
+\end_layout
+
+\begin_layout Plain Layout
+
+[includedR, pvalsR] = mcs(-gains, .05, 1000, 12)
+\end_layout
+
+\begin_layout Plain Layout
+
+% MCS with circular block bootstrap
+\end_layout
+
+\begin_layout Plain Layout
+
+[includedR, pvalsR] = mcs(losses, .05, 1000, 12, 'BLOCK')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Required Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = mcs(LOSSES,ALPHA,B,W)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+LOSSES
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula $T$
+\end_inset
+
+ by 
+\begin_inset Formula $M$
+\end_inset
+
+ matrix of model losses.
+ If 
+\begin_inset Quotes eld
+\end_inset
+
+goods
+\begin_inset Quotes erd
+\end_inset
+
+ (e..g returns) , multiply by -1.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+ALPHA
+\end_layout
+
+\end_inset
+
+: Size to use when constructing the MCS 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+B
+\end_layout
+
+\end_inset
+
+: Scalar integer number of bootstrap replications to perform.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+W
+\end_layout
+
+\end_inset
+
+:Scalar integer containing the average window length (stationary bootstrap)
+ or window length (block bootstrap).
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Optional Inputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[outputs] = mcs(LOSSES,ALPHA,B,W,BOOT)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+BOOT
+\end_layout
+
+\end_inset
+
+: String value, either 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'STATIONARY'
+\end_layout
+
+\end_inset
+
+ (default) or 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+'BLOCK'
+\end_layout
+
+\end_inset
+
+.
+ Determines the type of bootstrap used.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Outputs
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[INCLUDEDR,PVALSR,EXCLUDEDR,INCLUDEDSQ,PVALSSQ,EXCLUDEDSQ] = mcs(inputs)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+INCLUDEDR
+\end_layout
+
+\end_inset
+
+: Indices of included models using 
+\begin_inset Formula $R$
+\end_inset
+
+ type comparison.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+PVALSR
+\end_layout
+
+\end_inset
+
+: P-values of models using 
+\begin_inset Formula $R$
+\end_inset
+
+ type comparison.
+ The p-values correspond to the the indices in the order 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+[EXCLUDEDR;INCLUDEDR]
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+EXCLUDEDR
+\end_layout
+
+\end_inset
+
+: Indices of excluded models using 
+\begin_inset Formula $R$
+\end_inset
+
+ type comparison.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+INCLUDEDSQ
+\end_layout
+
+\end_inset
+
+: Indices of included models using 
+\begin_inset Formula $SQ$
+\end_inset
+
+ type comparison.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+PVALSSQ
+\end_layout
+
+\end_inset
+
+: P-values of models using 
+\begin_inset Formula $R$
+\end_inset
+
+ type comparison.
+ The p-values correspond to the the indices in the order 
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+[EXCLUDEDSQ;INCLUDEDSQ]
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+inline true
+status open
+
+\begin_layout Plain Layout
+
+EXCLUDEDSQ
+\end_layout
+
+\end_inset
+
+: Indices of excluded models using 
+\begin_inset Formula $SQ$
+\end_inset
+
+ type comparison.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Compute the model confidence set of Hansen, Lunde and Nason
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+USAGE:
+\end_layout
+
+\begin_layout Plain Layout
+
+  [INCLUDEDR] = mcs(LOSSES,ALPHA,B,W)
+\end_layout
+
+\begin_layout Plain Layout
+
+  [INCLUDEDR,PVALSR,EXCLUDEDR,INCLUDEDSQ,PVALSSQ,EXCLUDEDSQ] = mcs(LOSSES,ALPHA,
+B,W,BOOT)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+INPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  LOSSES     - T by K matrix of losses
+\end_layout
+
+\begin_layout Plain Layout
+
+  ALPHA      - The final pval to use in the MCS
+\end_layout
+
+\begin_layout Plain Layout
+
+  B          - Number of bootstrap replications
+\end_layout
+
+\begin_layout Plain Layout
+
+  W          - Desired block length
+\end_layout
+
+\begin_layout Plain Layout
+
+  BOOT       - [OPTIONAL] 'STATIONARY' or 'BLOCK'.
+  Stationary will be used as default.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+OUTPUTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  INCLUDEDR  - Included models using R method
+\end_layout
+
+\begin_layout Plain Layout
+
+  PVALSR     - Pvals using R method
+\end_layout
+
+\begin_layout Plain Layout
+
+  EXCLUDEDR  - Excluded models using R method
+\end_layout
+
+\begin_layout Plain Layout
+
+  INCLUDEDSQ - Included models using SQ method
+\end_layout
+
+\begin_layout Plain Layout
+
+  PVALSSQ    - Pvals using SQ method
+\end_layout
+
+\begin_layout Plain Layout
+
+  EXCLUDEDSQ - Excluded models using SQ method
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+COMMENTS:
+\end_layout
+
+\begin_layout Plain Layout
+
+  This version of the MCS operates on quatities that should be 'bad', such
+ as losses.
+  If the
+\end_layout
+
+\begin_layout Plain Layout
+
+  quantities of interest are 'goods', such as returns, simply call MCS with
+ -1*LOSSES
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+EXAMPLES
+\end_layout
+
+\begin_layout Plain Layout
+
+  MCS with 5% size, 1000 bootstrap replications and an average block length
+ of 12
+\end_layout
+
+\begin_layout Plain Layout
+
+      losses = bsxfun(@plus,chi2rnd(5,[1000 10]),linspace(.1,1,10));
+\end_layout
+
+\begin_layout Plain Layout
+
+      [includedR, pvalsR] = mcs(losses, .05, 1000, 12)
+\end_layout
+
+\begin_layout Plain Layout
+
+  MCS on "goods"
+\end_layout
+
+\begin_layout Plain Layout
+
+      gains = bsxfun(@plus,chi2rnd(5,[1000 10]),linspace(.1,1,10));
+\end_layout
+
+\begin_layout Plain Layout
+
+      [includedR, pvalsR] = mcs(-gains, .05, 1000, 12)
+\end_layout
+
+\begin_layout Plain Layout
+
+  MCS with circular block bootstrap
+\end_layout
+
+\begin_layout Plain Layout
+
+      [includedR, pvalsR] = mcs(losses, .05, 1000, 12, 'BLOCK')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+See also BSDS
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
