@@ -1,5 +1,5 @@
 function [data, Ht] = bekk_simulate(T,k,parameters,p,o,q,type)
-% Simulation of symmetric and asymmetric BEKK(p,o,q) multivarate volatility models
+% Simulation of symmetric and asymmetric BEKK(p,o,q) multivariate volatility models
 %
 % USAGE:
 %  [DATA,HT] = bekk_simulate(T,K,PARAMETERS,P,O,Q,TYPE)

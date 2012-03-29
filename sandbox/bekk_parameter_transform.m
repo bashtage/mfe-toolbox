@@ -1,4 +1,29 @@
 function [C,A,G,B] = bekk_parameter_transform(parameters,p,o,q,k,type)
+% Parameter transformation for BEKK(p,o,q) multivariate volatility model simulation and estimation
+%
+% USAGE:
+%  [C,A,G,B] = bekk_parameter_transform(PARAMETERS,P,O,Q,K,TYPE)
+%
+% INPUTS:
+%   PARAMETERS - Vector of parameters governing the dynamics.  See BEKK or BEKK_SIMULATE
+%   P          - Positive, scalar integer representing the number of symmetric innovations
+%   O          - Non-negative, scalar integer representing the number of asymmetric innovations
+%   Q          - Non-negative, scalar integer representing the number of conditional covariance lags
+%   K          - Number of assets
+%   TYPE       - Integer indicating type
+%                  1: Scalar
+%                  2: Diagonal
+%                  3: Full
+%
+% OUTPUTS:
+%   C - K by K covariance model intercept
+%   A - K by K by P matrix of symmetric innovation parameters
+%   G - K by K by O matrix of asymmetric innovation parameters
+%   B - K by K by Q matrix of smoothing parameters
+%
+% COMMENTS:
+%
+% See also BEKK, BEKK_SIMULATE, BEKK_LIKELIHOOD
 
 if type==1
     numParams = 1;

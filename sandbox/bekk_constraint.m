@@ -1,4 +1,27 @@
 function [c,ceq] = bekk_constraint(parameters,data,dataAsym,p,o,q,backCast,backCastAsym,type) %#ok<*INUSL>
+% Non-linear constraint for estimation of BEKK(p,o,q) multivariate volatility models
+%
+% USAGE:
+%  [C,CEQ] = bekk_constraint(PARAMETERS,DATA,DATAASYM,P,O,Q,BACKCAST,BACKCASTASYM,TYPE) 
+%
+% INPUTS:
+%   See barch_likelihood
+%
+% OUTPUTS:
+%   C   - Vector of inequality constraints
+%   CEQ - Empty
+%
+% COMMENTS:
+%
+%  EXAMPLES:
+%
+% See also BEKK, BEKK_LIKELIHOOD
+
+% Copyright: Kevin Sheppard
+% kevin.sheppard@economics.ox.ac.uk
+% Revision: 1    Date: 3/27/2012
+
+
 
 ceq = [];
 [C,A,G,B] = bekk_parameter_transform(parameters,p,o,q,k,type);
