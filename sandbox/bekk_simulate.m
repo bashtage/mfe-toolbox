@@ -8,7 +8,7 @@ function [data, Ht] = bekk_simulate(T,k,parameters,p,o,q,type)
 %   T          - Either a scalar containing the length of the series to simulate, or a T by K matrix 
 %                  of simulated random variables.  The default is to use standard normals.  Providing 
 %                  a T by K matrix allows other distributions to be used.
-%   PARAMETERS - Vector of parameters governing the dynamics.  The form of the parameters depends on the TYPE.  
+%   PARAMETERS - Vector of parameters.  The form of the parameters depends on the TYPE.  
 %                  'Scalar':
 %                  [CC' a(1) ... a(p) g(1) ... g(o) b(1) ... b(q)]'  (all scalars)
 %                  'Diagonal' 

@@ -5,7 +5,7 @@ function [c,ceq] = bekk_constraint(parameters,data,dataAsym,p,o,q,backCast,backC
 %  [C,CEQ] = bekk_constraint(PARAMETERS,DATA,DATAASYM,P,O,Q,BACKCAST,BACKCASTASYM,TYPE) 
 %
 % INPUTS:
-%   See barch_likelihood
+%   See bekk_likelihood
 %
 % OUTPUTS:
 %   C   - Vector of inequality constraints
@@ -24,8 +24,8 @@ function [c,ceq] = bekk_constraint(parameters,data,dataAsym,p,o,q,backCast,backC
 
 
 ceq = [];
-[C,A,G,B] = bekk_parameter_transform(parameters,p,o,q,k,type);
-k = size(C,1);
+k = size(data,2);
+[~,A,G,B] = bekk_parameter_transform(parameters,p,o,q,k,type);
 
 switch type
     case 1

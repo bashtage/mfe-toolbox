@@ -18,13 +18,32 @@ function [parameters, ll, Ht, VCV, scores] = bekk(data,dataAsym,p,o,q,type,start
 %   OPTIONS      - [OPTIONAL] Options to use in the model optimization (fmincon)
 %
 % OUTPUTS:
-%   PARAMETERS   -
+%   PARAMETERS   - Vector of parameters.  The form of the parameters depends on the TYPE.  
+%                    'Scalar':
+%                    [CC' a(1) ... a(p) g(1) ... g(o) b(1) ... b(q)]'  (all scalars)
+%                    'Diagonal' 
+%                    [CC' diag(A(:,:,1))' ... diag(A(:,:,p))' diag(G(:,:,1))' ... diag(G(:,:,o))' diag(B(:,:,1))' ... diag(B(:,:,p))']'
+%                    'Full' 
+%                    [CC' f(A(:,:,1)) ... f(A(:,:,p)) f(G(:,:,1)) ... f(G(:,:,o)) f(B(:,:,1)) ... f(B(:,:,q))]'
+%                    where CC = chol2vec(C')' and f(M) = M(:)'
 %   LL           - The log likelihood at the optimum
 %   HT           - A [K K T] dimension matrix of conditional covariances
 %   VCV          - A numParams^2 square matrix of robust parameter covariances (A^(-1)*B*A^(-1)/T)
 %   SCORES       - A T by numParams matrix of individual scores
 %
 % COMMENTS:
+%   The dynamics of a BEKK are given by 
+%   
+%   H(:,:,t) = C*C' +
+%       A(:,:,1)'*OP(:,:,t-1)*A(:,:,1) + ... + A(:,:,p)'*OP(:,:,t-1)*A(:,:,p) +
+%       G(:,:,1)'*OPA(:,:,t-1)*G(:,:,1) + ... + G(:,:,o)'*OPA(:,:,t-1)*G(:,:,o) +
+%       B(:,:,1)'*G(:,:,t-1)*B(:,:,1) + ... + B(:,:,q)'*OP(:,:,t-1)*B(:,:,q)
+%
+%   where in the scalar model A(:,:,i) = a(i)*eye(K) (similarly for G and B).
+%
+%   Use bekk_parameter_transform to produce formatted parameter matrices.
+%
+%  See also BEKK_SIMULATE, BEKK_PARAMETER_TRANSFORM, RARCH
 
 % Copyright: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk
@@ -137,27 +156,37 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Starting Values
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[startingVals,~,~,~,~,d] = scalar_vt_vech(data,dataAsym,p,o,q,[],options);
-C = d.intercept;
-C = chol2vec(chol(C)');
-switch type
-    case 1
-        shape = 1;
-    case 2
-        shape = ones(k,1);
-    case 3
-        shape = eye(k);
+if isempty(startingVals)
+    startingOptions = optimset('fminunc');
+    startingOptions.LargeScale = 'off';
+    startingOptions.Display = 'none';
+    [startingVals,~,~,intercept] = scalar_vt_vech(data,dataAsym,p,o,q,[],startingOptions);
+    C = intercept;
+    C = chol2vec(chol(C)');
+    switch type
+        case 1
+            shape = 1;
+        case 2
+            shape = ones(k,1);
+        case 3
+            shape = eye(k);
+    end
+    sv = [];
+    for i=1:p+o+q
+        temp = sqrt(startingVals(i));
+        temp = temp * shape;
+        sv = [sv;temp(:)]; %#ok<AGROW>
+    end
+    startingVals = [C;sv];
 end
-sv = [];
-for i=1:p+o+q
-    temp = sqrt(startingVals(i));
-    temp = temp * shape;
-    sv = [sv;temp(:)]; %#ok<AGROW>
-end
-startingVals = [C;sv];
 UB = .99998 * ones(size(startingVals));
 UB(1:k2) = inf;
 LB = -UB;
+m = ceil(sqrt(T));
+w = .06 * .94.^(0:(m-1));
+w = reshape(w/sum(w),[1 1 m]);
+backCast = sum(bsxfun(@times,w,data(:,:,1:m)),3);
+backCastAsym = sum(bsxfun(@times,w,dataAsym(:,:,1:m)),3);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Estimation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -49,7 +49,7 @@ for i=1:T
             Ht(:,:,i) = Ht(:,:,i) + A(:,:,j)'*data(:,:,i-j)*A(:,:,j);
         end
     end
-    for j=1:p
+    for j=1:o
         if (i-j)<=0
             Ht(:,:,i) = Ht(:,:,i) + G(:,:,j)'*backCastAsym*G(:,:,j);
         else
