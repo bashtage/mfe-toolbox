@@ -1,4 +1,54 @@
 function [data, Ht] = bekk_simulate(T,k,parameters,p,o,q,type)
+% Simulation of symmetric and asymmetric BEKK(p,o,q) multivarate volatility models
+%
+% USAGE:
+%  [DATA,HT] = bekk_simulate(T,K,PARAMETERS,P,O,Q,TYPE)
+%
+% INPUTS:
+%   T          - Either a scalar containing the length of the series to simulate, or a T by K matrix 
+%                  of simulated random variables.  The default is to use standard normals.  Providing 
+%                  a T by K matrix allows other distributions to be used.
+%   PARAMETERS - Vector of parameters governing the dynamics.  The form of the parameters depends on the TYPE.  
+%                  'Scalar':
+%                  [CC' a(1) ... a(p) g(1) ... g(o) b(1) ... b(q)]'  (all scalars)
+%                  'Diagonal' 
+%                  [CC' diag(A(:,:,1))' ... diag(A(:,:,p))' diag(G(:,:,1))' ... diag(G(:,:,o))' diag(B(:,:,1))' ... diag(B(:,:,p))']'
+%                  'Full' 
+%                  [CC' f(A(:,:,1)) ... f(A(:,:,p)) f(G(:,:,1)) ... f(G(:,:,o)) f(B(:,:,1)) ... f(B(:,:,q))]'
+%                  where CC = chol2vec(C')' and f(M) = M(:)'
+%   P          - Positive, scalar integer representing the number of symmetric innovations
+%   O          - Non-negative, scalar integer representing the number of asymmetric innovations
+%   Q          - Non-negative, scalar integer representing the number of conditional covariance lags
+%   TYPE       - String, one of :
+%                  'Scalar' (Default) 
+%                  'Diagonal'
+%                  'Full'
+%
+% OUTPUTS:
+%   DATA   - A T by K matrix of simulated data
+%   HT     - A [K K T] dimension matrix of conditional covariances
+%
+% COMMENTS:
+%   The dynamics of a BEKK are given by 
+%   
+%   H(:,:,t) = C*C' +
+%       A(:,:,1)'*OP(:,:,t-1)*A(:,:,1) + ... + A(:,:,p)'*OP(:,:,t-1)*A(:,:,p) +
+%       G(:,:,1)'*OPA(:,:,t-1)*G(:,:,1) + ... + G(:,:,o)'*OPA(:,:,t-1)*G(:,:,o) +
+%       B(:,:,1)'*G(:,:,t-1)*B(:,:,1) + ... + B(:,:,q)'*OP(:,:,t-1)*B(:,:,q)
+%
+%   where in the scalar model A(:,:,i) = a(i)*eye(K) (similarly for G and B).
+%
+%  EXAMPLES:
+%    % Scalar with A.^2=.05, G.^2=.1 and B.^2=.88
+%    CCp = [1 .5;.5 4];
+%    parameters = [chol2vec(chol(CCp)');sqrt([.05,.10,.88])']
+%    [data,Ht] = bekk_simulate(1000,2,parameters,1,1,1,'Scalar')
+%    % Diagonal 
+%    parameters = [chol2vec(chol(CCp)');sqrt([.05 .07 .93 .88])']
+%    [data,Ht] = bekk_simulate(1000,2,parameters,1,0,1,'Diagonal')
+%
+% See also BEKK
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input checking
