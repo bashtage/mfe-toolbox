@@ -1,5 +1,4 @@
-function [startingvals,lls,output_parameters]=scalar_vt_vech_starting_values(startingvals,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym)
-
+function [startingvals,lls,output_parameters]=scalar_vt_vech_starting_values(startingvals,data,dataAsym,p,o,q,C,Casym,kappa,useComposite,backCast,backCastAsym)
 % Perform a grid search to find decent starting values for SCALAR_VT_VECH(P,Q) esimtation.  If
 % starting values is user supplied (and thus nonempty), does nothing.
 %
@@ -64,12 +63,12 @@ if isempty(startingvals)
     %Evaluate the likelihood at each parameter
     for i=1:size(params,1)
         parameters=params(i,:);
-        lls(i)=scalar_vt_vech_likelihood(parameters,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,false);
+        lls(i)=scalar_vt_vech_likelihood(parameters,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,useComposite,false);
     end
     [lls,pos]=sort(lls);
     output_parameters=params(pos,:);
     startingvals=output_parameters(1,:);
 else
-    lls=scalar_vt_vech_likelihood(startingvals,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,false);
+    lls=scalar_vt_vech_likelihood(startingvals,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,useComposite,false);
     output_parameters=startingvals;
 end

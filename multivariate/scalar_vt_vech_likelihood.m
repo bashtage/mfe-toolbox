@@ -1,11 +1,11 @@
-function [ll,lls,Ht]=scalar_vt_vech_likelihood(parameters,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,isJoint,estimFlag)
+function [ll,lls,Ht]=scalar_vt_vech_likelihood(parameters,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,isJoint,useComposite,estimFlag)
 % Log likelihood for SCALAR_VT_VECH(P,O,Q) estimation
 %
 % USAGE:
-%   [LL, LLS, HT] = scalar_vt_vech_likelihood(PARAMETERS,DATA,DATAASYM,P,O,Q,C,CASYM,KAPPA,BACKCAST,BACKCASTASYM,ISJOINT,ESTIMFLAG)
+%   [LL, LLS, HT] = scalar_vt_vech_likelihood(PARAMETERS,DATA,DATAASYM,P,O,Q,C,CASYM,KAPPA,BACKCAST,BACKCASTASYM,ISJOINT,USECOMPOSITE,ESTIMFLAG)
 %
 % INPUTS:
-%   PARAMETERS   - A vector of vech GARCH process parameters: [alpha beta]' or 
+%   PARAMETERS   - A vector of vech GARCH process parameters: [alpha beta]' or
 %                    [vech(C)' alpha beta]' if ISJOINT
 %   DATA         - K by K by T matrix of covariance innovations
 %   DATAASYM     - K by K by T matrix of asymmetric covariance innovations
@@ -18,9 +18,13 @@ function [ll,lls,Ht]=scalar_vt_vech_likelihood(parameters,data,dataAsym,p,o,q,C,
 %   BACKCASTASYM - Back cast value (asymetric terms) for starting the recursion
 %   ISJOINT      - Logical indicating whether the likelihood is the joint across all parameters
 %                    (intercept and dynamics) or is just for the dynamics
+%   USECOMPOSITE - Indicates whether to use composite likelihood:
+%                    0 - Use standard likelihood (not composite)
+%                    1 - Use diagonal composite likelihood
+%                    2 - Use full composite likelihood
 %   ESTIMFLAG    - [OPTIONAL] Flag (0 or 1) to indicate if the function
 %                    is being used in estimation.  If it is 1, then the parameters are transformed
-%                    from unconstrained values to constrained by standard garch model constraints  
+%                    from unconstrained values to constrained by standard garch model constraints
 %
 % OUTPUTS:
 %   LL           - Minus 1 times the log likelihood
@@ -34,7 +38,7 @@ function [ll,lls,Ht]=scalar_vt_vech_likelihood(parameters,data,dataAsym,p,o,q,C,
 % kevin.sheppard@economics.ox.ac.uk
 % Revision: 4    Date: 10/28/2009
 
-[k,nothing,T]=size(data);
+[k,~,T]=size(data);
 %If nargin~=7, then we don't need to transform the parameters
 base = 0;
 if estimFlag
@@ -57,7 +61,7 @@ beta=parameters(base+(p+o+1:p+o+q));
 %Compute the constant
 const=(1-sum(alpha)-sum(beta))*C;
 if o>0
-     const = const - sum(gamma)*Casym;
+    const = const - sum(gamma)*Casym;
 end
 
 %Initialize the covariance
@@ -68,7 +72,7 @@ lls=zeros(T,1);
 
 %Compute the likelihood constant.
 likconst=k*log(2*pi);
-
+compLikConst = 2*log(2*pi);
 %Perform the recursion
 for t=1:T;
     Ht(:,:,t)=const;
@@ -85,7 +89,7 @@ for t=1:T;
         else
             Ht(:,:,t)=Ht(:,:,t)+gamma(j)*dataAsym(:,:,t-j);
         end
-    end    
+    end
     for j=1:q
         if (t-j)<1
             Ht(:,:,t)=Ht(:,:,t)+beta(j)*backCast;
@@ -100,6 +104,18 @@ for t=1:T;
     Q=sqrt(diag(Ht(:,:,t)));
     R=Ht(:,:,t)./(Q*Q');
     stdresid=data(:,:,t)./(Q*Q');
-    lls(t)=0.5*(likconst+2*sum(log(Q))+log(det(R))+trace(R^(-1)*stdresid));
+    if useComposite==0
+        lls(t)=0.5*(likconst+2*sum(log(Q))+log(det(R))+trace(R^(-1)*stdresid));
+    elseif useComposite==1
+        for i=1:k-1
+            lls(t)= lls(t) + 0.5*(compLikConst+2*sum(log(Q(i))+log(Q(i+1))) + log(1-R(i,i+1)^2) + trace(R(i+i+1,i:i+1)^(-1)*stdresid));
+        end
+    else % useComposite==2
+        for i=1:k
+            for j=i+1:k
+                lls(t)=0.5*(compLikConst+2*sum(log(Q(i))+log(Q(j))) + log(1-R(i,j)^2) + trace(R([i j],[i j])^(-1)*stdresid));
+            end
+        end
+    end
 end
 ll = sum(lls);

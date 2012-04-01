@@ -1,9 +1,9 @@
-function [parameters, ll, ht, intercept, VCV, scores, diagnostics] = scalar_vt_vech(data,dataAsym,p,o,q,startingvals,options)
+function [parameters, ll, ht, intercept, VCV, scores, diagnostics] = scalar_vt_vech(data,dataAsym,p,o,q,composite,startingvals,options)
 % Estimation of symmetric and asymmetric scalar multivariate vech ARCH models using variance
 % targeting to reduce the number of parameters needing to be estimated simultaneously
 %
 % USAGE:
-%  [PARAMETERS,LL,HT,INTERCEPT,VCV,SCORES,DIAGNOSTICS] = scalar_vt_vech(DATA,DATAASYM,P,O,Q,STARTINGVALS,OPTIONS)
+%  [PARAMETERS,LL,HT,INTERCEPT,VCV,SCORES,DIAGNOSTICS] = scalar_vt_vech(DATA,DATAASYM,P,O,Q,COMPOSITE,STARTINGVALS,OPTIONS)
 %
 % INPUTS:
 %   DATA         - A T by K matrix of zero mean residuals -OR-
@@ -12,6 +12,10 @@ function [parameters, ll, ht, intercept, VCV, scores, diagnostics] = scalar_vt_v
 %   P            - Positive, scalar integer representing the number of lags of the innovation process
 %   O            - Non-negative scalar integer representing the number of asymmetric lags to include
 %   Q            - Non-negative scalar integer representing the number of lags of conditional covariance
+%   COMPOSUTE    - [OPTIONAL] String, one of:
+%                    'None' - Standard K-dimensional QMLE (Default)
+%                    'Diagonal' - Use only pairwise likelihoode for i,i+1, i=1,2,...,K-1
+%                    'Full' - Use all pairwise likelihoods
 %   STARTINGVALS - [OPTIONAL] (p+o+q) x 1 vector of starting values
 %   OPTIONS      - [OPTIONAL] Options to use in the optimization (fminunc)
 %
@@ -59,20 +63,27 @@ switch nargin
     case 3
         o=0;
         q=0;
+        composite = 'None';
         startingvals=[];
         options = [];
     case 4
         q=0;
+        composite = 'None';
         startingvals=[];
         options = [];
     case 5
+        composite = 'None';
         startingvals=[];
         options = [];
     case 6
+        startingvals=[];
         options = [];
     case 7
+        options = [];
+    case 8
+        % Nothing
     otherwise
-        error('Between 2 and 6 arguments required.')
+        error('Between 3 and 8 arguments required.')
 end
 
 %data should be TxK, T>K
@@ -127,6 +138,18 @@ if isempty(q)
 end
 if length(q)>1 || any(q<0) || floor(q)~=q
     error('Q must be a non-negative scalar');
+end
+
+if isempty(composite)
+    composite = 'None';
+end
+switch lower(composite)
+    case {'none'}
+        useComposite = 0;
+    case {'diagonal'}
+        useComposite = 1;
+    case {'full'}
+        useComposite = 2;
 end
 
 % Startingvals must have p+o+q parameters sum(alpha)+kappa*sum(gamma)+sum(beta)<1
@@ -187,12 +210,12 @@ for i=1:tau
 end
 
 %Augment the data with backcasts
-[startingvals,lls,output_parameters] = scalar_vt_vech_starting_values(startingvals,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym); %#ok<NASGU>
+[startingvals,lls,output_parameters] = scalar_vt_vech_starting_values(startingvals,data,dataAsym,p,o,q,C,Casym,kappa,useComposite,backCast,backCastAsym); %#ok<NASGU>
 
 % finally to transform the parameters to the unrestricted equivalents
 startingvals=scalar_vt_vech_transform(startingvals,p,o,q,kappa);
 
-[parameters,ll,exitflag,output]=fminunc('scalar_vt_vech_likelihood',startingvals,options,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,true);
+[parameters,ll,exitflag,output]=fminunc('scalar_vt_vech_likelihood',startingvals,options,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,useComposite,true);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Estimation Robustification
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -200,7 +223,7 @@ if exitflag<=0 &&  ll<lls(1)
     %Did not converge, but function improved
     options.MaxFunEvals=4*100*(p+q);
     options.MaxIter=2*100*(p+q);
-    parameters=fminunc('scalar_vt_vech_likelihood',parameters,options,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,true);
+    parameters=fminunc('scalar_vt_vech_likelihood',parameters,options,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,useComposite,true);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Estimation Robustification
@@ -208,7 +231,7 @@ end
 
 parameters=scalar_vt_vech_itransform(parameters,p,o,q,kappa);
 if nargout>1
-    [ll,~,ht]=scalar_vt_vech_likelihood(parameters,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,false);
+    [ll,~,ht]=scalar_vt_vech_likelihood(parameters,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,useComposite,false);
     ll=-ll;
 end
 
@@ -242,9 +265,9 @@ if nargout>4
             scoreCount = scoreCount  + 1;
         end
     end
-    [~,gt] = gradient_2sided(@scalar_vt_vech_likelihood,parameters,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,false);
+    [~,gt] = gradient_2sided(@scalar_vt_vech_likelihood,parameters,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,false,useComposite,false);
     scores(:,momentCount+1:momentCount+p+o+q) = gt;
-    A(momentCount+1:momentCount+p+o+q,:) = hessian_2sided_nrows(@scalar_vt_vech_likelihood,jointParameters,p+o+q,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,true,false);
+    A(momentCount+1:momentCount+p+o+q,:) = hessian_2sided_nrows(@scalar_vt_vech_likelihood,jointParameters,p+o+q,data,dataAsym,p,o,q,C,Casym,kappa,backCast,backCastAsym,true,useComposite,false);
     
     A = A/t;
     B = covnw(scores);
@@ -264,6 +287,7 @@ alpha = sum(parameters(1:p));
 gamma = sum(parameters(p+1:p+o));
 beta = sum(parameters(p+o+1:p+o+q));
 diagnostics.intercept = C*(1-alpha-beta);
+diagnostics.composite = composite;
 if o>0
     diagnostics.intercept  = diagnostics.intercept  - gamma*Casym;
 end
