@@ -40,13 +40,13 @@ function [data, Ht] = rarch_simulate(T,C,parameters,p,q,type)
 %   and in the CP model, B(:,:,j) = theta - sum(A.^2,3).  OP is the outer product of the
 %   unconditionally standardized data.
 %
-%  EXAMPLES:
-%    % Scalar with A.^2=.05 and B.^2=.93
-%    [data,Ht] = rarch_simulate(1000,eye(2)+1,sqrt([.05,.93]),1,1,'Scalar')
-%    % Diagonal 
-%    [data,Ht] = rarch_simulate(1000,eye(2)+1,sqrt([.05 .07 .93 .88]),1,1,'Diagonal')
-%    % Common Persistence, note uses theta (sqrt(A.^2+B.^2) not B)
-%    [data,Ht] = rarch_simulate(1000,eye(2)+1,sqrt([.05 .07 .99]),1,1,'CP')
+% EXAMPLES:
+%   % Scalar with A.^2=.05 and B.^2=.93
+%   [data,Ht] = rarch_simulate(1000,eye(2)+1,sqrt([.05,.93]),1,1,'Scalar')
+%   % Diagonal 
+%   [data,Ht] = rarch_simulate(1000,eye(2)+1,sqrt([.05 .07 .93 .88]),1,1,'Diagonal')
+%   % Common Persistence, note uses theta (sqrt(A.^2+B.^2) not B)
+%   [data,Ht] = rarch_simulate(1000,eye(2)+1,sqrt([.05 .07 .99]),1,1,'CP')
 %
 % See also RARCH
 
