@@ -16,7 +16,10 @@ function [parameters, ll, Ht, VCV, scores] = rarch(data,p,q,type,method,starting
 %   OPTIONS      - [OPTIONAL] Options to use in the model optimization (fmincon)
 %
 % OUTPUTS:
-%   PARAMETERS   -
+%   PARAMETERS   - Estimated parameters in the order: 
+%                    Scalar: [vech(C) a(1) ... a(P) b(1) ... b(Q)]
+%                    CP: [vech(C) diag(A(:,:,1)) ...  diag(A(:,:,P)) theta]
+%                    Diagonal: [vech(C) diag(A(:,:,1)) ...  diag(A(:,:,P)) diag(B(:,:,1)) ...  diag(B(:,:,Q))]
 %   LL           - The log likelihood at the optimum
 %   HT           - A [K K T] dimension matrix of conditional covariances
 %   VCV          - A numParams^2 square matrix of robust parameter covariances (A^(-1)*B*A^(-1)/T)

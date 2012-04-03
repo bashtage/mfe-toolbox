@@ -1,4 +1,53 @@
 function [parameters, ll, ht, VCV, scores] = heavy(data,p,q,cons,startingVals,options)
+% Estimation of HEAVY volatility model of Shephard and Sheppard.  Also estimates general volatility
+% spillover models with 2 or more dimensions.
+%  
+% USAGE:
+%  [PARAMETERS,LL,HT,VCV,SCORES] = heavy(DATA,P,Q,CONS,STARTINGVALS,OPTIONS)
+%  
+% INPUTS:
+%   DATA         - T by K matrix of input data.  Data can be either returns or realized-measure type
+%                    data.  Returns are detected by examining a series for negative values, and are
+%                    squared for estimation of the model.
+%   P            - A K by K matrix containing the lag length of model innovations.  Position (i,j)
+%                    indicates the number of lags of series j in the model for series i
+%   Q            - A K by K matrix containing the lag length of conditional variances.  Position (i,j)
+%                    indicates the number of lags of series j in the model for series i
+%   CONS         - [OPTIONAL] String indicating the type of constraint to use on parameters:
+%                    'None' - Only constrain the intercepts to be positive
+%                    'Positive' - Restrict all parameters to be non-negative
+%   STARTINGVALS - [OPTIONAL] A number of parameters by 1 vector of starting values.  See COMMENTS.
+%   OPTIONS      - [OPTIONAL] Optimization option structure (fmincon)
+%  
+% OUTPUTS:
+%   PARAMETERS   - A sum(sum(P)) + sum(sum(Q)) + K by 1 vector of estimated parameters. See COMMENTS.
+%   LL           - The log likelihood at the optimum.
+%   HT           - A T by K matrix of conditional variances
+%   VCV          - A numParams^2 square matrix of robust parameter covariances (A^(-1)*B*A^(-1)/T)
+%   SCORES       - A T by numParams matrix of individual scores
+%  
+% COMMENTS:
+%   Dynamics are given by:
+%     h(t,:)' = O + A(:,:,1)*f(data(t-1,:))' + ... + A(:,:,maxP)*f(data(t-maxP,:))' + ...
+%                 + B(:,:,1)*h(t-1,:)' + ... + B(:,:,maxQ)*h(t-maxQ,:)'
+%  
+%   PARAMETERS are ordered:
+%   [O' A(1,1,1:p(1,1)) A(1,2,1:p(1,2)) ... A(1,K,1:p(1,K)) A(2,1,1:p(2,1)) ... A(2,K,1:p(2,K)) 
+%       ... A(K,1,1:p(K,1)) ... A(K,K,1:p(K,K)) ... B(1,1,1:q(1,1)) ... B(1,K,1:q(1,K)) 
+%       ... B(K,1,1:q(K,1)) ... B(K,K,1:q(K,K)) ]
+%  
+% EXAMPLES:
+%   % Standard HEAVY simulation
+%   p = [0 1;0 1]
+%   q = eye(2)
+%   data = [r rm];
+%   parameters = heavy(data,p,q,'None')
+%  
+% See also HEAVY_SIMULATE, TARCH, EGARCH
+
+% Copyright: Kevin Sheppard
+% kevin.sheppard@economics.ox.ac.uk
+% Revision: 1    Date: 4/2/2012
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input Checking
