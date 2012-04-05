@@ -108,12 +108,12 @@ for t=1:T;
         lls(t)=0.5*(likconst+2*sum(log(Q))+log(det(R))+trace(R^(-1)*stdresid));
     elseif useComposite==1
         for i=1:k-1
-            lls(t)= lls(t) + 0.5*(compLikConst+2*sum(log(Q(i))+log(Q(i+1))) + log(1-R(i,i+1)^2) + trace(R(i+i+1,i:i+1)^(-1)*stdresid));
+            lls(t)= lls(t) + 0.5*(compLikConst+2*sum(log(Q(i))+log(Q(i+1))) + log(1-R(i,i+1)^2) + trace(R(i+i+1,i:i+1)^(-1)*stdresid))/(k-1);
         end
     else % useComposite==2
         for i=1:k
             for j=i+1:k
-                lls(t)=0.5*(compLikConst+2*sum(log(Q(i))+log(Q(j))) + log(1-R(i,j)^2) + trace(R([i j],[i j])^(-1)*stdresid));
+                lls(t)=0.5*(compLikConst+2*sum(log(Q(i))+log(Q(j))) + log(1-R(i,j)^2) + trace(R([i j],[i j])^(-1)*stdresid))/(k*(k+1)/2);
             end
         end
     end
