@@ -1,4 +1,4 @@
-function [ll,lls,Rt] = dcc_likelihood(parameters,data,dataAsym,p,o,q,R,N,backCast,backCastAsym,stage,transformIntercept,univariate)
+function [ll,lls,Rt] = dcc_likelihood(parameters,data,dataAsym,m,l,n,R,N,backCast,backCastAsym,stage,transformIntercept,univariate)
 
 
 [k,~,T] = size(data);
@@ -30,9 +30,9 @@ if stage<=2
         R = corr_ivech(z);
     end
 end
-a = parameters(offset + (1:p));
-g = parameters(offset + (p+1:o));
-b = parameters(offset + (p+o+1:p+o+q));
+a = parameters(offset + (1:m));
+g = parameters(offset + (m+1:l));
+b = parameters(offset + (m+l+1:m+l+n));
 
 if stage>=2
     stdData = data;
@@ -55,29 +55,29 @@ Rt = zeros(k,k,T);
 lls = zeros(T,1);
 for t=1:T
     Qt(:,:,t) = intercept;
-    for i = 1:p
+    for i = 1:m
         if (t-i)>0
             Qt(:,:,t) = Qt(:,:,t) + a(i)*stdData(:,:,t-i);
         else
             Qt(:,:,t) = Qt(:,:,t) + a(i)*backCast;
         end
     end
-    for i = 1:o
+    for i = 1:l
         if (t-i)>0
             Qt(:,:,t) = Qt(:,:,t) + g(i)*stdDataAsym(:,:,t-i);
         else
             Qt(:,:,t) = Qt(:,:,t) + g(i)*backCastAsym;
         end
     end
-    for i = 1:q
+    for i = 1:n
         if (t-i)>0
             Qt(:,:,t) = Qt(:,:,t) + b(i)*Qt(:,:,t-i);
         else
             Qt(:,:,t) = Qt(:,:,t) + b(i)*backCast;
         end
     end
-    q = sqrt(diag(Q(:,:,t)));
-    Rt(:,:,t) = Qt(:,:,t)./ (q*q');
+    n = sqrt(diag(Q(:,:,t)));
+    Rt(:,:,t) = Qt(:,:,t)./ (n*n');
     lls(t) = 0.5*(likconst + logdetH(t) + log(det(Rt(:,:,t))) + sum(diag((Rt\I)*stdData)));
 end
 ll = sum(lls);
