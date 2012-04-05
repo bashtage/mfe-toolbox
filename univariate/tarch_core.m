@@ -53,10 +53,6 @@ ht=zeros(size(fdata));
 ht(1:m)=back_cast;
 
 %Recursion Loop
-% Old slow version
-% for i=m+1:T
-%     ht(i) = parameters'*[1 ; fdata(i-1:-1:i-p) ; fIdata(i-1:-1:i-o) ; ht(i-1:-1:i-q)];
-% end
 for i=m+1:T
     ht(i) = parameters(1);
     for j=1:p
