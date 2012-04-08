@@ -37,7 +37,7 @@ function [parameters, LL, ht, VCVrobust, VCV, scores, diagnostics] = tarch(epsil
 %   VCVROBUST    - Robust parameter covariance matrix
 %   VCV          - Non-robust standard errors (inverse Hessian)
 %   SCORES       - Matrix of scores (# of params by t)
-%   DIAGNOSTICS  - Structure of optimization output information.  Useful to check for convergence problems
+%   DIAGNOSTICS  - Structure of optimization outputs and other values useful for functions calling TARCH.
 % 
 % COMMENTS:
 % The following (generally wrong) constraints are used:
@@ -153,7 +153,7 @@ else
     startingflag=1;
 end
 %Grid search for starting values.
-[startingvals,nu,lambda,LLs,ordered_parameters]=tarch_starting_values(startingvals,epsilon_augmented,fepsilon,fIepsilon,p,o,q,T,error_type,tarch_type);
+[startingvals,nu,lambda,~,ordered_parameters]=tarch_starting_values(startingvals,epsilon_augmented,fepsilon,fIepsilon,p,o,q,T,error_type,tarch_type);
 %Finally, initialize the starting values
 startingvals = [startingvals; nu; lambda];
 %Transform the starting vals
@@ -256,15 +256,16 @@ end
 parameters=[parameters;nu;lambda];
 %Compute the log likelihood if needed
 if nargout>1
-    [LL, likelihoods, ht]=tarch_likelihood(parameters,epsilon_augmented,fepsilon,fIepsilon,p,o,q,error_type,tarch_type,back_cast,T);
+    [LL, ~, ht]=tarch_likelihood(parameters,epsilon_augmented,fepsilon,fIepsilon,p,o,q,error_type,tarch_type,back_cast,T);
     LL=-LL;
 end
 
 %Compute standard errors using RobustVCV if needed.
 if nargout>3
     nw=0; %No newey west on scores
-    [VCVrobust,A,B,scores,hess]=robustvcv('tarch_likelihood',parameters,nw,epsilon_augmented,fepsilon,fIepsilon,p,o,q,error_type,tarch_type,back_cast,T);
+    [VCVrobust,A,~,scores,hess]=robustvcv('tarch_likelihood',parameters,nw,epsilon_augmented,fepsilon,fIepsilon,p,o,q,error_type,tarch_type,back_cast,T);
     VCV=hess^(-1)/(T-m);
+    diagnostics.A = A;
 end
 
 %Report diagnostics in case requested
@@ -272,3 +273,8 @@ diagnostics.EXITFLAG=exitflag;
 diagnostics.ITERATIONS=output.iterations;
 diagnostics.FUNCCOUNT=output.funcCount;
 diagnostics.MESSAGE=output.message;
+diagnostics.m = m;
+diagnostics.T = T;
+diagnostics.fdata = fepsilon;
+diagnostics.fIdata = fIepsilon;
+diagnostics.back_cast = back_cast;
