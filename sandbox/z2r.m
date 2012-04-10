@@ -1,4 +1,4 @@
-function R = ZtoR(z)
+function R = z2r(z)
 
 m = length(z);
 k = ceil(sqrt(2*m));
