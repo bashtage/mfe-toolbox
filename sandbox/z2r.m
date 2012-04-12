@@ -26,4 +26,4 @@ end
 
 R = C*C';
 r = sqrt(diag(R));
-R = R ./ (r*r')
+R = R ./ (r*r');

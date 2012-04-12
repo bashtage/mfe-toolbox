@@ -130,10 +130,10 @@ end
 if any(floor(p)~=p) || any(p<1) || numel(p)~=k
     error('All elements in P must be positive, and P must be either scalar or K by 1')
 end
-if any(floor(o)~=o) || any(o<1) || numel(o)~=k
+if any(floor(o)~=o) || any(o<0) || numel(o)~=k
     error('All elements in O must be non-negative, and O must be either scalar or K by 1.')
 end
-if any(floor(q)~=q) || any(q<1) || numel(q)~=k
+if any(floor(q)~=q) || any(q<0) || numel(q)~=k
     error('All elements in Q must be non-negative, and Q must be either scalar or K by 1.')
 end
 if isempty(gjrType)
@@ -142,7 +142,7 @@ end
 if isscalar(gjrType)
     gjrType = ones(k,1)*gjrType;
 end
-if any(~ismembber(gjrType,[1 2])) || numel(gjrType)~=k
+if any(~ismember(gjrType,[1 2])) || numel(gjrType)~=k
     error('GJRTYPE must be in {1,2} and mustbe either scalar of K by 1.')
 end
 
@@ -154,9 +154,9 @@ if ~ismember(type,{'3-stage','2-stage'})
     error('TYPE must be either ''3-stage'' or ''2-stage''.')
 end
 if strcmpi(type,'3-stage')
-   type = 3;
+    stage = 3;
 else
-    type = 2;
+    stage = 2;
 end
 
 
@@ -168,28 +168,48 @@ if ~ismember(composite,{'none','diagonal','full'})
     error('COMPOSITE must be one of ''None'', ''Diagonal'' or ''Full''.')
 end
 if strcmpi(composite,'none')
-   composite = 0;
+    composite = 0;
 elseif strcmpi(composite,'diagonal')
     composite = 1;
 else
     composite = 2;
 end
-if type == 2 && composite==1
+if stage == 2 && composite==1
     warning('oxfordMFE:incorrectOption','When TYPE is ''2-stage'', COMPOSITE must be either ''None'' or ''Full''.')
     composite = 2;
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Data Transformation
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if ~isempty(startingVals)
+    count = k + sum(p)+ sum(o) + sum(q);
+    count = count + m + l + n;
+    count = count + k*(k-1)/2;
+    if length(startingVals)~=count
+        error('STARTINGVALS does not contain the correct number of parameters.')
+    end
+end
 
+if isempty(options)
+    options = optimset('fmincon');
+    options.Display = 'iter';
+    options.Diagnostics = 'on';
+    options.Algorithm = 'interior-point';
+    
+end
+try
+    optimset(options);
+catch ME
+    error('OPTIONS does not appear to be a valid options structure.')
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Univariate volatility models
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 H = zeros(T,k);
-univariate = cell(K,1);
-for i=1:K
-    [parameters, ~, ht, ~, ~, diagnostics] = tarch(data2d(:,i),p(i),o(i),q(i), [], gjrType(i), [], univariteOptions);
+univariate = cell(k,1);
+univariteOptions = optimset('fminunc');
+univariteOptions.Display = 'none';
+univariteOptions.LargeScale = 'off';
+for i=1:k
+    [parameters, ~, ht, ~, ~, ~, diagnostics] = tarch(data2d(:,i),p(i),o(i),q(i), [], gjrType(i), [], univariteOptions);
     % Store output for later use
     univariate{i}.p = p(i);
     univariate{i}.o = o(i);
@@ -205,21 +225,85 @@ for i=1:K
     univariate{i}.A = diagnostics.A;
     H(:,i) = ht;
 end
+stdData = data;
+stdDataAsym = dataAsym;
+for t=1:T
+    h = sqrt(H(t,:));
+    hh = h'*h;
+    stdData(:,:,t) = stdData(:,:,t)./hh;
+    stdDataAsym(:,:,t) = stdDataAsym(:,:,t)./hh;
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Estimation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-LB = zeros(length(startingVals));
-UB = zeros(length(startingVals));
+R = mean(stdData,3);
+r = sqrt(diag(R));
+R = R ./ (r*r');
+N = mean(stdDataAsym,3);
+scale = max(eig(R^(-0.5)*N*R^(-0.5)));
+% FIXME
+startingVals = [.02 .01/scale .96];
+
+LB = zeros(length(startingVals),1);
+UB = ones(length(startingVals),1);
 A = ones(1,length(startingVals));
-scale = min(1./eig(R^(-0.5)*N*R^(-0.5)));
-A(p+1:p+o) = scale;
-b = 1;
-parameters = fmincon(@dcc_likelihood,startingVals,A,b,[],[],LB,UB,[],options,stdData,stdDataAsym,m,l,n,R,N,backCase,backCastAsym,3,false,univariate);
-if type==2
-    % Prepend r2z of the correlation intercept
+A(m+1:m+l) = scale;
+b = .99998;
+
+if (startingVals*A'-b) >= 0
+    error('STARTINGVALS for DCC parameters are not comparible with a positive definite intercept.')
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Back casts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+w = .06*.94.^(0:sqrt(T));
+w = w'/sum(w);
+backCast = zeros(k);
+backCastAsym = zeros(k);
+for i=1:length(w)
+    backCast = backCast + w(i)*stdData(:,:,i);
+    backCastAsym = backCastAsym + w(i)*stdDataAsym(:,:,i);
+end
+isJoint = false;
+isInference = false;
+parameters = fmincon(@dcc_likelihood,startingVals,A,b,[],[],LB,UB,[],options,stdData,stdDataAsym,m,l,n,R,N,backCast,backCastAsym,stage,composite,isJoint,isInference);
+
+% FIXME Remove this
+stage = 2;
+if stage==2
+    gScale = diag(N);
+    a = parameters(1:m);
+    g = parameters(m+1:m+l);
+    b = parameters(m+l+1:m+l+n);
+    intercept = R*(1-sum(a)-sum(b)) - N*sum(g);
+    [~,rescaledIntercept] = cov2corr(intercept);
+    z = r2z(rescaledIntercept);
+    startingVals = [z' parameters];
+    
+    LB = [-inf*ones(1,k*(k-1)/2) zeros(1,length(parameters))];
+    UB = [inf*ones(1,k*(k-1)/2) ones(1,length(parameters))];
+    A = [zeros(1,k*(k-1)/2) A];
+    b = .99998;
+    parameters = fmincon(@dcc_likelihood,startingVals,A,b,[],[],LB,UB,[],options,stdData,stdDataAsym,m,l,n,R,N,backCast,backCastAsym,stage,composite,isJoint,isInference,gScale);
+    z = parameters(1:k(k-1)/2);
+    R = z2r(z);
+    parameters = parameters(k(k-1)/2+1:length(parameters));
+    parameters  = [corr_vech(R)' parameters];
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Covariances and Parameters
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if stage==3
+    [~,~,Rt] = dcc_likelihood(parameters,stdData,stdDataAsym,m,l,n,R,N,backCast,backCastAsym,stage,composite,isJoint,isInference);
+elseif stage ==2
+    [~,~,Rt] = dcc_likelihood(parameters,stdData,stdDataAsym,m,l,n,R,N,backCast,backCastAsym,stage,composite,isJoint,isInference,gScale);
+end
+Ht = zeros(k,k,T);
+for t=1:T
+    h = sqrt(H(t,:));
+    Ht(:,:,t) = Rt(:,:,t).*(h'*h);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inference
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
