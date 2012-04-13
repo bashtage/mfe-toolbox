@@ -15,8 +15,8 @@ function [ll,lls,Rt] = dcc_likelihood(parameters,data,dataAsym,m,l,n,R,N,backCas
 %   M            - Order of symmetric innovations in DCC model
 %   L            - Order of asymmetric innovations in ADCC model
 %   N            - Order of lagged correlation in DCC model
-%   R
-%   N
+%   R            - K by K correlation matrix of standardized data
+%   N            - K by K matrix mean of asymmetric standardized data outer products
 %   BACKCAST     - K by K  matrix to use for back casting symetric terms
 %   BACKCASTASYM - K by K  matrix to use for back casting asymetric terms
 %   STAGE        - Integer, either 2 or 3 indicating whether 2-stage ro 3-stage estimator is being used
