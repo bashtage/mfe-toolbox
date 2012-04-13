@@ -13,7 +13,7 @@ function z = r2z(R)
 % COMMENTS:
 %   See z2r for information about the transformation from Z to R.
 %
-% See also Z2R
+% See also Z2R, R2PHI, PHI2R
 
 % Copyright: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk

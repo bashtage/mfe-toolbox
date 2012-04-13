@@ -16,7 +16,7 @@ function R = z2r(z)
 %   C(i,j) = y(i,j) * sqrt(1-sum(C(i,j+1:k).^2), for i=2,...,k, j=i-1:-1:1
 %   R = C*C'
 %
-% See also R2Z
+% See also R2Z, R2PHI, PHI2R
 
 % Copyright: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk

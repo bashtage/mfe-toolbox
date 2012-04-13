@@ -1,4 +1,18 @@
 function R = phi2r(phi,transform)
+% Transformation of a vector of angles in [0,pi] to a correlation matrix
+%
+% USAGE:
+%  [R] = phi2r(PHI)
+%
+% INPUTS:
+%   PHI - K(K-1)/2 vector of values in [0,pi]
+%
+% OUTPUTS:
+%   R - A K by K correlation matrix
+%
+% COMMENTS:
+%
+% See also R2PHI, Z2R, R2Z
 
 if nargin==2 && transform
     phi = 2*pi*exp(phi)./(1+exp(phi));

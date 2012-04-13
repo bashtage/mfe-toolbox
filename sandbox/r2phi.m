@@ -1,5 +1,22 @@
 function phi = r2phi(R)
+% Transformation of a correlation matrix to a set of angles in [0,pi]
+%
+% USAGE:
+%  [PHI] = r2phi(R)
+%
+% INPUTS:
+%   R   - A K by K correlation matrix
+%
+% OUTPUTS:
+%   PHI - K(K-1)/2 vector of values in [0,2*pi]
+%
+% COMMENTS:
+%   See phi2r for information about the transformation from Z to R.
+%
+% See also PHI2R, Z2R, R2Z
 
+
+% FIXME : It is necessary to invert both cos and sin to identify where in 0, 2pi the angle is
 X = chol(R);
 k = length(R);
 S = zeros(k);
