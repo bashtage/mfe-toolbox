@@ -1,24 +1,86 @@
-function [parameters, ll ,Ht, VCV, scores, diagnostics]=dcc(data,dataAsym,m,l,n,p,o,q,gjrType,type,composite,startingVals,options)
+function [parameters, ll ,Ht, VCV, scores, diagnostics]=dcc(data,dataAsym,m,l,n,p,o,q,gjrType,method,composite,startingVals,options)
+% Estimation of scalar DCC(m,n) and ADCC(m,l,n) multivarate volatility model with with TARCH(p,o,q) 
+% or GJRGARCH(p,o,q) conditional variances
+%
+% USAGE:
+%  [PARAMETERS] = dcc(DATA,[],M,L,N)
+%  [PARAMETERS] = dcc(DATA,DATAASYM,M,L,N,P,O,Q,GJRTYPE,METHOD,COMPOSITE,STARTINGVALS,OPTIONS)
+%
+% INPUTS:
+%   DATA         - A T by K matrix of zero mean residuals -OR-
+%                    K by K by T array of covariance estimators (e.g. realized covariance)
+%   DATAASYM     - [OPTIONAL] K by K by T array of asymmetric covariance estimators only needed if
+%                    DATA is 3-dimensional and O>0 or L>0
+%   M            - Order of symmetric innovations in DCC model
+%   L            - Order of asymmetric innovations in ADCC model
+%   N            - Order of lagged correlation in DCC model
+%   P            - [OPTIONAL] Positive, scalar integer representing the number of symmetric innovations in the
+%                    univariate volatility models.  Can also be a K by 1 vector containing the lag length 
+%                    for each series. Default is 1.
+%   O            - [OPTIONAL] Non-negative, scalar integer representing the number of asymmetric innovations in the
+%                    univariate volatility models.  Can also be a K by 1 vector containing the lag length 
+%                    for each series. Default is 0.
+%   Q            - [OPTIONAL] Non-negative, scalar integer representing the number of conditional covariance lags in 
+%                    the univariate volatility models.  Can also be a K by 1 vector containing the lag length 
+%                    for each series. Default is 1.
+%   GJRTYPE      - [OPTIONAL] Either 1 (TARCH/AVGARCH) or 2 (GJR-GARCH/GARCH/ARCH).  also be a K by 1 vector 
+%                    containing the model type for each for each series. Default is 2.
+%   METHOD       - [OPTIONAL] String, one of '3-stage' (Default) or '2-stage'.  Determines whether
+%                    the model is estimated using the 3-stage estimator, or if the correlation intercepts 
+%                    are jointly estimated along with the dynamic parameters.
+%   COMPOSITE    - [OPTIONAL] String value, either 'None' (Default), 'Diagonal' or 'Full'.  None
+%                    uses standard QMLE.  'Diagonal' and 'Full' both uses composite likelihood where
+%                    'Diagonal' uses all pairs of the form i,i+1 while 'Full' uses all pairs.
+%   STARTINGVALS - [OPTIONAL] Vector of starting values to use.  See parameters and COMMENTS.
+%   OPTIONS      - [OPTIONAL] Options to use in the model optimization (fmincon)
+%
+% OUTPUTS:
+%   PARAMETERS   - Estimated parameters.  Output depends on METHOD. 
+%                    3-stage: [VOL(1) ... VOL(K) corr_vech(R)' vech(N)' alpha gamma beta]
+%                    2-stage: [VOL(1) ... VOL(K) corr_vech(R)' alpha gamma beta]
+%                    where VOL(j) is a (1+P(i)+O(i)+Q(i)) vector containing the parameters from
+%                    volatility model i.
+%   LL           - The log likelihood at the optimum
+%   HT           - A [K K T] dimension matrix of conditional covariances
+%   VCV          - A numParams^2 square matrix of robust parameter covariances (A^(-1)*B*A^(-1)/T)
+%   SCORES       - A T by numParams matrix of individual scores
+%   DIAGNOSTICS  - A structure containing further outputs.
+%
+% COMMENTS:
+%   The dynamics of a the correlations in a DCC model are:
+%     3-stage:
+%     Q(t) = R*(1-sum(a)-sum(b))-sum(g)*N + a(1)*e(t-1)'*e(t-1) + ... + a(m)*e(t-m)'*e(t-m)
+%     + g(1)*v(t-1)'*v(t-1) + ... + g(l)*v(t-l)*v(t-l) + b(1)*Q(t-1) + ... + b(n)*Q(t-1)
+%     
+%     2-stage
+%     Q(t) = R.*scale + a(1)*e(t-1)'*e(t-1) + ... + a(m)*e(t-m)'*e(t-m)
+%     + g(1)*v(t-1)'*v(t-1) + ... + g(l)*v(t-l)*v(t-l) + b(1)*Q(t-1) + ... + b(n)*Q(t-1)
+%  
+%   where v(t,:) = e(t,;).*(e(t,:)<0) and s = sqrt((1-sum(a)-sum(b)-gScale*sum(g))) and scale = s*s'
+%
+%
+% EXAMPLES:
+%   % DCC(1,1)
+%   parameters = dcc(data,[],1,0,1)
+%   % ADCC(1,1)
+%   parameters = dcc(data,[],1,1,1)
+%   % ADCC(1,1), 2-stage
+%   parameters = dcc(data,[],1,1,1,[],[],[],[],'2-stage')
 
+% Copyright: Kevin Sheppard
+% kevin.sheppard@economics.ox.ac.uk
+% Revision: 1    Date: 4/13/2012
 
-
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Input Checking
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Input Argument Checking
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 switch nargin
     case 5
         p = [];
         o = [];
         q = [];
         gjrType = [];
-        type = [];
+        method = [];
         composite = [];
         startingVals = [];
         options = [];
@@ -26,25 +88,25 @@ switch nargin
         o = [];
         q = [];
         gjrType = [];
-        type = [];
+        method = [];
         composite = [];
         startingVals = [];
         options = [];
     case 7
         q = [];
         gjrType = [];
-        type = [];
+        method = [];
         composite = [];
         startingVals = [];
         options = [];
     case 8
         gjrType = [];
-        type = [];
+        method = [];
         composite = [];
         startingVals = [];
         options = [];
     case 9
-        type = [];
+        method = [];
         composite = [];
         startingVals = [];
         options = [];
@@ -75,7 +137,7 @@ if ndims(data)==2
     end
 elseif ndims(data)==3
     [k,~,T]=size(data);
-    data2d = zeros(K,K,T);
+    data2d = zeros(k,k,T);
     for i=1:K
         data2d(:,i) = squeeze((1-2*(dataAsym(i,i,:)==0)) .* sqrt(data(i,i,:)));
     end
@@ -143,17 +205,17 @@ if isscalar(gjrType)
     gjrType = ones(k,1)*gjrType;
 end
 if any(~ismember(gjrType,[1 2])) || numel(gjrType)~=k
-    error('GJRTYPE must be in {1,2} and mustbe either scalar of K by 1.')
+    error('GJRTYPE must be in {1,2} and must be either scalar of K by 1.')
 end
 
-if isempty(type)
-    type = '3-stage';
+if isempty(method)
+    method = '3-stage';
 end
-type = lower(type);
-if ~ismember(type,{'3-stage','2-stage'})
+method = lower(method);
+if ~ismember(method,{'3-stage','2-stage'})
     error('TYPE must be either ''3-stage'' or ''2-stage''.')
 end
-if strcmpi(type,'3-stage')
+if strcmpi(method,'3-stage')
     stage = 3;
 else
     stage = 2;
@@ -307,6 +369,7 @@ end
 isJoint = true;
 isInference = true;
 [ll,~,Rt] = dcc_likelihood(parameters,data,dataAsym,m,l,n,[],[],backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate);
+ll = -ll;
 Ht = zeros(k,k,T);
 for t=1:T
     h = sqrt(H(t,:));
@@ -339,7 +402,7 @@ if stage==2
     count = k*(k-1)/2 + m + l + n;
     H = hessian_2sided_nrows(@dcc_likelihood,parameters',count,data,dataAsym,m,l,n,[],[],backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate);
     A(offset+(1:count),:) = H/T;
-    [g,s]=gradient_2sided(@dcc_likelihood,parameters',data,dataAsym,m,l,n,[],[],backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate);
+    [~,s]=gradient_2sided(@dcc_likelihood,parameters',data,dataAsym,m,l,n,[],[],backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate);
     scores(:,offset+(1:count)) = s(:,offset+(1:count));
     B = cov(scores);
     Ainv = A\eye(v);
@@ -351,7 +414,7 @@ elseif stage==3
         count = count + k*(k+1)/2;
     end
     tempParams = parameters(1:offset+count);
-    [g,s]=gradient_2sided(@dcc_inference_objective, tempParams', data,dataAsym,m,l,n,univariate);
+    [~,s]=gradient_2sided(@dcc_inference_objective, tempParams', data,dataAsym,m,l,n,univariate);
     scores(:,offset+(1:count))=s(:,offset+(1:count));
     H = hessian_2sided_nrows(@dcc_inference_objective, tempParams', count, data,dataAsym,m,l,n,univariate);
     A(offset+(1:count),1:(count+offset)) = H/T;
@@ -360,7 +423,7 @@ elseif stage==3
     count = m + l + n;
     H = hessian_2sided_nrows(@dcc_likelihood,parameters',count,data,dataAsym,m,l,n,[],[],backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate);
     A(offset+(1:count),:) = H/T;
-    [g,s]=gradient_2sided(@dcc_likelihood,parameters',data,dataAsym,m,l,n,[],[],backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate);
+    [~,s]=gradient_2sided(@dcc_likelihood,parameters',data,dataAsym,m,l,n,[],[],backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate);
     scores(:,offset+(1:count)) = s(:,offset+(1:count));
     B = cov(scores);
     Ainv = A\eye(v);
