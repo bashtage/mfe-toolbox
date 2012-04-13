@@ -113,7 +113,7 @@ if max(eigs(m))>1
     backCast = C/.001;
     warning('MFE:nonstationary','The parameters do not correspond to the stationary region.')
 else
-    backCast = inv(eye(k*k)-m)*C(:);
+    backCast = ((eye(k*k)-m)\eye(k*k))*C(:);
     backCast = reshape(backCast,k,k);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
