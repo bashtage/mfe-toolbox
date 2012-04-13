@@ -5,6 +5,7 @@ function [ll,lls,Rt] = dcc_likelihood(parameters,data,dataAsym,m,l,n,R,N,backCas
 % 2-stage (Inference): Univariate, R (corr vech), DCC (N-scale ignored)
 % 3-stage (Estimation): DCC
 % 3-stage (Inferecne): Univariate, R (corr vech), N (vech), DCC
+
 [k,~,T] = size(data);
 offset = 0;
 % Parse Parameters
@@ -14,7 +15,7 @@ if stage==1 || isJoint
         u = univariate{i};
         count = count + u.p+u.o+u.q+1;
     end
-    garchP = parameters(1:count);
+    garchParameters = parameters(1:count);
     offset = offset + count;
     computeVol = true;
 else
@@ -39,26 +40,27 @@ b = parameters(offset + (m+l+1:m+l+n));
 % Compute volatilities
 H = ones(T,k);
 if computeVol
+    offset = 0;
     for i=1:k
         u = univariate{i};
         count = u.p+u.o+u.q+1;
-        volParameters = garchP(offset + (1:count));
+        volParameters = garchParameters(offset + (1:count));
         offset = offset+count;
         ht = tarch_core(u.fdata,u.fIdata,volParameters,u.back_cast,u.p,u.o,u.q,u.m,u.T,u.tarch_type);
-        H(:,i) = ht(m+1:T);
+        H(:,i) = ht(u.m+1:u.T);
     end
     stdData = zeros(k,k,T);
     stdDataAsym = zeros(k,k,T);
     for t=1:T
         h = sqrt(H(t,:));
-        stdData(:,:,t) = data./(h*h');
-        stdDataAsym(:,:,t) = dataAsym./(h*h');
+        stdData(:,:,t) = data(:,:,t)./(h'*h);
+        stdDataAsym(:,:,t) = dataAsym(:,:,t)./(h'*h);
     end
     logdetH = sum(log(H),2);
 else
     stdData = data;
     stdDataAsym = dataAsym;
-    logdetH = zeros(T,1);    
+    logdetH = zeros(T,1);
 end
 
 % Transfor R & N, if needed

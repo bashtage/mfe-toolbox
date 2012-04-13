@@ -1,4 +1,26 @@
 function R = z2r(z)
+% Transformation of an unconstrained K(K-1)/2 vector to a correlation matrix
+%
+% USAGE:
+%  [R] = z2r(Z)
+%
+% INPUTS:
+%   Z - K(K-1)/2 vector of values in (-inf,inf)
+%
+% OUTPUTS:
+%   R - A K by K correlation matrix
+%
+% COMMENTS:
+%   The unconstrained values are mapped to the correlaiotn matrix through:
+%   y = 2*exp(Z)./(1+exp(Z))-1
+%   C(i,j) = y(i,j) * sqrt(1-sum(C(i,j+1:k).^2), for i=2,...,k, j=i-1:-1:1
+%   R = C*C'
+%
+% See also R2Z
+
+% Copyright: Kevin Sheppard
+% kevin.sheppard@economics.ox.ac.uk
+% Revision: 1    Date: 3/27/2012
 
 m = length(z);
 k = ceil(sqrt(2*m));

@@ -20,21 +20,21 @@ if l>0
 end
 
 offset = 0;
-H = zeros(T,k);
+H = ones(T,k);
 for i=1:k
     u = univariate{i};
     count = u.p+u.o+u.q+1;
     volParameters = garchParameters(offset + (1:count));
     offset = offset+count;
     ht = tarch_core(u.fdata,u.fIdata,volParameters,u.back_cast,u.p,u.o,u.q,u.m,u.T,u.tarch_type);
-    H(:,i) = ht(m+1:T);
+    H(:,i) = ht(u.m+1:u.T);
 end
 stdData = zeros(k,k,T);
 stdDataAsym = zeros(k,k,T);
 for t=1:T
     h = sqrt(H(t,:));
-    stdData(:,:,t) = data(:,:,t)./(h*h');
-    stdDataAsym(:,:,t) = dataAsym(:,:,t)./(h*h');
+    stdData(:,:,t) = data(:,:,t)./(h'*h);
+    stdDataAsym(:,:,t) = dataAsym(:,:,t)./(h'*h);
 end
 
 scales = diag(mean(stdData,3));

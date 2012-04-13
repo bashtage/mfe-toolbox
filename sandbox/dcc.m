@@ -1,4 +1,4 @@
-function [parameters,LL,Ht,VCVrobust,likelihoods,scores,diagnostics]=dcc(data,dataAsym,m,l,n,p,o,q,gjrType,type,composite,startingVals,options)
+function [parameters, ll ,Ht, VCV, scores, diagnostics]=dcc(data,dataAsym,m,l,n,p,o,q,gjrType,type,composite,startingVals,options)
 
 
 
@@ -209,7 +209,7 @@ univariteOptions = optimset('fminunc');
 univariteOptions.Display = 'none';
 univariteOptions.LargeScale = 'off';
 for i=1:k
-    [parameters, ~, ht, ~, ~, ~, diagnostics] = tarch(data2d(:,i),p(i),o(i),q(i), [], gjrType(i), [], univariteOptions);
+    [parameters, ~, ht, ~, ~, scores, diagnostics] = tarch(data2d(:,i),p(i),o(i),q(i), [], gjrType(i), [], univariteOptions);
     % Store output for later use
     univariate{i}.p = p(i);
     univariate{i}.o = o(i);
@@ -223,6 +223,7 @@ for i=1:k
     univariate{i}.parameters = parameters;
     univariate{i}.ht = ht;
     univariate{i}.A = diagnostics.A;
+    univariate{i}.scores = scores;
     H(:,i) = ht;
 end
 stdData = data;
@@ -267,15 +268,14 @@ for i=1:length(w)
 end
 isJoint = false;
 isInference = false;
-parameters = fmincon(@dcc_likelihood,startingVals,A,b,[],[],LB,UB,[],options,stdData,stdDataAsym,m,l,n,R,N,backCast,backCastAsym,stage,composite,isJoint,isInference);
+parameters = fmincon(@dcc_likelihood,startingVals,A,b,[],[],LB,UB,[],options,stdData,stdDataAsym,m,l,n,R,N,backCast,backCastAsym,3,composite,isJoint,isInference);
 
-% FIXME Remove this
-stage = 2;
+gScale = diag(N);
+a = parameters(1:m);
+g = parameters(m+1:m+l);
+b = parameters(m+l+1:m+l+n);
+
 if stage==2
-    gScale = diag(N);
-    a = parameters(1:m);
-    g = parameters(m+1:m+l);
-    b = parameters(m+l+1:m+l+n);
     intercept = R*(1-sum(a)-sum(b)) - N*sum(g);
     [~,rescaledIntercept] = cov2corr(intercept);
     z = r2z(rescaledIntercept);
@@ -285,7 +285,7 @@ if stage==2
     UB = [inf*ones(1,k*(k-1)/2) ones(1,length(parameters))];
     A = [zeros(1,k*(k-1)/2) A];
     b = .99998;
-    parameters = fmincon(@dcc_likelihood,startingVals,A,b,[],[],LB,UB,[],options,stdData,stdDataAsym,m,l,n,R,N,backCast,backCastAsym,stage,composite,isJoint,isInference,gScale);
+    parameters = fmincon(@dcc_likelihood,startingVals,A,b,[],[],LB,UB,[],options,stdData,stdDataAsym,m,l,n,R,N,backCast,backCastAsym,2,composite,isJoint,isInference,gScale);
     z = parameters(1:k(k-1)/2);
     R = z2r(z);
     parameters = parameters(k(k-1)/2+1:length(parameters));
@@ -294,11 +294,19 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Covariances and Parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if stage==3
-    [~,~,Rt] = dcc_likelihood(parameters,stdData,stdDataAsym,m,l,n,R,N,backCast,backCastAsym,stage,composite,isJoint,isInference);
-elseif stage ==2
-    [~,~,Rt] = dcc_likelihood(parameters,stdData,stdDataAsym,m,l,n,R,N,backCast,backCastAsym,stage,composite,isJoint,isInference,gScale);
+garchParameters = [];
+for i=1:k
+    garchParameters  = [garchParameters univariate{i}.parameters']; %#ok<AGROW>
 end
+if stage==3
+    parameters = [garchParameters corr_vech(R)' vech(N)' parameters];
+elseif stage==2
+    parameters = [garchParameters parameters];
+end
+
+isJoint = true;
+isInference = true;
+[ll,~,Rt] = dcc_likelihood(parameters,data,dataAsym,m,l,n,[],[],backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate);
 Ht = zeros(k,k,T);
 for t=1:T
     h = sqrt(H(t,:));
@@ -307,3 +315,57 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inference
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if nargout<=3
+    return
+end
+
+v = length(parameters);
+A = zeros(v);
+scores = zeros(T,v);
+offset = 0;
+
+for i=1:k
+    u = univariate{i};
+    count = 1 + u.p + u.o + u.q;
+    ind = offset+(1:count);
+    A(ind,ind) = u.A;
+    offset = offset + count;
+    scores(:,ind) = u.scores;
+end
+
+% FIXME : Better gradient function
+if stage==2
+    % 1. dcc_likelihood
+    count = k*(k-1)/2 + m + l + n;
+    H = hessian_2sided_nrows(@dcc_likelihood,parameters',count,data,dataAsym,m,l,n,[],[],backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate);
+    A(offset+(1:count),:) = H/T;
+    [g,s]=gradient_2sided(@dcc_likelihood,parameters',data,dataAsym,m,l,n,[],[],backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate);
+    scores(:,offset+(1:count)) = s(:,offset+(1:count));
+    B = cov(scores);
+    Ainv = A\eye(v);
+    VCV = Ainv*B*Ainv'/T;
+elseif stage==3
+    % 1. dcc_inference_objective
+    count = k*(k-1)/2;
+    if l>0
+        count = count + k*(k+1)/2;
+    end
+    tempParams = parameters(1:offset+count);
+    [g,s]=gradient_2sided(@dcc_inference_objective, tempParams', data,dataAsym,m,l,n,univariate);
+    scores(:,offset+(1:count))=s(:,offset+(1:count));
+    H = hessian_2sided_nrows(@dcc_inference_objective, tempParams', count, data,dataAsym,m,l,n,univariate);
+    A(offset+(1:count),1:(count+offset)) = H/T;
+    offset = offset + count;
+    % 2. dcc_likelihood
+    count = m + l + n;
+    H = hessian_2sided_nrows(@dcc_likelihood,parameters',count,data,dataAsym,m,l,n,[],[],backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate);
+    A(offset+(1:count),:) = H/T;
+    [g,s]=gradient_2sided(@dcc_likelihood,parameters',data,dataAsym,m,l,n,[],[],backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate);
+    scores(:,offset+(1:count)) = s(:,offset+(1:count));
+    B = cov(scores);
+    Ainv = A\eye(v);
+    VCV = Ainv*B*Ainv'/T;
+end
+
+diagnostics = [];
+diagnostics.gScale = gScale;
