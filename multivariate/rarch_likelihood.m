@@ -48,7 +48,7 @@ intercept = eye(k) - sum(A.^2,3) - sum(B.^2,3);
 dint = diag(intercept);
 dint(dint<.000001)=.000001;
 intercept = diag(dint);
-logLikConst = log(2*k*pi);
+logLikConst = k*log(2*pi);
 
 for i=1:T
     e(:,:,i) = Cm12 * data(:,:,i) * Cm12;

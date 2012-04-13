@@ -38,7 +38,7 @@ k = size(data,2);
 
 Ht = zeros(k,k,T);
 lls = zeros(T,1);
-logLikConst = log(2*k*pi);
+logLikConst = k*log(2*pi);
 
 for i=1:T
     Ht(:,:,i+1) = C;
