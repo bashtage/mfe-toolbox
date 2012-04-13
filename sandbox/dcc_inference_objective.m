@@ -1,4 +1,4 @@
-function [obj,objs] = dcc_inference_objective(parameters,data,dataAsym,m,l,n,univariate)
+function [obj,objs] = dcc_inference_objective(parameters,data,dataAsym,m,l,n,univariate) %#ok<INUSL>
 % "Objective" function which has R and N as solution to problem
 
 [k,~,T] = size(data);
