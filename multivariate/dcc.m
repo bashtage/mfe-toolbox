@@ -66,6 +66,8 @@ function [parameters, ll ,Ht, VCV, scores, diagnostics]=dcc(data,dataAsym,m,l,n,
 %   parameters = dcc(data,[],1,1,1)
 %   % ADCC(1,1), 2-stage
 %   parameters = dcc(data,[],1,1,1,[],[],[],[],'2-stage')
+%
+% See also CCC_MVGARCH, BEKK, RARCH, SCALAR_VT_VECH, MATRIX_GARCH, TARCH
 
 % Copyright: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk

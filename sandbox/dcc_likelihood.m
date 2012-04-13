@@ -1,4 +1,46 @@
 function [ll,lls,Rt] = dcc_likelihood(parameters,data,dataAsym,m,l,n,R,N,backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate)
+% Likelihood for estimation of scalar DCC(m,n) and ADCC(m,l,n) multivarate volatility models 
+% with with TARCH(p,o,q) or GJRGARCH(p,o,q) conditional variances
+%
+% USAGE:
+%  [LL,LLS,RT] = dcc_likelihood(PARAMETERS,DATA,DATAASYM,M,L,N,R,N,BACKCAST,BACKCASTASYM,STAGE,COMPOSITE,ISJOINT,ISINFERENCE,GSCALE,UNIVARIATE)
+%
+% INPUTS:
+%   PARAMETERS   - Vector of ADCC parameters, and possibly volatility and intercept parameters, 
+%                    depending on other inputs
+%   DATA         - A T by K matrix of zero mean residuals -OR-
+%                    K by K by T array of covariance estimators (e.g. realized covariance)
+%   DATAASYM     - [OPTIONAL] K by K by T array of asymmetric covariance estimators only needed if
+%                    DATA is 3-dimensional and O>0 or L>0
+%   M            - Order of symmetric innovations in DCC model
+%   L            - Order of asymmetric innovations in ADCC model
+%   N            - Order of lagged correlation in DCC model
+%   R
+%   N
+%   BACKCAST     - K by K  matrix to use for back casting symetric terms
+%   BACKCASTASYM - K by K  matrix to use for back casting asymetric terms
+%   STAGE        - Integer, either 2 or 3 indicating whether 2-stage ro 3-stage estimator is being used
+%   COMPOSITE    - Integer, one of 0 (None, use QMLE), 1 (Use diagonal composite) or 2 (full composite)
+%   ISJOINT      - Boolean indicating whether PARAMETERS includes volatility parameters
+%   ISINFERENCE  - Boolean indicating whether likelihood is used for making inference, in which case
+%                    no transformations are made to parameters.
+%   GSCALE       - K by 1 vector used in 2-stage to scale the intercept.  See DCC.
+%   UNIVARIATE   - Cell array of structures containing information needed to compute volatilities.
+%
+% OUTPUTS:
+%   LL           - The log likelihood evaluated at the PARAMETERS
+%   LLS          - A T by 1 vector of log-likelihoods
+%   HT           - A [K K T] dimension matrix of conditional correlations
+%
+% COMMENTS:
+%
+% See also DCC
+
+% Copyright: Kevin Sheppard
+% kevin.sheppard@economics.ox.ac.uk
+% Revision: 1    Date: 4/13/2012
+
+
 % Modes:
 % 1-stage: Univariate, R (corr vech), DCC (N-scale ignored)
 % 2-stage (Estimation): R (transformed corr vech), DCC  (N-scale treated as constants)
