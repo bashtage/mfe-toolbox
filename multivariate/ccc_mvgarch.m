@@ -1,8 +1,10 @@
-function  [parameters, ll, ht, VCV, scores] = ccc_mvgarch(data,dataAsym,p,o,q,startingVals,options)
-% Estimation of TARCH(p,o,q) - Constant Conditional Correlation MV GARCH 
+function  [parameters, ll, ht, VCV, scores] = ccc_mvgarch(data,dataAsym,p,o,q,gjrType,startingVals,options)
+% Estimation of Constant Conditional Correlation MV GARCH with TARCH(p,o,q) or GJRGARCH(p,o,q)
+% conditional variances
 %
 % USAGE:
-%  [PARAMETERS,LL,HT,VCV,SCORES] = ccc_mvgarch(DATA,DATAASYM,P,O,Q,STARTINGVALS,OPTIONS)
+%  [PARAMETERS] = ccc_mvgarch(DATA,DATAASYM,P,O,Q)
+%  [PARAMETERS,LL,HT,VCV,SCORES] = ccc_mvgarch(DATA,DATAASYM,P,O,Q,GJRTYPE,STARTINGVALS,OPTIONS)
 %
 % INPUTS:
 %   DATA         - A T by K matrix of zero mean residuals -OR-
@@ -14,12 +16,14 @@ function  [parameters, ll, ht, VCV, scores] = ccc_mvgarch(data,dataAsym,p,o,q,st
 %                     K by 1 vector of individual asymmetric innovations order
 %   Q            - Non-negative, scalar integer representing the number of conditional variance lags -OR-
 %                     K by 1 vector of individual conditional variance lags
+%   GJRTYPE      - [OPTIONAL] Scalar integer in {1,2} indicating whether to use a TARCH-type model (1) 
+%                     or a GJR-GARCH-type model (2, Default)
 %   STARTINGVALS - [OPTIONAL] Vector of starting values for the K TARCH models.  It should have the
-%                    form  [tarch(1)' tarch(2)'  ... tarch(k)']  
-%                    where each set of TARCH parameters is
-%                    tarch(i) =
-%                    [omega(i) alpha(i,1) ... alpha(i,p(i)) gamma(i,1)
-%                                   ... gamma(i,o(i)) beta(i,1) ... beta(i,q(i))]'
+%                     form  [tarch(1)' tarch(2)'  ... tarch(k)']  
+%                     where each set of TARCH parameters is
+%                     tarch(i) =
+%                     [omega(i) alpha(i,1) ... alpha(i,p(i)) gamma(i,1)
+%                                    ... gamma(i,o(i)) beta(i,1) ... beta(i,q(i))]'
 %   OPTIONS      - [OPTIONAL] Options to use in the TARCH model optimization (fminunc)
 %
 % OUTPUTS:
@@ -43,38 +47,42 @@ function  [parameters, ll, ht, VCV, scores] = ccc_mvgarch(data,dataAsym,p,o,q,st
 
 % Copyright: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk
-% Revision: 3    Date: 10/28/2009
+% Revision: 4    Date: 4/13/2012
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input Argument Checking
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 switch nargin
     case 5
+        gjrType = [];
         startingVals = [];
         options = [];
     case 6
+        startingVals = [];
         options = [];
     case 7
-        % Nothing
+        options = [];
+    case 8
+        % Nothing        
     otherwise
-       error('Between 5 and 7 arguments required.')
+       error('Between 5 and 8 arguments required.')
 end
 
 %data should be TxK, T>K
 if ndims(data)==2
-    [t,k]=size(data);
+    [T,k]=size(data);
     if ~isempty(dataAsym)
         error('If DATA is a T by K matrix, DATAASYM must be empty.');
     end
-    temp = zeros(k,k,t);
-    dataAsym = zeros(k,k,t);
-    for i=1:t
+    temp = zeros(k,k,T);
+    dataAsym = zeros(k,k,T);
+    for i=1:T
         temp(:,:,i) = data(i,:)'*data(i,:);
         dataAsym(:,:,i) = (data(i,:).*(data(i,:)<0))'*(data(i,:).*(data(i,:)<0));
     end
     data = temp;
 elseif ndims(data)==3
-    [k,m,t] = size(data);
+    [k,m,T] = size(data);
     if m~=k
         error('DATA must be K by K by T is a 3D array.');
     end
@@ -83,13 +91,13 @@ elseif ndims(data)==3
             error('DATAASYM must be a 3D array with the same dimensions as DATA');
         end
         [k2,m2,t2]=size(dataAsym);
-        if any([k m t]~=[k2 m2 t2])
+        if any([k m T]~=[k2 m2 t2])
             error('DATAASYM must be a 3D array with the same dimensions as DATA');
         end
     end
 end
 
-if min(t,k)<2 || t<k
+if min(T,k)<2 || T<k
     error('DATA must be a T by K matrix or a K by K by T 3D array, T>K>1');
 end
 
@@ -131,6 +139,18 @@ if any(o>0) && isempty(dataAsym)
     error('DATAASYM must be non-empty if O>0.')
 end
 
+if isempty(gjrType)
+    gjrType = 2;
+end
+if isscalar(gjrType)
+    gjrType = ones(k,1)*gjrType;
+end
+if any(~ismember(gjrType,[1 2])) || numel(gjrType)~=k
+    error('GJRTYPE must be in {1,2} and must be either scalar of K by 1.')
+end
+
+
+
 if  ~isempty(startingVals)
     if size(startingVals,2)>size(startingVals,1)
         startingVals = startingVals';
@@ -152,50 +172,59 @@ try
 catch ME
     error('OPTIONS is not a valid options structure');
 end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input Argument Checking
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 if ndims(data)==3
-    [k,~,t]=size(data);
+    [k,~,T]=size(data);
+    if isempty(dataAsym)
+        dataAsym = repmat(eye(k),[1 1 T]);
+    end
+    data2d = zeros(T,k);
+    for t=1:T
+        data2d(t,:) = sqrt(diag(data(:,:,t)))';
+        data2d(t,:) = data2d(t,:) .* (2*(diag(dataAsym(:,:,t))>0)-1)';
+    end
 else
-    [t,k] = size(data);
-    temp = zeros(k,k,t);
-    for i=1:t
+    data2d = data;
+    [T,k] = size(data);
+    temp = zeros(k,k,T);
+    for i=1:T
         temp(:,:,i) = data(i,:)'*data(i,:);
         dataAsym(:,:,i) = (data(i,:).*(data(i,:)<0))'*(data(i,:).*(data(i,:)<0));
     end
     data = temp;
 end
 
-tarchParameters = cell(k,1);
-ht=cell(k,1);
-tarchVcv=cell(k,1);
-tarchScores = cell(k,1);
-htMat = zeros(t,k);
-volData = zeros(t,k);
-
+H = zeros(T,k);
+univariate = cell(k,1);
+univariteOptions = optimset('fminunc');
+univariteOptions.Display = 'none';
+univariteOptions.LargeScale = 'off';
 for i=1:k
-    % Prepare the data
-    tempData = sqrt(data(i,i,:));
-    if o(i)>0
-        tempData = tempData .* ((dataAsym(i,i,:)<=0) - (dataAsym(i,i,:)>0));
-    end
-    volData(:,i) = squeeze(tempData);
-    tarchStartingVals = [];
-    if ~isempty(startingVals)
-        parameterEnd = i + sum(p(1:i)) + sum(o(1:i)) + sum(q(1:i));
-        parameterStart = parameterEnd - 1 - p(i) - o(i) - q(i) + 1;
-        tarchStartingVals = startingVals(parameterStart:parameterEnd);
-    end
-    [tarchParameters{i},~,ht{i},~,tarchVcv{i},tarchScores{i}]=tarch(volData(:,i),p(i),o(i),q(i),[],2,tarchStartingVals,options);
-    htMat(:,i) = ht{i};
+    [parameters, ~, ht, ~, ~, scores, diagnostics] = tarch(data2d(:,i),p(i),o(i),q(i), [], gjrType(i), [], univariteOptions);
+    % Store output for later use
+    univariate{i}.p = p(i);
+    univariate{i}.o = o(i);
+    univariate{i}.q = q(i);
+    univariate{i}.fdata = diagnostics.fdata;
+    univariate{i}.fIdata = diagnostics.fIdata;
+    univariate{i}.back_cast = diagnostics.back_cast;
+    univariate{i}.m = diagnostics.m;
+    univariate{i}.T = diagnostics.T;
+    univariate{i}.tarch_type = gjrType(i);
+    univariate{i}.parameters = parameters;
+    univariate{i}.ht = ht;
+    univariate{i}.A = diagnostics.A;
+    univariate{i}.scores = scores;
+    H(:,i) = ht;
 end
 
-htArray = zeros(k,k,t);
+htArray = zeros(k,k,T);
 for i=1:k
     for j=i:k
-        htArray(i,j,:) = reshape(sqrt(htMat(:,i).*htMat(:,j)),[1 1 t]);
+        htArray(i,j,:) = reshape(sqrt(H(:,i).*H(:,j)),[1 1 T]);
         htArray(j,i,:) = htArray(i,j,:);
     end
 end
@@ -203,40 +232,46 @@ end
 stdData = data./htArray;
 R = mean(stdData,3);
 R = R./sqrt(diag(R)*diag(R)');
-parameters = zeros(sum(p)+sum(o)+sum(q)+k*(k-1)/2,1);
-parameterCount = 1;
-
-
-for i=1:k
-    parameterCountEnd = parameterCount + sum(1+p(i)+o(i)+q(i));
-    parameters(parameterCount:parameterCountEnd-1) = tarchParameters{i};
-    parameterCount = parameterCountEnd;
+Ht = bsxfun(@times,R,htArray);
+ll = 0;
+likConst = k*log(2*pi);
+for t=1:T
+    ll = ll + 0.5*(likConst + log(det(Ht(:,:,t))) + sum(diag((Ht(:,:,t)\eye(k))*data(:,:,t))));
 end
-corrIndex = parameterCount:parameterCount+(k*(k-1)/2) - 1;
+
+ll = -ll;
+
+% Format parameters
+parameters = zeros(sum(p)+sum(o)+sum(q)+k*(k-1)/2,1);
+offset = 0;
+for i=1:k
+    u = univariate{i};
+    count = sum(1+p(i)+o(i)+q(i));
+    parameters(offset + (1:count)) = u.parameters;
+    offset = offset + count;
+end
+corrIndex = offset + (1:k*(k-1)/2);
 parameters(corrIndex) = corr_vech(R);
 
 % Compute the LL and covariance
-if nargout>1
-    [ll, lls, ht] = ccc_mvgarch_joint_likelihood(parameters,data,volData,p,o,q);
-    ll = - ll;
-end
-% Inference
 if nargout>3
-    A = zeros(length(parameters));
-    parameterCount = 1;
-    scores = zeros(t,length(parameters));
+    v = length(parameters);
+    A = zeros(v);
+    scores = zeros(T,v);
+    offset = 0;
     for i=1:k
-        parameterCountEnd = parameterCount + sum(1+p(i)+o(i)+q(i)) - 1;
-        index = parameterCount:parameterCountEnd;
-        A(index,index) = tarchVcv{i}^(-1);
-        scores(:,index) = tarchScores{i};
-        parameterCount = parameterCountEnd + 1;
+        u = univariate{i};
+        count = sum(1+p(i)+o(i)+q(i));
+        index = offset + (1:count);
+        offset = offset + count;
+        A(index,index) = u.A;
+        scores(:,index) = u.scores;
     end
-    corrParameters = parameters(corrIndex);
-    A(corrIndex,:) = hessian_2sided_nrows(@ccc_mvgarch_joint_likelihood,parameters,k*(k-1)/2,data,volData,p,o,q);
-    [nothing,scores(:,corrIndex)] = gradient_2sided(@ccc_mvgarch_likelihood,corrParameters,data,htMat);
-    A = A/t;
-    B = covnw(scores,0,0);
-    Ainv = A^(-1);
-    VCV = Ainv*B*Ainv'/t;
+    H = hessian_2sided_nrows(@dcc_inference_objective,parameters,k*(k-1)/2,data,dataAsym,0,0,0,univariate);
+    [~,s] = gradient_2sided(@dcc_inference_objective,parameters,data,dataAsym,0,0,0,univariate);
+    scores(:,corrIndex) = s(:,corrIndex);
+    A(corrIndex,:) = H/T;
+    B = cov(scores);
+    Ainv = A\eye(v);
+    VCV = Ainv*B*Ainv'/T;
 end
