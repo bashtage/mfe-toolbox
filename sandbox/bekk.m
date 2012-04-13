@@ -75,6 +75,7 @@ switch nargin
     otherwise
         error('5 to 8 inputs required.')
 end
+
 if ndims(data)>3
     error('DATA must be either a T by K matrix or a K by K by T array.')
 end
@@ -160,7 +161,7 @@ if isempty(startingVals)
     startingOptions = optimset('fminunc');
     startingOptions.LargeScale = 'off';
     startingOptions.Display = 'none';
-    [startingVals,~,~,intercept] = scalar_vt_vech(data,dataAsym,p,o,q,[],startingOptions);
+    [startingVals,~,~,intercept] = scalar_vt_vech(data,dataAsym,p,o,q,[],[],startingOptions);
     C = intercept;
     C = chol2vec(chol(C)');
     switch type
@@ -196,6 +197,7 @@ warning('off') %#ok<*WNOFF>
 parameters = fmincon(@bekk_likelihood,startingVals,[],[],[],[],LB,UB,@bekk_constraint,options,data,dataAsym,p,o,q,backCast,backCastAsym,type);
 warning('on') %#ok<*WNON>
 [ll,~,Ht] = bekk_likelihood(parameters,data,dataAsym,p,o,q,backCast,backCastAsym,type);
+ll = -ll;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inference
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
