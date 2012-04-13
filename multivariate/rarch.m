@@ -220,6 +220,7 @@ if isJoint
     parameters = fmincon(@rarch_likelihood,startingValJoint,[],[],[],[],LBJoint,UBJoint,@rarch_constraint,options,data,p,q,C,backCast,type,true,true);
     [ll,~,Ht] = rarch_likelihood(parameters,data,p,q,C,backCast,type,true,true);
 end
+ll = -ll;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inference
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
