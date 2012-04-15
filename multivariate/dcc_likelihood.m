@@ -78,7 +78,12 @@ end
 a = parameters(offset + (1:m));
 g = parameters(offset + (m+1:m+l));
 b = parameters(offset + (m+l+1:m+l+n));
-
+if isempty(g)
+    g=0;
+end
+if isempty(b)
+    b=0;
+end
 % Compute volatilities
 H = ones(T,k);
 if computeVol
@@ -117,7 +122,10 @@ end
 
 % Compute intercept
 if stage==3
-    intercept = R*(1-sum(a)-sum(b))-N*sum(g);
+    intercept = R*(1-sum(a)-sum(b));
+    if l>0
+        intercept = intercept - N*sum(g);
+    end
 else
     scale = (1-sum(a)-sum(b)) - gScale*sum(g);
     scale = sqrt(scale);

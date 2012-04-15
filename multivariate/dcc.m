@@ -1,5 +1,5 @@
 function [parameters, ll ,Ht, VCV, scores, diagnostics]=dcc(data,dataAsym,m,l,n,p,o,q,gjrType,method,composite,startingVals,options)
-% Estimation of scalar DCC(m,n) and ADCC(m,l,n) multivarate volatility model with with TARCH(p,o,q) 
+% Estimation of scalar DCC(m,n) and ADCC(m,l,n) multivarate volatility model with with TARCH(p,o,q)
 % or GJRGARCH(p,o,q) conditional variances
 %
 % USAGE:
@@ -15,18 +15,18 @@ function [parameters, ll ,Ht, VCV, scores, diagnostics]=dcc(data,dataAsym,m,l,n,
 %   L            - Order of asymmetric innovations in ADCC model
 %   N            - Order of lagged correlation in DCC model
 %   P            - [OPTIONAL] Positive, scalar integer representing the number of symmetric innovations in the
-%                    univariate volatility models.  Can also be a K by 1 vector containing the lag length 
+%                    univariate volatility models.  Can also be a K by 1 vector containing the lag length
 %                    for each series. Default is 1.
 %   O            - [OPTIONAL] Non-negative, scalar integer representing the number of asymmetric innovations in the
-%                    univariate volatility models.  Can also be a K by 1 vector containing the lag length 
+%                    univariate volatility models.  Can also be a K by 1 vector containing the lag length
 %                    for each series. Default is 0.
-%   Q            - [OPTIONAL] Non-negative, scalar integer representing the number of conditional covariance lags in 
-%                    the univariate volatility models.  Can also be a K by 1 vector containing the lag length 
+%   Q            - [OPTIONAL] Non-negative, scalar integer representing the number of conditional covariance lags in
+%                    the univariate volatility models.  Can also be a K by 1 vector containing the lag length
 %                    for each series. Default is 1.
-%   GJRTYPE      - [OPTIONAL] Either 1 (TARCH/AVGARCH) or 2 (GJR-GARCH/GARCH/ARCH).  also be a K by 1 vector 
+%   GJRTYPE      - [OPTIONAL] Either 1 (TARCH/AVGARCH) or 2 (GJR-GARCH/GARCH/ARCH).  also be a K by 1 vector
 %                    containing the model type for each for each series. Default is 2.
 %   METHOD       - [OPTIONAL] String, one of '3-stage' (Default) or '2-stage'.  Determines whether
-%                    the model is estimated using the 3-stage estimator, or if the correlation intercepts 
+%                    the model is estimated using the 3-stage estimator, or if the correlation intercepts
 %                    are jointly estimated along with the dynamic parameters.
 %   COMPOSITE    - [OPTIONAL] String value, either 'None' (Default), 'Diagonal' or 'Full'.  None
 %                    uses standard QMLE.  'Diagonal' and 'Full' both uses composite likelihood where
@@ -35,7 +35,7 @@ function [parameters, ll ,Ht, VCV, scores, diagnostics]=dcc(data,dataAsym,m,l,n,
 %   OPTIONS      - [OPTIONAL] Options to use in the model optimization (fmincon)
 %
 % OUTPUTS:
-%   PARAMETERS   - Estimated parameters.  Output depends on METHOD. 
+%   PARAMETERS   - Estimated parameters.  Output depends on METHOD.
 %                    3-stage: [VOL(1) ... VOL(K) corr_vech(R)' vech(N)' alpha gamma beta]
 %                    2-stage: [VOL(1) ... VOL(K) corr_vech(R)' alpha gamma beta]
 %                    where VOL(j) is a (1+P(i)+O(i)+Q(i)) vector containing the parameters from
@@ -51,11 +51,11 @@ function [parameters, ll ,Ht, VCV, scores, diagnostics]=dcc(data,dataAsym,m,l,n,
 %     3-stage:
 %     Q(t) = R*(1-sum(a)-sum(b))-sum(g)*N + a(1)*e(t-1)'*e(t-1) + ... + a(m)*e(t-m)'*e(t-m)
 %     + g(1)*v(t-1)'*v(t-1) + ... + g(l)*v(t-l)*v(t-l) + b(1)*Q(t-1) + ... + b(n)*Q(t-1)
-%     
+%
 %     2-stage
 %     Q(t) = R.*scale + a(1)*e(t-1)'*e(t-1) + ... + a(m)*e(t-m)'*e(t-m)
 %     + g(1)*v(t-1)'*v(t-1) + ... + g(l)*v(t-l)*v(t-l) + b(1)*Q(t-1) + ... + b(n)*Q(t-1)
-%  
+%
 %   where v(t,:) = e(t,;).*(e(t,:)<0) and s = sqrt((1-sum(a)-sum(b)-gScale*sum(g))) and scale = s*s'
 %
 %
@@ -186,7 +186,7 @@ if isscalar(o)
     o = o * ones(k,1);
 end
 if isempty(q)
-    q = 0;
+    q = 1;
 end
 if isscalar(q)
     q = q * ones(k,1);
@@ -307,8 +307,8 @@ r = sqrt(diag(R));
 R = R ./ (r*r');
 N = mean(stdDataAsym,3);
 scale = max(eig(R^(-0.5)*N*R^(-0.5)));
-% FIXME
-startingVals = [.02 .01/scale .96];
+% TODO : Better starting values
+startingVals = [.02*ones(1,m)/m .01/scale*ones(1,l)/l .96*ones(1,n)/n];
 
 LB = zeros(length(startingVals),1);
 UB = ones(length(startingVals),1);
@@ -355,6 +355,7 @@ if stage==2
     parameters = parameters(k(k-1)/2+1:length(parameters));
     parameters  = [corr_vech(R)' parameters];
 end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Covariances and Parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -363,7 +364,11 @@ for i=1:k
     garchParameters  = [garchParameters univariate{i}.parameters']; %#ok<AGROW>
 end
 if stage==3
-    parameters = [garchParameters corr_vech(R)' vech(N)' parameters];
+    if l>0
+        parameters = [garchParameters corr_vech(R)' vech(N)' parameters];
+    else
+        parameters = [garchParameters corr_vech(R)' parameters];
+    end
 elseif stage==2
     parameters = [garchParameters parameters];
 end
@@ -398,7 +403,7 @@ for i=1:k
     scores(:,ind) = u.scores;
 end
 
-% FIXME : Better gradient function
+% TODO : Better gradient function
 if stage==2
     % 1. dcc_likelihood
     count = k*(k-1)/2 + m + l + n;
