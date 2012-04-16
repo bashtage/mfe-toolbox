@@ -23,7 +23,7 @@ function [parameters, ll ,Ht, VCV, scores, diagnostics]=dcc(data,dataAsym,m,l,n,
 %   Q            - [OPTIONAL] Non-negative, scalar integer representing the number of conditional covariance lags in
 %                    the univariate volatility models.  Can also be a K by 1 vector containing the lag length
 %                    for each series. Default is 1.
-%   GJRTYPE      - [OPTIONAL] Either 1 (TARCH/AVGARCH) or 2 (GJR-GARCH/GARCH/ARCH).  also be a K by 1 vector
+%   GJRTYPE      - [OPTIONAL] Either 1 (TARCH/AVGARCH) or 2 (GJR-GARCH/GARCH/ARCH). Can also be a K by 1 vector
 %                    containing the model type for each for each series. Default is 2.
 %   METHOD       - [OPTIONAL] String, one of '3-stage' (Default) or '2-stage'.  Determines whether
 %                    the model is estimated using the 3-stage estimator, or if the correlation intercepts
