@@ -39,6 +39,8 @@ function [parameters,ll,Ht,VCV,scores] = gogarch(data,p,q,gjrType,type,startingV
 %   parameters = gogarch(data,1,1,[],'OGARCH')
 %   % GOGARCH(1,1)
 %   parameters = gogarch(data,1,1)
+%
+% See also BEKK, RARCH, DCC, TARCH, PHI2U
 
 % Copyright: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk
@@ -223,13 +225,33 @@ if isGogarch
         A(i,offset + (1:count)) = Ai;
         offset = offset + count;
     end
-    parameters = fmincon(@gogarch_likelihood,startingVals,A,b,[],[],LB,UB,[],options,data,p,q,gjrType,P,L,false);
-    [ll,~,Ht] = gogarch_likelihood(parameters,data,p,q,gjrType,P,L,false);
+    parameters = fmincon(@gogarch_likelihood,startingVals,A,b,[],[],LB,UB,[],options,data,p,q,gjrType,P,L,false,false);
+    [ll,~,Ht] = gogarch_likelihood(parameters,data,p,q,gjrType,P,L,false,false);
 else
-    [ll,~,Ht] = gogarch_likelihood(parameters,data,p,q,gjrType,P,L,true);
+    [ll,~,Ht] = gogarch_likelihood(parameters,data,p,q,gjrType,P,L,true,false);
 end
 ll = -ll;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inference
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-VCV = [];
+k2 = k*(k+1)/2;
+v = k2+length(parameters);
+scores = zeros(T,v);
+count = 1;
+for j=1:k
+    for i=j:k
+        scores(:,count) = squeeze(data(i,j,:) - S(i,j));
+        count = count + 1;
+    end
+end
+[~,s] = gradient_2sided(@gogarch_likelihood,parameters',data,p,q,gjrType,P,L,~isGogarch,false);
+scores(:,k2+1:v) = s;
+B = covnw(scores,ceil(1.2*T^(1/3)));
+A = zeros(v);
+A(1:k2,1:k2) = -eye(k2);
+m = length(parameters);
+parameters = [vech(S)' parameters]';
+temp = hessian_2sided_nrows(@gogarch_likelihood,parameters,m,data,p,q,gjrType,P,L,~isGogarch,true);
+A((k2+1):v,:) = temp/T;
+Ainv = A\eye(v);
+VCV = Ainv*B*Ainv'/T;

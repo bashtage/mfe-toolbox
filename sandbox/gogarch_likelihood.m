@@ -1,8 +1,8 @@
-function [ll,lls,Ht] = gogarch_likelihood(parameters,data,p,q,gjrType,P,L,isOgarch)
+function [ll,lls,Ht] = gogarch_likelihood(parameters,data,p,q,gjrType,P,L,isOgarch,isInference)
 % Log-likelihood for use in estimation GOGARCH and OGARCH models
 %
 % USAGE:
-%  [LL,LLS,HT] = gogarch_likelihood(PARAMETERS,DATA,P,Q,GJRTYPE,P,L,ISOGARCH)
+%  [LL,LLS,HT] = gogarch_likelihood(PARAMETERS,DATA,P,Q,GJRTYPE,P,L,ISOGARCH,ISINFERNCE)
 %
 % INPUTS:
 %   PARAMETERS - K*(K-1)/2 + sum(P) + sum(Q) by 1 vector of parameters (only sum(P) + sum(Q) if ISOGARCH)
@@ -12,6 +12,9 @@ function [ll,lls,Ht] = gogarch_likelihood(parameters,data,p,q,gjrType,P,L,isOgar
 %   GJRTYPE    - K by 1 vector containing either 1 (TARCH/AVGARCH) or 2 (GJRGARCH/GARCH/ARCH)
 %   P          - Eigenvector of unconditional covariance matrix of the data
 %   L          - Diagonal matrix containing the eigenvalues of unconditional covariance matrix of the data
+%   ISOGARCH   - Boolean indicating that the model is OGARCH (otherwise GOGARCH)
+%   ISINFERNCE - Boolean indicating the likelihood is being used for inference, so that the first
+%                  K(K+1)/2 parameters are ivech(S)
 %
 % OUTPUTS:
 %   LL         - The log likelihood computed at PARAMETERS
@@ -25,13 +28,24 @@ function [ll,lls,Ht] = gogarch_likelihood(parameters,data,p,q,gjrType,P,L,isOgar
 % Revision: 1    Date: 4/15/2012
 
 [k,~,T] = size(data);
+if size(parameters,1)>size(parameters,2)
+    parameters = parameters';
+end
+
+offset = 0;
+if isInference
+    S =  ivech(parameters(1:k*(k+1)/2));
+    [P,L] = eig(S);
+    P = P';
+    offset = offset + k*(k+1)/2;
+end
+
 if ~isOgarch
-    phi = parameters(1:k(k-1)/2);
+    phi = parameters(offset + (1:k(k-1)/2));
     U = phi2u(phi);
-    offset = k*(k-1)/2;
+    offset = offset + k*(k-1)/2;
 else
     U = eye(k);
-    offset = 0;
 end
 Z = P*L^(0.5)*U;
 Zinv = U'*L^(-0.5)*P';
