@@ -41,7 +41,7 @@ function [parameters,ht,w,pc]=o_mvgarch(data,numfactors,p,o,q,startingVals,optio
 %   matrix of factor loadings and Omega is a diagonal matrix of (time-invariant) idiosyncratic
 %   variances.  If NUMFACTORS = K when Omega = 0.
 %
-% See also PCA, CCC_MVGARCH, DCC_MVGARCH
+% See also PCA, CCC_MVGARCH, DCC, GOGARCH
 
 
 % Copyright: Kevin Sheppard
@@ -154,10 +154,9 @@ for i=1:numfactors
         parameterStart = parameterEnd - 1 - p(i) - o(i) - q(i) + 1;
         tarchStartingVals = startingVals(parameterStart:parameterEnd);
     end
-    [tarchParameters{i},nothing,tarchHt{i},nothing,tarchVcv{i},tarchScores{i}]=tarch(pcs(:,i),p(i),o(i),q(i),[],2,tarchStartingVals,options);
+    [tarchParameters{i},~,tarchHt{i},~,tarchVcv{i},tarchScores{i}]=tarch(pcs(:,i),p(i),o(i),q(i),[],2,tarchStartingVals,options);
     htMat(:,i) = tarchHt{i};
 end
-
 
 if numfactors<k
     errors = data - weights * pcs;
