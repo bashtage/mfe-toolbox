@@ -70,9 +70,15 @@ Ht=repmat(backCast,[1 1 T]);
 %Initialize the log likelihood
 lls=zeros(T,1);
 
-%Compute the likelihood constant.
-likconst=k*log(2*pi);
-compLikConst = 2*log(2*pi);
+% Indices or constant, as needed
+if useComposite == 0
+    likconst = k*log(2*pi);
+elseif useComposite == 1
+    indices = [(1:k-1)' (2:k)'];
+elseif useComposite == 2
+    [i,j] = meshgrid(1:k);
+    indices = [i(~triu(true(k))) j(~triu(true(k)))];
+end
 %Perform the recursion
 for t=1:T;
     Ht(:,:,t)=const;
@@ -97,25 +103,16 @@ for t=1:T;
             Ht(:,:,t)=Ht(:,:,t)+beta(j)*Ht(:,:,t-j);
         end
     end
-    % Replace these lines to make it work better with poorle conditioned data
+    % Replace these lines to make it work better with poorly conditioned covairance
     % likelihoods(i)=likconst+(log(det(Ht(:,:,t)))+data(i,:)*Ht(:,:,t)^(-1)*data(i,:)');
-    
-    %This is a trick to ensure better numerical stability
-    Q=sqrt(diag(Ht(:,:,t)));
-    R=Ht(:,:,t)./(Q*Q');
-    stdresid=data(:,:,t)./(Q*Q');
+    % This is a trick to ensure better numerical stability
     if useComposite==0
+        Q=sqrt(diag(Ht(:,:,t)));
+        R=Ht(:,:,t)./(Q*Q');
+        stdresid=data(:,:,t)./(Q*Q');
         lls(t)=0.5*(likconst+2*sum(log(Q))+log(det(R))+trace(R^(-1)*stdresid));
-    elseif useComposite==1
-        for i=1:k-1
-            lls(t)= lls(t) + 0.5*(compLikConst+2*sum(log(Q(i))+log(Q(i+1))) + log(1-R(i,i+1)^2) + trace(R(i+i+1,i:i+1)^(-1)*stdresid))/(k-1);
-        end
-    else % useComposite==2
-        for i=1:k
-            for j=i+1:k
-                lls(t)=0.5*(compLikConst+2*sum(log(Q(i))+log(Q(j))) + log(1-R(i,j)^2) + trace(R([i j],[i j])^(-1)*stdresid))/(k*(k+1)/2);
-            end
-        end
+    elseif useComposite
+        lls(t) = composite_likelihood(Ht(:,:,t),data(:,:,t),indices);
     end
 end
 ll = sum(lls);

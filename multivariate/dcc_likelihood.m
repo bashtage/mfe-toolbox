@@ -133,11 +133,16 @@ else
 end
 % Check eigenvalues?
 
+% Indices or constant, as needed
 if composite == 0
     likconst = k*log(2*pi);
-else
-    likconst  = 2*log(2*pi);
+elseif composite == 1
+    indices = [(1:k-1)' (2:k)'];
+elseif composite == 2
+    [i,j] = meshgrid(1:k);
+    indices = [i(~triu(true(k))) j(~triu(true(k)))];
 end
+
 I = eye(k);
 Qt = zeros(k,k,T);
 Rt = zeros(k,k,T);
@@ -169,21 +174,9 @@ for t=1:T
     Rt(:,:,t) = Qt(:,:,t)./ (q*q');
     if composite == 0
         lls(t) = 0.5*(likconst + logdetH(t) + log(det(Rt(:,:,t))) + sum(diag((Rt(:,:,t)\I)*stdData(:,:,t))));
-    elseif composite == 1
-        scale = (k-1);
-        for i=1:k-1
-            % FIXME : Sclaar optimization of CL badly needed
-            j = i + 1;
-            lls(t) = lls(t) + 0.5*(likconst + sum(log(H([i j]))) + log(det(Rt([i j],[i j],t))) + sum(diag((Rt([i j],[i j],t)\I)*stdData([i j],[i j],t))))/scale;
-        end
-    else
-        scale = k*(k-1)/2;
-        for i=1:k
-            for j=i+1:k
-                % FIXME : Scalar optimization of CL badly needed
-                lls(t) = lls(t) + 0.5*(likconst + sum(log(H([i j]))) + log(det(Rt([i j],[i j],t))) + sum(diag((Rt([i j],[i j],t)\I)*stdData([i j],[i j],t))))/scale;
-            end
-        end
+    elseif composite
+        S = (sqrt(H(t,:))'*sqrt(H(t,:))) .* Rt(:,:,t);
+        lls(t) = composite_likelihood(S,stdData(:,:,t),indices);
     end
 end
 ll = sum(lls);
