@@ -87,15 +87,7 @@ end
 % Compute volatilities
 H = ones(T,k);
 if computeVol
-    offset = 0;
-    for i=1:k
-        u = univariate{i};
-        count = u.p+u.o+u.q+1;
-        volParameters = garchParameters(offset + (1:count));
-        offset = offset+count;
-        ht = tarch_core(u.fdata,u.fIdata,volParameters,u.back_cast,u.p,u.o,u.q,u.m,u.T,u.tarch_type);
-        H(:,i) = ht(u.m+1:u.T);
-    end
+    H = dcc_reconstruct_variance(garchParameters,univariate);
     stdData = zeros(k,k,T);
     stdDataAsym = zeros(k,k,T);
     for t=1:T

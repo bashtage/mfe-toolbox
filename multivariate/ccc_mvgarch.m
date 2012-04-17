@@ -197,30 +197,7 @@ else
     data = temp;
 end
 
-H = zeros(T,k);
-univariate = cell(k,1);
-univariteOptions = optimset('fminunc');
-univariteOptions.Display = 'none';
-univariteOptions.LargeScale = 'off';
-for i=1:k
-    [parameters, ~, ht, ~, ~, scores, diagnostics] = tarch(data2d(:,i),p(i),o(i),q(i), [], gjrType(i), [], univariteOptions);
-    % Store output for later use
-    univariate{i}.p = p(i);
-    univariate{i}.o = o(i);
-    univariate{i}.q = q(i);
-    univariate{i}.fdata = diagnostics.fdata;
-    univariate{i}.fIdata = diagnostics.fIdata;
-    univariate{i}.back_cast = diagnostics.back_cast;
-    univariate{i}.m = diagnostics.m;
-    univariate{i}.T = diagnostics.T;
-    univariate{i}.tarch_type = gjrType(i);
-    univariate{i}.parameters = parameters;
-    univariate{i}.ht = ht;
-    univariate{i}.A = diagnostics.A;
-    univariate{i}.scores = scores;
-    H(:,i) = ht;
-end
-
+[H,univariate] = dcc_fit_variance(data2d,p,o,q,gjrType);
 htArray = zeros(k,k,T);
 for i=1:k
     for j=i:k

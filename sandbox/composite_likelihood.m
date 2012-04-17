@@ -21,10 +21,11 @@ function ll = composite_likelihood(S,data,indices)
 q = size(indices,1);
 [m,n] = size(data);
 likConst = 3.67575413281869;
+ll = 0;
 if m==n
     for k=1:q
         i = indices(k,1);
-        j = indices(k,1);
+        j = indices(k,2);
         s11 = S(i,i);
         s12 = S(i,j);
         s22 = S(j,j);
@@ -32,12 +33,12 @@ if m==n
         x11 = data(i,i);
         x12 = data(i,j);
         x22 = data(j,j);
-        ll = 0.5*(likConst + log(det) + (s22*x11 - 2*s12*x12 + s11*x22)/det)/m;
+        ll = ll + 0.5*(likConst + log(det) + (s22*x11 - 2*s12*x12 + s11*x22)/det)/q;
     end
 else
     for k=1:q
         i = indices(k,1);
-        j = indices(k,1);
+        j = indices(k,2);
         s11 = S(i,i);
         s12 = S(i,j);
         s22 = S(j,j);
@@ -45,6 +46,6 @@ else
         x11 = data(i)*data(i);
         x12 = data(i)*data(j);
         x22 = data(j)*data(j);
-        ll = 0.5*(likConst + log(det) + (s22*x11 - 2*s12*x12 + s11*x22)/det)/m;
+        ll = ll + 0.5*(likConst + log(det) + (s22*x11 - 2*s12*x12 + s11*x22)/det)/q;
     end    
 end
