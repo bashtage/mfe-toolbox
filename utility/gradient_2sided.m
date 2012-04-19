@@ -32,6 +32,9 @@ function [G,Gt] = gradient_2sided(f,x,varargin)
 % kevin.sheppard@economics.ox.ac.uk
 % Revision: 3    Date: 2/1/2006
 
+if size(x,2)>size(x,1)
+    x=x';
+end
 
 M = size(x,1);
  

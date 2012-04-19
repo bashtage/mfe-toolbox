@@ -30,11 +30,13 @@ function H = hessian_2sided_nrows(f,x,k,varargin)
 % kevin.sheppard@economics.ox.ac.uk
 % Revision: 3    Date: 9/1/2005
 
-n = size(x,1);
-
+if size(x,2)>size(x,1)
+    x=x';
+end
 if size(x,2)~=1
     error('X must be a column vector.')
 end
+n = size(x,1);
 
 try
     feval(f,x,varargin{:});
@@ -50,6 +52,7 @@ fx = feval(f,x,varargin{:});
 h = eps.^(1/3)*max(abs(x),1e-2);
 xh = x+h;
 h = xh-x;
+
 ee = sparse(1:n,1:n,h,n,n);
 
 % Compute forward and backward steps

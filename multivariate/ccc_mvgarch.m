@@ -248,7 +248,7 @@ if nargout>3
     [~,s] = gradient_2sided(@dcc_inference_objective,parameters,data,dataAsym,0,0,0,univariate);
     scores(:,corrIndex) = s(:,corrIndex);
     A(corrIndex,:) = H/T;
-    B = cov(scores);
+    B = covnw(scores);
     Ainv = A\eye(v);
     VCV = Ainv*B*Ainv'/T;
 end

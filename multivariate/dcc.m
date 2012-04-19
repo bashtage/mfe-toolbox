@@ -408,7 +408,7 @@ elseif stage==3
     A(offset+(1:count),:) = H/T;
     [~,s]=gradient_2sided(@dcc_likelihood,parameters',data,dataAsym,m,l,n,[],[],backCast,backCastAsym,stage,composite,isJoint,isInference,gScale,univariate);
     scores(:,offset+(1:count)) = s(:,offset+(1:count));
-    B = cov(scores);
+    B = covnw(scores);
     Ainv = A\eye(v);
     VCV = Ainv*B*Ainv'/T;
 end
