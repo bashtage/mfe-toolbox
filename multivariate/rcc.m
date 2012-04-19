@@ -52,8 +52,8 @@ function [parameters, ll ,Ht, VCV, scores, diagnostics]=rcc(data,dataAsym,m,n,p,
 % EXAMPLES:
 %   % RCC(1,1)
 %   parameters = rcc(data,[],1,1)
-%   % DCC(1,1), 2-stage
-%   parameters = dcc(data,[],1,1,[],[],[],[],[],'2-stage')
+%   % RCC(1,1), 2-stage
+%   parameters = rcc(data,[],1,1,[],[],[],[],[],'2-stage')
 %
 % See also DCC, CCC_MVGARCH, BEKK, RARCH, SCALAR_VT_VECH, MATRIX_GARCH, TARCH
 
@@ -269,6 +269,12 @@ if ~isempty(startingVals)
     if length(startingVals)~=count
         error('STARTINGVALS does not contain the correct number of parameters.')
     end
+    tarchStartingVals = startingVals(1:k+sum(p)+sum(o)+sum(q));
+    offset = k+sum(p)+sum(o)+sum(q) + k*(k-1)/2;
+    rccStartingVals= startingVals(offset + (1:(m+n)));
+else
+    tarchStartingVals = [];
+    rccStartingVals = [];
 end
 
 if isempty(options)
@@ -285,7 +291,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Univariate volatility models
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[H,univariate] = dcc_fit_variance(data2d,p,o,q,gjrType);
+[H,univariate] = dcc_fit_variance(data2d,p,o,q,gjrType,tarchStartingVals);
 stdData = data;
 for t=1:T
     h = sqrt(H(t,:));
@@ -306,7 +312,33 @@ backCast = zeros(k);
 for i=1:length(w)
     backCast = backCast + w(i) * (Rm12*stdData(:,:,i)*Rm12);
 end
-startingVals = sqrt([.02*ones(1,m)/m .96*ones(1,n)/n]);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Starting Values
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if ~isempty(rccStartingVals)
+    startingVals = rccStartingVals;
+else
+    a = [.01 .03 .05 .1];
+    theta = [.99 .97 .95];
+    [a,theta] = ndgrid(a,theta);
+    parameters = sqrt(unique([a(:) theta(:)-a(:)],'rows'));
+    minLL= inf;
+    isJoint = false;
+    isInference = false;
+    for i=1:size(parameters,1)
+        ll = rcc_likelihood(parameters(i,:),stdData,1,1,R,backCast,3,1,composite,isJoint,isInference,rScale,univariate);
+        if ll<minLL
+            startingVals = parameters(i,:);
+            minLL = ll;
+        end
+    end
+    a = startingVals(1).^2;
+    b = startingVals(2).^2;
+    startingVals = sqrt([a*ones(1,m)/m b*ones(1,n)/n]);
+end
+if size(startingVals,1)>size(startingVals,2)
+    startingVals = startingVals';
+end
 UB = ones(size(startingVals));
 LB = -UB;
 
@@ -395,7 +427,7 @@ end
 
 % TODO : Better gradient function
 if stage==2
-    % 1. dcc_likelihood
+    % 1. rcc_likelihood
     count = k*(k-1)/2 + m + n;
     H = hessian_2sided_nrows(@rcc_likelihood,parameters,count,data,m,n,R,backCast,stage,type,composite,isJoint,isInference,rScale,univariate);
     A(offset+(1:count),:) = H/T;

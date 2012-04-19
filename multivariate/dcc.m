@@ -246,11 +246,31 @@ end
 if ~isempty(startingVals)
     count = k + sum(p)+ sum(o) + sum(q);
     count = count + m + l + n;
-    count = count + k*(k-1)/2;
+    if stage==2 || l==0
+        count = count + k*(k-1)/2;
+    elseif  stage==3
+        count = count + k*(k+1)/2 + k*(k-1)/2;
+    end
     if length(startingVals)~=count
         error('STARTINGVALS does not contain the correct number of parameters.')
     end
+    count = k+sum(p)+sum(o)+sum(q);
+    tarchStartingVals = startingVals(1:count);
+    offset = count;
+    % Count for intercepts
+    if stage==2 || l==0
+        count = k*(k-1)/2;
+    elseif  stage==3
+        count = k*(k+1)/2 + k*(k-1)/2;
+    end
+    offset = offset + count;
+    count = m+l+n;
+    dccStartingVals = startingVals(offset + (1:count));
+else
+    tarchStartingVals = [];
+    dccStartingVals = [];
 end
+
 
 if isempty(options)
     options = optimset('fmincon');
@@ -266,7 +286,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Univariate volatility models
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[H,univariate] = dcc_fit_variance(data2d,p,o,q,gjrType);
+[H,univariate] = dcc_fit_variance(data2d,p,o,q,gjrType,tarchStartingVals);
 stdData = data;
 stdDataAsym = dataAsym;
 for t=1:T
@@ -274,26 +294,6 @@ for t=1:T
     hh = h'*h;
     stdData(:,:,t) = stdData(:,:,t)./hh;
     stdDataAsym(:,:,t) = stdDataAsym(:,:,t)./hh;
-end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Estimation
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-R = mean(stdData,3);
-r = sqrt(diag(R));
-R = R ./ (r*r');
-N = mean(stdDataAsym,3);
-scale = max(eig(R^(-0.5)*N*R^(-0.5)));
-% TODO : Better starting values
-startingVals = [.02*ones(1,m)/m .01/scale*ones(1,l)/l .96*ones(1,n)/n];
-
-LB = zeros(length(startingVals),1);
-UB = ones(length(startingVals),1);
-A = ones(1,length(startingVals));
-A(m+1:m+l) = scale;
-b = .99998;
-
-if (startingVals*A'-b) >= 0
-    error('STARTINGVALS for DCC parameters are not comparible with a positive definite intercept.')
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Back casts
@@ -306,6 +306,62 @@ for i=1:length(w)
     backCast = backCast + w(i)*stdData(:,:,i);
     backCastAsym = backCastAsym + w(i)*stdDataAsym(:,:,i);
 end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Estimation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+R = mean(stdData,3);
+r = sqrt(diag(R));
+R = R ./ (r*r');
+N = mean(stdDataAsym,3);
+scale = max(eig(R^(-0.5)*N*R^(-0.5)));
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Starting Values
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if ~isempty(dccStartingVals)
+    startingVals = dccStartingVals;
+else
+    a = [.01 .03 .05 .1];
+    theta = [.99 .97 .95];
+    if l>0
+        g = [.01 .03 .05];
+        [a,g,theta] = ndgrid(a,g,theta);
+        parameters = unique([a(:) g(:) theta(:)-a(:)-scale*g(:)],'rows');
+        isAsym = 1;
+    else
+        [a,theta] = ndgrid(a,theta);
+        parameters = unique([a(:) theta(:)-a(:)],'rows');
+        isAsym = 0;
+    end
+    minLL= inf;
+    isJoint = false;
+    isInference = false;
+    for i=1:size(parameters,1)
+        ll = dcc_likelihood(parameters(i,:),stdData,stdDataAsym,1,isAsym,1,R,N,backCast,backCastAsym,3,composite,isJoint,isInference);
+        if ll<minLL
+            startingVals = parameters(i,:);
+            minLL = ll;
+        end
+    end
+    a = startingVals(1);
+    if l>0
+        g = startingVals(2);
+        b = startingVals(3);
+        startingVals = [a*ones(1,m)/m g*ones(1,l)/l b*ones(1,n)/n];
+    else
+        b = startingVals(2);
+        startingVals = [a*ones(1,m)/m b*ones(1,n)/n];
+    end
+end
+LB = zeros(length(startingVals),1);
+UB = ones(length(startingVals),1);
+A = ones(1,length(startingVals));
+A(m+1:m+l) = scale;
+b = .99998;
+
+if (startingVals*A'-b) >= 0
+    error('STARTINGVALS for DCC parameters are not comparible with a positive definite intercept.')
+end
+
 isJoint = false;
 isInference = false;
 parameters = fmincon(@dcc_likelihood,startingVals,A,b,[],[],LB,UB,[],options,stdData,stdDataAsym,m,l,n,R,N,backCast,backCastAsym,3,composite,isJoint,isInference);

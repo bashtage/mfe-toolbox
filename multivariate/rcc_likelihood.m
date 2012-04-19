@@ -33,7 +33,6 @@ if stage<=2 || isJoint
 end
 % Use rarch_parameter_transform with isJoint=false
 [R,A,B] = rarch_parameter_transform(parameters(offset + (1:length(parameters)-offset)),m,n,k,R,type,false,false);
-
 % Fix B in case of CP
 B(B<0)= 0;
 

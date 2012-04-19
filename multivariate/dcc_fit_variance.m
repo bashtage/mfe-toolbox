@@ -1,4 +1,4 @@
-function [H,univariate] = dcc_fit_variance(data,p,o,q,gjrType)
+function [H,univariate] = dcc_fit_variance(data,p,o,q,gjrType,startingVals)
 % Fits TARCH models for use in DCC and related estimators
 %
 % USAGE:
@@ -14,6 +14,7 @@ function [H,univariate] = dcc_fit_variance(data,p,o,q,gjrType)
 %   GJRTYPE - K by 1 vector of model types:
 %                    1 - Model evolves in absolute values
 %                    2 - Model evolves in squares [DEFAULT]
+%   STARTINGVALS - [OPTIONAL] K+sum(P)+sum(O)+sum(Q) vector of starting values
 %
 % OUTPUTS:
 %   H          - T by K matrix of conditional variances
@@ -28,14 +29,27 @@ function [H,univariate] = dcc_fit_variance(data,p,o,q,gjrType)
 % Revision: 1    Date: 17/4/2012
 
 
+if size(startingVals,2)>size(startingVals,1)
+    startingVals = startingVals';
+end
+
 [T,k] = size(data);
 H = zeros(T,k);
 univariate = cell(k,1);
 univariteOptions = optimset('fminunc');
 univariteOptions.Display = 'none';
 univariteOptions.LargeScale = 'off';
+offset = 0;
+
 for i=1:k
-    [parameters, ~, ht, ~, ~, scores, diagnostics] = tarch(data(:,i),p(i),o(i),q(i), [], gjrType(i), [], univariteOptions);
+    if ~isempty(startingVals)
+        count = 1+p(i)+o(i)+q(i);
+        volStartingVals = startingVals(offset + (1:count));
+        offset = offset + count;
+    else
+        volStartingVals = [];
+    end
+    [parameters, ~, ht, ~, ~, scores, diagnostics] = tarch(data(:,i),p(i),o(i),q(i), [], gjrType(i), volStartingVals, univariteOptions);
     % Store output for later use
     univariate{i}.p = p(i);
     univariate{i}.o = o(i);

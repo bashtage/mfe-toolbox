@@ -1,4 +1,4 @@
-function  [parameters, ll, ht, VCV, scores] = ccc_mvgarch(data,dataAsym,p,o,q,gjrType,startingVals,options)
+function  [parameters, ll, Ht, VCV, scores] = ccc_mvgarch(data,dataAsym,p,o,q,gjrType,startingVals,options)
 % Estimation of Constant Conditional Correlation MV GARCH with TARCH(p,o,q) or GJRGARCH(p,o,q)
 % conditional variances
 %
@@ -197,7 +197,7 @@ else
     data = temp;
 end
 
-[H,univariate] = dcc_fit_variance(data2d,p,o,q,gjrType);
+[H,univariate] = dcc_fit_variance(data2d,p,o,q,gjrType,startingVals);
 htArray = zeros(k,k,T);
 for i=1:k
     for j=i:k
