@@ -62,7 +62,17 @@ intercept = eye(k) - sum(A.^2,3) - sum(B.^2,3);
 dint = diag(intercept);
 dint(dint<.000001)=.000001;
 intercept = diag(dint);
-logLikConst = k*log(2*pi);
+
+% Indices or constant, as needed
+if composite == 0
+    likconst = k*log(2*pi);
+elseif composite == 1
+    indices = [(1:k-1)' (2:k)'];
+elseif composite == 2
+    [i,j] = meshgrid(1:k);
+    indices = [i(~triu(true(k))) j(~triu(true(k)))];
+end
+
 Rt = zeros(k,k,T);
 for t=1:T
     e(:,:,t) = Rm12 * stdData(:,:,t) * Rm12;
@@ -89,6 +99,10 @@ for t=1:T
     hh = h'*h;
     V = R.*hh;
     V = (V + V')/2;
-    lls(t) = 0.5*(logLikConst + log(det(V)) + sum(diag(V^(-1)*data(:,:,t))));
+    if composite == 0
+        lls(t) = 0.5*(likconst + log(det(V)) + sum(diag(V^(-1)*data(:,:,t))));
+    elseif composite
+        lls(t) = composite_likelihood(V,data(:,:,t),indices);
+    end
 end
 ll = sum(lls);
