@@ -376,7 +376,7 @@ if stage==2
     
     z = parameters(1:k*(k-1)/2);
     R = z2r(z);
-    parameters = parameters(k(k-1)/2+1:length(parameters));
+    parameters = parameters(k*(k-1)/2+1:length(parameters));
     parameters  = [corr_vech(R)' parameters];
 end
 
