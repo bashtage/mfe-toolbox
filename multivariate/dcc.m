@@ -382,9 +382,9 @@ if stage==2
     A = [zeros(1,k*(k-1)/2) A];
     b = .99998;
     parameters = fmincon(@dcc_likelihood,startingVals,A,b,[],[],LB,UB,[],options,stdData,stdDataAsym,m,l,n,R,N,backCast,backCastAsym,2,composite,isJoint,isInference,gScale);
-    z = parameters(1:k(k-1)/2);
+    z = parameters(1:k*(k-1)/2);
     R = z2r(z);
-    parameters = parameters(k(k-1)/2+1:length(parameters));
+    parameters = parameters(k*(k-1)/2+1:length(parameters));
     parameters  = [corr_vech(R)' parameters];
 end
 

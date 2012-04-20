@@ -374,7 +374,7 @@ if stage==2
     UB = [inf*ones(1,k*(k-1)/2) ones(size(parameters))];
     parameters = fmincon(@rcc_likelihood,startingVals,[],[],[],[],LB,UB,@rcc_constraint,options,stdData,m,n,R,backCast,2,type,composite,isJoint,isInference,rScale,univariate);
     
-    z = parameters(1:k(k-1)/2);
+    z = parameters(1:k*(k-1)/2);
     R = z2r(z);
     parameters = parameters(k(k-1)/2+1:length(parameters));
     parameters  = [corr_vech(R)' parameters];
