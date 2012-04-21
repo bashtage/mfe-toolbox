@@ -157,7 +157,7 @@ maxp=max(p);
 if size(p,1)==1 && p==0
     p=[];
 end
-if length(unique(q))~=length(q)
+if length(unique(p))~=length(p)
     error('P must contain at most one of each lag')
 end
 nP=length(p);
