@@ -241,8 +241,10 @@ if ~isempty(sigma2)
     if size(sigma2,1)~=size(y,1) || size(sigma2,2)~=1 || ndims(sigma2)>2 || any(sigma2<0)
         error('SIGMA2 must be a T by 1 vector containing strictly positive numbers.')
     end
+    hasSigma2 = true;
 else
     sigma2=ones(size(y));
+    hasSigma2 = false;
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input Checking
@@ -426,6 +428,10 @@ end
 [LL,likelihoods,errors]=armaxfilter_likelihood(parameters,p,q,constant,yAugmentedForMA,xAugmentedForMA,m,sigmaAugmentedForMA);
 likelihoods=-likelihoods;
 LL=-LL;
+if ~hasSigma2
+    sigma2 = (errors'*errors)/length(errors);
+    [LL,likelihoods]=normloglik(errors,0,sigma2);
+end
 SEregression=sqrt(errors'*errors/(length(errors)-length(parameters)));
 
 if nargout>=4
@@ -447,6 +453,6 @@ if nargout>=4
 end
 
 if nargout >=5
-    [VCVrobust,A,B,scores,hess]=robustvcv('armaxfilter_likelihood',parameters,0,p,q,constant,yAugmentedForMA,xAugmentedForMA,m,sigmaAugmentedForMA); 
-    VCV=hess^(-1)/T;
+    [VCVrobust,A,B,scores]=robustvcv('armaxfilter_likelihood',parameters,0,p,q,constant,yAugmentedForMA,xAugmentedForMA,m,sigmaAugmentedForMA); 
+    VCV=A^(-1)/T;
 end
