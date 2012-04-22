@@ -61,6 +61,10 @@ void armaxerror_core(double *parameters, double *p, double *q, int constant, int
         {
                e[t] -= parameters[constant + np + k + i] * e[t - (int)q[i]];
         }
+        e[t] = e[t];
+    }
+    for (t = m; t < T; t++)
+    {
         e[t] = e[t]/sigma[t];
     }
 }
