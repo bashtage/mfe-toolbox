@@ -428,10 +428,6 @@ end
 [LL,likelihoods,errors]=armaxfilter_likelihood(parameters,p,q,constant,yAugmentedForMA,xAugmentedForMA,m,sigmaAugmentedForMA);
 likelihoods=-likelihoods;
 LL=-LL;
-if ~hasSigma2
-    sigma2 = (errors'*errors)/length(errors);
-    [LL,likelihoods]=normloglik(errors,0,sigma2);
-end
 SEregression=sqrt(errors'*errors/(length(errors)-length(parameters)));
 
 if nargout>=4
@@ -452,7 +448,8 @@ if nargout>=4
     diagnostics.holdBack = holdBack;
 end
 
-if nargout >=5
+if nargout>=5
     [VCVrobust,A,B,scores]=robustvcv('armaxfilter_likelihood',parameters,0,p,q,constant,yAugmentedForMA,xAugmentedForMA,m,sigmaAugmentedForMA); 
-    VCV=A^(-1)/T;
+    VCV=A^(-1)/(T-m);
+    VCV=B^(-1)/(T-m);
 end

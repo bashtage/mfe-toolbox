@@ -46,7 +46,7 @@ end
 fx = feval(f,x,varargin{:});
 
 % Compute the stepsize (h)
-h = eps.^(1/3)*max(abs(x),1e-2);
+h = eps.^(1/3)*max(abs(x),1e-8);
 xh = x+h;
 h = xh-x;
 ee = sparse(1:n,1:n,h,n,n);

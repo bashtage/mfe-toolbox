@@ -45,7 +45,7 @@ k=length(theta);
 h=max(abs(theta*eps^(1/3)),1e-8);
 h=diag(h);
 
-[LLF,like]=feval(fun,theta,varargin{:});
+[~,like]=feval(fun,theta,varargin{:});
 
 t=length(like);
 

@@ -48,5 +48,6 @@ for t=m+1:T
     for i=1:nq
         errors(t) = errors(t) - parameters(constant+np+k+i)*errors(t-q(i));
     end
-    errors(t) = errors(t)/sigma(t);
+    errors(t) = errors(t);
 end
+errors = errors./sigma;

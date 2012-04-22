@@ -29,12 +29,8 @@ function [LLF, likelihoods, errors] = armaxfilter_likelihood(parameters,p,q,cons
 % kevin.sheppard@economics.ox.ac.uk
 % Revision: 3    Date: 4/1/2004
 
-
 e = armaxerrors(parameters,p,q,constant,y,x,m,ones(size(y)));
 T = length(e);
-
-% Do not divide e by sigma since this is done in armaxerrors
-likelihoods =  0.5*(2*log(sigma) + (e./sigma).^2 + log(2*pi));
 
 if isempty(p)
     p = 0;
@@ -47,6 +43,16 @@ if max(q)>max(p) % prepend y and x, if needed
 else
     t    = 1:T;
 end
+
+if nargin==7 || isempty(sigma)
+    stde = e(t);
+else
+    stde = e./sigma;
+end
+sigma2 = stde(t)'*stde(t)/length(t);
+
+% Do not divide e by sigma since this is done in armaxerrors
+likelihoods =  0.5*(2*log(sigma) + log(sigma2) + stde.^2./sigma2 + log(2*pi));
 
 likelihoods = likelihoods(t);
 errors=e(t);
