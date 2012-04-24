@@ -451,5 +451,4 @@ end
 if nargout>=5
     [VCVrobust,A,B,scores]=robustvcv('armaxfilter_likelihood',parameters,0,p,q,constant,yAugmentedForMA,xAugmentedForMA,m,sigmaAugmentedForMA); 
     VCV=A^(-1)/(T-m);
-    VCV=B^(-1)/(T-m);
 end

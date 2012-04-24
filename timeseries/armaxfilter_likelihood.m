@@ -44,11 +44,7 @@ else
     t    = 1:T;
 end
 
-if nargin==7 || isempty(sigma)
-    stde = e(t);
-else
-    stde = e./sigma;
-end
+stde = e./sigma;
 sigma2 = stde(t)'*stde(t)/length(t);
 
 % Do not divide e by sigma since this is done in armaxerrors
