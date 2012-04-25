@@ -241,10 +241,8 @@ if ~isempty(sigma2)
     if size(sigma2,1)~=size(y,1) || size(sigma2,2)~=1 || ndims(sigma2)>2 || any(sigma2<0)
         error('SIGMA2 must be a T by 1 vector containing strictly positive numbers.')
     end
-    hasSigma2 = true;
 else
     sigma2=ones(size(y));
-    hasSigma2 = false;
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input Checking
@@ -449,6 +447,34 @@ if nargout>=4
 end
 
 if nargout>=5
-    [VCVrobust,A,B,scores]=robustvcv('armaxfilter_likelihood',parameters,0,p,q,constant,yAugmentedForMA,xAugmentedForMA,m,sigmaAugmentedForMA); 
-    VCV=A^(-1)/(T-m);
+    % Analytical in the cast of AR
+    if maxq==0
+        [~,lags] = newlagmatrix(y,maxp,0);
+        lags = lags(:,p);
+        tau = size(lags,1);
+        if constant
+            lags = [ones(tau,1) lags];
+        end
+        if ~isempty(x)
+            T = size(x,1);
+            X = [lags x(T-tau+1:T,:)];
+        else
+            X = lags;
+        end
+        
+        T = length(errors);
+        e = errors(maxp+1:T);
+        T = length(e);
+        XpXi = (X'*X/T)\eye(size(X,2));
+        XeeX = zeros(size(X,2));
+        for t=1:T
+            XeeX = XeeX + e(t)^2*X(t,:)'*X(t,:);
+        end
+        XeeX = XeeX/T;
+        VCVrobust = XpXi*XeeX*XpXi/T;
+        VCV = SEregression^2*XpXi/T;
+    else
+        [VCVrobust,~,B,scores]=robustvcv('armaxfilter_likelihood',parameters,0,p,q,constant,yAugmentedForMA,xAugmentedForMA,m,sigmaAugmentedForMA);
+        VCV=B^(-1)/(T-m);
+    end
 end
