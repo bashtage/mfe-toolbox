@@ -26,6 +26,10 @@ function tparameters=scalar_vt_vech_transform(parameters,p,o,q,kappa)
 % kevin.sheppard@economics.ox.ac.uk
 % Revision: 3    Date: 9/1/2005
 
+
+if size(parameters,2)>size(parameters,1)
+   parameters = parameters';
+end
 %Upper bound to keep it a bit away from 1
 UB=.999998;
 
