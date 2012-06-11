@@ -154,7 +154,7 @@ if constant
 end
 if any(lags>0)
     for k=1:K
-        [nothing,ylags{k}]=newlagmatrix(y(:,k),m,0);
+        [~,ylags{k}]=newlagmatrix(y(:,k),m,0);
     end
     p=length(lags);
     for i=1:p
