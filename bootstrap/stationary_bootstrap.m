@@ -63,7 +63,6 @@ for i=2:t
     % (rand<p)
     indices(i,~select(i,:))=indices(i-1,~select(i,:))+1;
 end
-% Complete the circle for indices > t
-data=[data;data];
+indices(indices>t) = indices(indices>t)-t;
 % The indices make finding the bsdata simple
 bsdata=data(indices);

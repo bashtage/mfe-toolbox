@@ -38,8 +38,8 @@ end
 if t<2 
     error('DATA must have at least 2 observations.')
 end
-if ~isscalar(w) || w<1 || floor(w)~=w
-    error('W must be a positive scalar integer')
+if ~isscalar(w) || w<1 || floor(w)~=w || w>t
+    error('W must be a positive scalar integer smaller than T')
 end
 if ~isscalar(B) || B<1 || floor(B)~=B
     error('B must be a positive scalar integer')
@@ -48,8 +48,6 @@ end
 % Input Checking
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Make it easy to do the circular bootstrap
-data=[data;data(1:w-1)];
 % Compute the number of blocks needed
 s=ceil(t/w);
 % Generate the starting points
@@ -63,6 +61,7 @@ for i=1:w:t
     index=index+1;
 end
 indices=indices(1:t,:);
+indices(indices>t) = indices(indices>t)-t;
 bsdata=data(indices);
 
 
