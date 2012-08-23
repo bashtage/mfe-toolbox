@@ -124,6 +124,6 @@ else
     restrictedLL=normloglik(y,0,1);
     unrestrictedLL=normloglik(e,0,sigma2);
     stat=-2*(restrictedLL-unrestrictedLL);
-    pval=1-chi2cdf(stat,2);
+    pval=1-chi2cdf(stat,3);
     H=pval<alpha;
 end;
