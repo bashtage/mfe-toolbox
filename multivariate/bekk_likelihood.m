@@ -41,7 +41,7 @@ lls = zeros(T,1);
 logLikConst = k*log(2*pi);
 
 for i=1:T
-    Ht(:,:,i+1) = C;
+    Ht(:,:,i) = C;
     for j=1:p
         if (i-j)<=0
             Ht(:,:,i) = Ht(:,:,i) + A(:,:,j)'*backCast*A(:,:,j);
