@@ -18,12 +18,12 @@ function [parameters, ll, Ht, VCV, scores] = bekk(data,dataAsym,p,o,q,type,start
 %   OPTIONS      - [OPTIONAL] Options to use in the model optimization (fmincon)
 %
 % OUTPUTS:
-%   PARAMETERS   - Vector of parameters.  The form of the parameters depends on the TYPE.  
+%   PARAMETERS   - Vector of parameters.  The form of the parameters depends on the TYPE.
 %                    'Scalar':
 %                    [CC' a(1) ... a(p) g(1) ... g(o) b(1) ... b(q)]'  (all scalars)
-%                    'Diagonal' 
+%                    'Diagonal'
 %                    [CC' diag(A(:,:,1))' ... diag(A(:,:,p))' diag(G(:,:,1))' ... diag(G(:,:,o))' diag(B(:,:,1))' ... diag(B(:,:,p))']'
-%                    'Full' 
+%                    'Full'
 %                    [CC' f(A(:,:,1)) ... f(A(:,:,p)) f(G(:,:,1)) ... f(G(:,:,o)) f(B(:,:,1)) ... f(B(:,:,q))]'
 %                    where CC = chol2vec(C')' and f(M) = M(:)'
 %   LL           - The log likelihood at the optimum
@@ -32,8 +32,8 @@ function [parameters, ll, Ht, VCV, scores] = bekk(data,dataAsym,p,o,q,type,start
 %   SCORES       - A T by numParams matrix of individual scores
 %
 % COMMENTS:
-%   The dynamics of a BEKK are given by 
-%   
+%   The dynamics of a BEKK are given by
+%
 %   H(:,:,t) = C*C' +
 %       A(:,:,1)'*OP(:,:,t-1)*A(:,:,1) + ... + A(:,:,p)'*OP(:,:,t-1)*A(:,:,p) +
 %       G(:,:,1)'*OPA(:,:,t-1)*G(:,:,1) + ... + G(:,:,o)'*OPA(:,:,t-1)*G(:,:,o) +
@@ -201,4 +201,6 @@ ll = -ll;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inference
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[VCV,~,~,scores] = robustvcv(@bekk_likelihood,parameters,0,data,dataAsym,p,o,q,backCast,backCastAsym,type);
+if nargout>=4
+    [VCV,~,~,scores] = robustvcv(@bekk_likelihood,parameters,0,data,dataAsym,p,o,q,backCast,backCastAsym,type);
+end

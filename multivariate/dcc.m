@@ -4,7 +4,8 @@ function [parameters, ll ,Ht, VCV, scores, diagnostics]=dcc(data,dataAsym,m,l,n,
 %
 % USAGE:
 %  [PARAMETERS] = dcc(DATA,[],M,L,N)
-%  [PARAMETERS] = dcc(DATA,DATAASYM,M,L,N,P,O,Q,GJRTYPE,METHOD,COMPOSITE,STARTINGVALS,OPTIONS)
+%  [PARAMETERS,LL,HT,VCV,SCORES,DIAGNOSTICS] = dcc(DATA,DATAASYM,M,L,N,P,O,Q,...
+%                                                    GJRTYPE,METHOD,COMPOSITE,STARTINGVALS,OPTIONS)
 %
 % INPUTS:
 %   DATA         - A T by K matrix of zero mean residuals -OR-
