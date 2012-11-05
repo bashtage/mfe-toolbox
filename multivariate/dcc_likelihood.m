@@ -168,7 +168,7 @@ for t=1:T
         lls(t) = 0.5*(likconst + logdetH(t) + log(det(Rt(:,:,t))) + sum(diag((Rt(:,:,t)\I)*stdData(:,:,t))));
     elseif composite
         S = (sqrt(H(t,:))'*sqrt(H(t,:))) .* Rt(:,:,t);
-        lls(t) = composite_likelihood(S,stdData(:,:,t),indices);
+        lls(t) = composite_likelihood(S,data(:,:,t),indices);
     end
 end
 ll = sum(lls);

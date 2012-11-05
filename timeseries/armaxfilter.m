@@ -449,9 +449,9 @@ end
 if nargout>=5
     % Analytical in the cast of AR
     if maxq==0
-        [~,lags] = newlagmatrix(y,maxp,0);
+        [leeds,lags] = newlagmatrix(y,maxp,0);
         lags = lags(:,p);
-        tau = size(lags,1);
+        tau = max(size(leeds,1),size(lags,1));
         if constant
             lags = [ones(tau,1) lags];
         end
