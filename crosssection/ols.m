@@ -95,6 +95,10 @@ end
 
 % Compute beta
 b=x\y;
+% early return
+if nargout==1
+    return
+end
 % And the fit values
 yhat=x*b;
 % And the errors
@@ -104,16 +108,11 @@ s2=epsilon'*epsilon/(N-K);
 % The estimated parameter covariance
 vcv=s2*(x'*x)^(-1);
 % Compute covariance of scores
-XeeX = zeros(K);
 scores = x.*repmat(epsilon,1,K);
-for i=1:N
-    XeeX = XeeX + scores(i,:)'*scores(i,:);
-end
-
+XeeX = scores'*scores;
 % White's VCV is easy
 XpXi = (x'*x)^(-1);
 vcvwhite= XpXi * XeeX * XpXi;
-
 % Compute t-stats using White
 tstat=b./sqrt(diag(vcvwhite));
 

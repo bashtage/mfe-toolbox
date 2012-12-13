@@ -38,6 +38,15 @@ function [LL,LLS,ht] = figarch_likelihood(parameters,p,q,epsilon,epsilon2,truncL
 
 if nargin==8 && estimFlag
     [parameters,nu,lambda] = figarch_itransform(parameters,p,q,errorType);
+else
+    if errorType == 2 || errorType == 3
+        nu = parameters(end);
+        parameters = parameters(1:end-1);
+    elseif errorType==4
+        nu = parameters(end-1);
+        lambda = parameters(end);
+        parameters = parameters(1:end-2);
+    end
 end
 
 omega = parameters(1);

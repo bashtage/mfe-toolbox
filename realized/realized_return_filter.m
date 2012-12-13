@@ -1,4 +1,5 @@
 function [returns,interval] = realized_return_filter(price,time,timeType,samplingType,samplingInterval,subsamples)
+% THESE COMMENTS ARE WRONG!!!
 % Computes the Quantile Realized Variance of Christensen, Oomen and Podolskij (2008),
 % the MinRV and MedRV estimator of Andersen, Dobrev and Shaumberg and the
 % general symmetrized version suggested by Sheppard in a discussion of COP
