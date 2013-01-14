@@ -21,7 +21,7 @@
 
 
 void composite_likelihood_core(double *S, double *X, double *indices, size_t q, size_t m, size_t n, double *ll) {
-    // q = size(indices,1);
+    /* q = size(indices,1);
     // [m,n] = size(data);
     // likConst = 3.67575413281869;
     // if m==n
@@ -50,7 +50,7 @@ void composite_likelihood_core(double *S, double *X, double *indices, size_t q, 
     //         x22 = data(j)*data(j);
     //         ll = 0.5*(likConst + log(det) + (s22*x11 - 2*s12*x12 + s11*x22)/det)/m;
     //     end
-    // end
+    // end*/
     size_t k, i, j;
     double s11, s12, s22, x11, x12, x22, scale, det;
     double likConst = 3.67575413281869;

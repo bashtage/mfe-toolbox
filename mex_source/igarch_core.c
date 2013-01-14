@@ -22,7 +22,7 @@ void igarch_core(double *fepsilon, double *parameters, double *backCast, int p, 
     }
     
     for (j=0; j<m; j++) {
-        // uses the estimated cov for starting values
+        /* uses the estimated cov for starting values */
         ht[j]=backCast[0];
     }
     

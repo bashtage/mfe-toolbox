@@ -18,7 +18,7 @@ void tarch_core(double *fdata, double *fIdata, double *parameters, double *back_
 
 	for (j=0; j<m; j++)
 	{
-		// uses the estimated cov for starting values
+		/* uses the estimated cov for starting values */
 		ht[j]=back_cast[0];
 	}
 
