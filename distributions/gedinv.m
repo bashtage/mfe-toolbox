@@ -1,16 +1,16 @@
 function x = gedinv(p,v)
 % Inverse Cumulative Distribution Function (CDF) of the Generalized Error
-% distribution; Maps [0,1] to a standardized Students-t with V degrees of freedom
+% Distribution (GED); Maps [0,1] to a GED with shape parameter V
 %
 % USAGE:
-%   X = stdtinv(P,V)
+%   X = gedinv(P,V)
 %
 % INPUTS:
 %   P     - Values to be inverted, P in [0,1]
-%   V     - Degree of freedom parameters, either scalar or size(X)
+%   V     - Shape parameters, either scalar or size(X)
 %
 % OUTPUTS:
-%   X     - Standardized T distributed random variables corresponding to P
+%   X     - GED random variables corresponding to P
 %
 % COMMENTS:
 %   A scalar GED r.v. with variance normalized to 1 has probability
@@ -23,7 +23,7 @@ function x = gedinv(p,v)
 %   [1] Tadikamalla (1980), J.Am.Stat.Assoc. (75)
 %   [2] Nelson (1991), Econometrica
 %
-% See also STDTCDF, STDTINV, STDTRND, STDTLOGLIK, TPDF
+% See also GEDCDF, GEDINV, GEDRND, GEDLOGLIK
 
 % Copyright: Ivana Komunjer
 % komunjer@hss.caltech.edu
