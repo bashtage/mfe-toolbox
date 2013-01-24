@@ -62,10 +62,13 @@ for i=m+1:T
         htdelta(i) = htdelta(i) + beta(j)*htdelta(i-j);
     end
     % Check that HT is between its LB and UB
-    if htdelta(i)<LB
-        htdelta(i)=LB;
-    elseif htdelta(i)>UB
-        htdelta(i)=UB;
+    htTemp = htdelta(i)^deltainv;
+    if htTemp<LB
+        htdelta(i)=LB^delta;
+        htTemp = htdelta(i)^deltainv;
+    elseif htTemp(i)>UB
+        htdelta(i)=UB^delta;
+        htTemp = htdelta(i)^deltainv;
     end
-    ht(i)=htdelta(i)^deltainv;
+    ht(i)=htTemp;
 end

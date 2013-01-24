@@ -73,8 +73,9 @@ if back_cast==0
 end
 
 %Upper and lower bounds, should be moved out of this function
-LB = (cov(data_aug(m+1:T))/10000)^delta;
-UB = (10*max(data_aug.^2))^delta;
+% Updated to not depend on delta
+LB = (cov(data_aug(m+1:T))/100000);
+UB = (100*max(data_aug.^2));
 
 %Compute the conditional variances
 
