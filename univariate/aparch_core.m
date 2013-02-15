@@ -66,7 +66,7 @@ for i=m+1:T
     if htTemp<LB
         htdelta(i)=LB^delta;
         htTemp = htdelta(i)^deltainv;
-    elseif htTemp(i)>UB
+    elseif htTemp>UB
         htdelta(i)=UB^delta;
         htTemp = htdelta(i)^deltainv;
     end

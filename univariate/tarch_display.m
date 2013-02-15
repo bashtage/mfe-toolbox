@@ -81,7 +81,7 @@ if ~isscalar(ll) || ~isreal(ll)
     error('LL must be a scalar.')
 end
 % VCV
-if size(vcv,2)~=size(vcv,1) || any(min(eig(vcv))<=0) || size(vcv,1)~=length(parameters)
+if size(vcv,2)~=size(vcv,1) || any(diag(vcv)<=0) || size(vcv,1)~=length(parameters)
     error('VCV must be a square positive definite matrix compatible with PARAMETERS.')
 end
 % data

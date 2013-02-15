@@ -49,7 +49,7 @@ if isempty(startingvals)
     options.LargeScale = 'off';
     options.MaxFunEvals = 1200;
     % Call tarch to get starting parameters using a standard GARCH model
-    startingvals=tarch(epsilon,p,0,q,'NORMAL',2,[],options);
+    startingvals=tarch(epsilon,p,0,q,'NORMAL',[],[],options);
     
     omega = startingvals(1);
     alpha = startingvals(2:p+1);
