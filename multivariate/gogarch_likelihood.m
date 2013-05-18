@@ -41,7 +41,7 @@ if isInference
 end
 
 if ~isOgarch
-    phi = parameters(offset + (1:k(k-1)/2));
+    phi = parameters(offset + (1:k*(k-1)/2));
     U = phi2u(phi);
     offset = offset + k*(k-1)/2;
 else

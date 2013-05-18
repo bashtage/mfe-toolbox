@@ -14,7 +14,7 @@ function [parameters,ll,Ht,VCV,scores] = gogarch(data,p,q,gjrType,type,startingV
 %                    lags Can also be a K by 1 vector with lag lengths for each series.
  %  GJRTYPE      - [OPTIONAL] Either 1 (TARCH/AVGARCH) or 2 (GJR-GARCH/GARCH/ARCH).  Can also be a K 
 %                    by 1 vector containing the model type for each for each series. Default is 2.
-%   TYPE         - [OPTIONAL] String, one of 'OGARCH' (Default)  or 'GOGARCH'
+%   TYPE         - [OPTIONAL] String, one of 'GOGARCH' (Default) or 'OGARCH'
 %   STARTINGVALS - [OPTIONAL] Vector of starting values to use.  See parameters and COMMENTS.
 %   OPTIONS      - [OPTIONAL] Options to use in the model optimization (fmincon)
 %
