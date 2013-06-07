@@ -92,7 +92,7 @@ if ~isscalar(m) || floor(m)~=m || m<1
 end
 % parameters
 k2 = k*(k+1)/2;
-if ndims(parameters)==2
+if ismatrix(parameters)
     parameterCount = k*(k+1)/2 *(1+ p + o + q);
     if size(parameters,2)>size(parameters,1)
         parameters = parameters';
@@ -112,6 +112,7 @@ elseif ndims(parameters)==3
     if any(size(parameters)~=[k k 1+p+o+q])
         error('PARAMETERS must be K by K by (1+P+O+Q) when using a 3-D matrix.')
     end
+    parameterMatrices = parameters;
 else
     error('The size of PARAMETERS is not compatible with this function.')
 end

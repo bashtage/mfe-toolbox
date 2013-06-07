@@ -186,7 +186,7 @@ if isempty(startingvals)
     startingOptions.LargeScale='off';
     startingOptions.TolX = 1e-4;
     startingOptions.TolFun = 1e-4;
-    [scalarVechStartingvals,n,n,n,n,diagnostics] = scalar_vt_vech(data,dataAsym,p,o,q,[],startingOptions);
+    [scalarVechStartingvals,~,~,~,~,~,diagnostics] = scalar_vt_vech(data,dataAsym,p,o,q,[],[],startingOptions);
     CpC = diagnostics.intercept;
     
     startingvals = zeros(k2 * (1+p+o+q),1);
