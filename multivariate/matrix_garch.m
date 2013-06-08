@@ -137,6 +137,7 @@ if  ~isempty(startingvals)
     % Only validate if provided
     % FIXME: Fix Validation
     % TODO: Fix Validation
+    kappa = 2;
     A=startingvals(1:p);
     G=startingvals(p+1:p+o);
     B=startingvals(p+o+1:p+o+q);
