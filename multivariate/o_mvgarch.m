@@ -106,9 +106,6 @@ else
         error('Q must contain K non-negative integer elements if a vector.');
     end
 end
-if any(o>0) && isempty(dataAsym)
-    error('DATAASYM must be non-empty if O>0.')
-end
 
 if  ~isempty(startingVals)
     if size(startingVals,2)>size(startingVals,1)
