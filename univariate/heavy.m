@@ -37,7 +37,7 @@ function [parameters, ll, ht, VCV, scores] = heavy(data,p,q,cons,startingVals,op
 %       ... B(K,1,1:q(K,1)) ... B(K,K,1:q(K,K)) ]
 %  
 % EXAMPLES:
-%   % Standard HEAVY simulation
+%   % Standard HEAVY model
 %   p = [0 1;0 1]
 %   q = eye(2)
 %   data = [r rm];

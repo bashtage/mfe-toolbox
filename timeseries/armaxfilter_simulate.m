@@ -110,8 +110,12 @@ if ~isempty(X) && length(X)~=T
     error('X should be length T');
 end
 
-if any([ma,ar,const]<0) || any([length(ma) length(ar) length(const)]>1)
-    error('ma,ar and const must all be non negative scalars')
+if any([ma,ar]<0) || any([length(ma) length(ar)]>1)
+    error('MA and AR must all be non negative scalars.')
+end
+
+if ~isscalar(const)
+    error('CONST must be a scalar')
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input Checking
