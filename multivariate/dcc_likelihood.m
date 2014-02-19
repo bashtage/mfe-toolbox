@@ -30,7 +30,7 @@ function [ll,lls,Rt] = dcc_likelihood(parameters,data,dataAsym,m,l,n,R,N,backCas
 % OUTPUTS:
 %   LL           - The log likelihood evaluated at the PARAMETERS
 %   LLS          - A T by 1 vector of log-likelihoods
-%   HT           - A [K K T] dimension matrix of conditional correlations
+%   RT           - A [K K T] dimension matrix of conditional correlations
 %
 % COMMENTS:
 %

@@ -32,9 +32,9 @@ function [weights, princomp, eigenvals, explvar, cumR2]=pca(data,type)
 %   where
 %      e(:,i) = (data(:,i) - mean(data(:,i)))/std(data(:,i))
 
- % Author: Kevin Sheppard
+% Author: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk
-% Revision: 3    Date: 2/1/2008
+% Revision: 3.01   Date: 2/18/2014
  
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -97,8 +97,12 @@ end
  
 % Compute the eigenvalues and eigenvectors
 [eigenvects,eigenvals]=eig(inputmat);
+% Ensures they are actually sorted smallest to largest
+[eigenvals, order] = sort(diag(eigenvals));
+% Reorder the eigenvectors in the same order
+eigenvects = eigenvects(:,order);
 % Flip them since they come out ordered smallest to largest
-eigenvals=fliplr(flipud(eigenvals));
+eigenvals=rot90(eigenvals,2);
 % Weights are the eigen vectors
 weights=eigenvects;
 % Principle components are the data times the eigenvectors

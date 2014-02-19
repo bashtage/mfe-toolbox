@@ -1,4 +1,4 @@
-function [adfstat,pval,critval,resid,lags]=augdfautolag(y,p,maxlags,IC)
+function [adfstat,pval,critval,resid,lags,ICs]=augdfautolag(y,p,maxlags,IC)
 % Dickey-Fuller and Augmented Dickey Fuller with automatic lag selection
 %
 % USAGE:
@@ -21,6 +21,7 @@ function [adfstat,pval,critval,resid,lags]=augdfautolag(y,p,maxlags,IC)
 %  PVAL      - Probability the series is a unit root
 %  CRITVALS  - A 6 by 1 vector with the [.01 .05 .1 .9 .95 .99] values from the DF distribution
 %  LAGS      - The selected number of lags
+%  IC        - The value at all lags of the selected IC
 %
 % COMMENTS:
 %
@@ -150,6 +151,6 @@ if strcmp(IC,'AIC')
 else
     ICs=log(s2) + K*log(tau)/tau;
 end
-[ICs,lags]=min(ICs); %#ok<ASGLU>
+[~,lags]=min(ICs);
 lags=lags-1;
 [adfstat,pval,critval,resid]=augdf(y,p,lags);

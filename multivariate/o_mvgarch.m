@@ -3,7 +3,7 @@ function [parameters,ht,w,pc]=o_mvgarch(data,numfactors,p,o,q,startingVals,optio
 % Analysis to reduce volatility modelling to univariate garches.  See Carrol 2000 (An Inrtoduction to O-Garch)
 %
 % USAGE:
-%   [PARAMETERS,HT,STDRESID,STDERRORS,A,B,WEIGHTS,PRINCIPALCOMPONETS,CUMR2]=o_mvgarch(DATA,NUMFACTORS,P,O,Q);
+%   [PARAMETERS,HT,W,PC] = o_mvgarch(DATA,NUMFACTORS,P,O,Q);
 %
 % INPUTS:
 %   DATA       - A T by K matrix of zero mean residuals
@@ -131,7 +131,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input Argument Checking
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[w, pc]=pca(data,'outer');
+[w, pc] = pca(data,'outer');
 
 
 
@@ -156,7 +156,7 @@ for i=1:numfactors
 end
 
 if numfactors<k
-    errors = data - weights * pcs;
+    errors = data - pcs * weights;
     omega = diag(mean(errors.^2));
 else
     omega = zeros(k);
@@ -165,7 +165,7 @@ end
 ht = zeros(k,k,t);
 
 for i=1:t
-    ht(:,:,i) = weights * diag(htMat(i,:)) * weights' + omega;
+    ht(:,:,i) = weights' * diag(htMat(i,:)) * weights + omega;
 end
 
 parameters=zeros(numfactors+sum(p+o+q),1);
