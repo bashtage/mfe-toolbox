@@ -1,8 +1,9 @@
-function [noiseVariance, debiasedNoiseVariance, IQEstimate] = realized_noise_estimate(price, time, timeType, options)
+function [noiseVariance, debiasedNoiseVariance, IQEstimate, noiseEstimateOomen] = realized_noise_estimate(price, time, timeType, options)
 % Estimation of the optimal bandwidth to use when estimating the quadratic variation using a Realized Kernel
 %
 % USAGE:
-%   [NOISEESTIMATE,RAWNOISEESTIMATE,IQESTIMATE] = realized_kernel_select_bandwidth(PRICE,TIME,TIMETYPE,OPTIONS)
+%   [NOISEVARIANCE,DEBIASEDNOISEVARIANCE,IQESIQESTIMATETIMATE,NOISEVARIANCEOOMEN] 
+%                        = realized_kernel_select_bandwidth(PRICE,TIME,TIMETYPE,OPTIONS)
 %
 % INPUTS:
 %   PRICE       - m by 1 vector of prices
@@ -19,6 +20,7 @@ function [noiseVariance, debiasedNoiseVariance, IQEstimate] = realized_noise_est
 %   NOISEVARIANCE         - Bandi-Russel noise variance estimate 
 %   DEBIASEDNOISEVARIANCE - Debiased Bandi-Russel noise variance estimate using the adjustment of BNHLS
 %   IQESTIMATE            - An estimate of the lower bound of the IQ based on low-freuqency returns
+%   NOISEVARIANCEOOMEN    - Estimate using Oomen (2006) alternative AC(1) estimator
 %
 % COMMENTS:
 %   This is a helper function for REALIZED_KERNEL.  See Barndorf-Nielsen, Hansen, Lunde and Shephard
@@ -107,6 +109,10 @@ else
     n = length(noiseFilteredPrice) - 1;
 end
 noiseVariance = noiseVariance/(2*n);
+
+noiseReturns = diff(log(noiseFilteredPrice));
+n = length(noiseReturns);
+noiseEstimateOomen = -1/(n-1) * noiseReturns(1:end-1)'*noiseReturns(2:end);
 
 % Require a realized kernel estimate to adjust the variance
 medFrequencyOptions = realized_options('kernel');

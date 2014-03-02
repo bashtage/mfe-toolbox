@@ -13,6 +13,8 @@ function options = realized_options(realizedFunction)
 %                      'Twoscale' - Two-scale Realized variance 
 %                      'Multiscale' - Multisclae Realized variance
 %                      'QMLE' - QMLE estimation of QV
+%                      'Preaveraging' - Preaveraged realized variance and related estimators
+%                      
 % OUTPUT:
 %   OPTIONS - A structure that may include the fields (default values in parentheses)
 %               kernel - One of the supported kernels ('nonflatparzen')
@@ -78,6 +80,7 @@ function options = realized_options(realizedFunction)
 %                 variance used in the IQ estimator ('BusinessUniform')
 %               IQEstimationSamplingInterval - Sampling interval to use when computing the realized
 %                 variance used in the IQ estimator (39)
+%               theta - The scale to use in preaveraged estimators (1)
 %
 % COMMENTS:
 %   These values have been calibrated to use with liquid NYSE TAQ data.  It may be necessary to
@@ -86,25 +89,26 @@ function options = realized_options(realizedFunction)
 %   is closed for part of the day)
 %
 %   Relevant options for each function:
-%                                  |  Realized  |  Multivariate  |  Optimal   |  Twoscale,  |  QMLE   
-%                                  |  Kernel    |  Kernel        |  Sampling  |  Multiccale |
-%                                  |            |                |            |             |
-%   kernel                         |    x       |        x       |            |             |
-%   endTreatment                   |    x       |        x       |            |             |
-%   jitterLags                     |    x       |        x       |            |             |
-%   maxBandwidthPerc               |    x       |        x       |            |      x      |
-%   maxBandwidth                   |    x       |        x       |            |      x      |
-%   bandwidth                      |    x       |        x       |            |      x      |
-%   useDebiasedNoise               |    x       |        x       |     x      |      x      |
-%   useAdjustedNoiseCount          |    x       |        x       |     x      |      x      |
-%   medFrequencySamplingType       |    x       |        x       |     x      |      x      |    x      
-%   medFrequencySamplingInterval   |    x       |        x       |     x      |      x      |    x      
-%   medFrequencyKernel             |    x       |        x       |     x      |      x      |
-%   medFrequencyBandwidth          |    x       |        x       |     x      |      x      |
-%   noiseVarianceSamplingType      |    x       |        x       |     x      |      x      |    x      
-%   noiseVarianceSamplingInterval  |    x       |        x       |     x      |      x      |    x     
-%   IQEstimationSamplingType       |    x       |        x       |     x      |      x      |
-%   IQEstimationSamplingInterval   |    x       |        x       |     x      |      x      |
+%                                  |  Realized  |  Multivariate  |  Optimal   |  Twoscale,  |  QMLE  | Preaveraging
+%                                  |  Kernel    |  Kernel        |  Sampling  |  Multiccale |        |      
+%                                  |            |                |            |             |        |      
+%   kernel                         |    x       |        x       |            |             |        |      
+%   endTreatment                   |    x       |        x       |            |             |        |      
+%   jitterLags                     |    x       |        x       |            |             |        |      
+%   maxBandwidthPerc               |    x       |        x       |            |      x      |        |      
+%   maxBandwidth                   |    x       |        x       |            |      x      |        |      
+%   bandwidth                      |    x       |        x       |            |      x      |        |      
+%   useDebiasedNoise               |    x       |        x       |     x      |      x      |        |      
+%   useAdjustedNoiseCount          |    x       |        x       |     x      |      x      |        |      
+%   medFrequencySamplingType       |    x       |        x       |     x      |      x      |    x   |     x
+%   medFrequencySamplingInterval   |    x       |        x       |     x      |      x      |    x   |     x  
+%   medFrequencyKernel             |    x       |        x       |     x      |      x      |        |     x      
+%   medFrequencyBandwidth          |    x       |        x       |     x      |      x      |        |     x      
+%   noiseVarianceSamplingType      |    x       |        x       |     x      |      x      |    x   |     x   
+%   noiseVarianceSamplingInterval  |    x       |        x       |     x      |      x      |    x   |     x
+%   IQEstimationSamplingType       |    x       |        x       |     x      |      x      |        |     x 
+%   IQEstimationSamplingInterval   |    x       |        x       |     x      |      x      |        |     x 
+%   theta                          |            |                |            |             |        |     x   
 %
 %  Note: Optimal Sampling uses default values of noiseVarianceSamplingType = 'BusinessTime' and
 %        noiseVarianceSamplingInterval = 1
@@ -131,7 +135,7 @@ if nargin==0
     realizedFunction = 'kernel';
 end
 realizedFunction = lower(realizedFunction);
-if ~ismember(realizedFunction,{'kernel','optimal sampling','twoscale','multiscale','multivariate kernel','qmle'})
+if ~ismember(realizedFunction,{'kernel','optimal sampling','twoscale','multiscale','multivariate kernel','qmle','preaveraging'})
     error('REALIZEDFUNCTION must be one of the listed types.')
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -172,6 +176,8 @@ options.noiseVarianceSamplingInterval = 120;
 options.IQEstimationSamplingType = 'BusinessUniform';
 % IQ Estimation Sampling Interval
 options.IQEstimationSamplingInterval = 39;
+% Theta for preaveraging
+options.theta = 1;
 
 
 % Remove any unneeded fields
@@ -193,6 +199,13 @@ switch realizedFunction
     case {'qmle'}
         fieldList = {'medFrequencySamplingType','medFrequencySamplingInterval',...
             'noiseVarianceSamplingType','noiseVarianceSamplingInterval'};
+        options.noiseVarianceSamplingType = 'BusinessTime';
+        options.noiseVarianceSamplingInterval = 1;
+    case {'preaveraging'}
+        fieldList = {'theta','medFrequencySamplingType','medFrequencySamplingInterval',...
+            'medFrequencyKernel','medFrequencyBandwidth','noiseVarianceSamplingType',...
+            'noiseVarianceSamplingInterval','IQEstimationSamplingType',...
+            'IQEstimationSamplingInterval','useAdjustedNoiseCount'};
         options.noiseVarianceSamplingType = 'BusinessTime';
         options.noiseVarianceSamplingInterval = 1;
 end
