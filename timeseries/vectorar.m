@@ -1,6 +1,6 @@
 function [parameters,stderr,tstat,pval,const,conststd,r2,errors,s2,paramvec,vcv] = vectorar(y,constant,lags,het,uncorr)
 % Estimate a Vector Autoregression and produce the parameter variance-covariance matrix under a
-% variety of assumptions on the covariance of the errors: 
+% variety of assumptions on the covariance of the errors:
 %   * Conditionally Homoskedastic and Uncorrelated
 %   * Conditionally Homoskedastic but Correlated
 %   * Heteroskedastic but Conditionally Uncorrelated
@@ -18,7 +18,7 @@ function [parameters,stderr,tstat,pval,const,conststd,r2,errors,s2,paramvec,vcv]
 %   HET           - [OPTIONAL] A scalar integer indicating the type of covariance estimator
 %                      0 - Homoskedastic
 %                      1 - Heteroskedastic [DEFAULT]
-%   UNCORR        - [OPTIONAL] A scalar integer indicating the assumed structure of the error covariance 
+%   UNCORR        - [OPTIONAL] A scalar integer indicating the assumed structure of the error covariance
 %                     matrix
 %                      0 - Correlated errors  [DEFAULT]
 %                      1 - Uncorrelated errors
@@ -27,11 +27,11 @@ function [parameters,stderr,tstat,pval,const,conststd,r2,errors,s2,paramvec,vcv]
 %   PARAMETERS    - Cell structure containing K by K matrices in the position of the indicated in
 %                     LAGS.  For example if LAGS = [1 3], PARAMETERS{1} would be the K by K
 %                     parameter matrix for the 1st lag and PARAMETERS{3} would be the K by K matrix
-%                     of parameters for the 3rd lag   
+%                     of parameters for the 3rd lag
 %   STDERR        - Cell structure with the same form as PARAMETERS containing parameter standard
-%                     errors estimated according to UNCORR and HET 
+%                     errors estimated according to UNCORR and HET
 %   TSTAT         - Cell structure with the same form as PARAMETERS containing parameter t-stats
-%                     computed using STDERR 
+%                     computed using STDERR
 %   PVAL          - P-values of the parameters
 %   CONST         - K by 1 vector of constants
 %   CONSTSTD      - K by 1 vector standard errors corresponding to constant
@@ -39,14 +39,14 @@ function [parameters,stderr,tstat,pval,const,conststd,r2,errors,s2,paramvec,vcv]
 %   ERRORS        - K by T vector of errors
 %   S2            - K by K matrix containing the estimated error variance
 %   PARAMVEC      - K*((# lags) + CONSTANT)  by 1 vector of estimated parameters.  The first (# lags
-%                     + CONSTANT) correspond to the first row in the usual var form: 
+%                     + CONSTANT) correspond to the first row in the usual var form:
 %                   [CONST(1) P1(1,1) P1(1,2) ... P1(1,K) P2(1,1) ... P2(1,K) ...]
 %                   The next (# lags + CONSTANT) are the 2nd row
 %                   [CONST(1) P1(2,1) P1(2,2) ... P1(2,K) P2(2,1) ... P2(2,K) ...]
 %                   and so on through the Kth row
 %                   [CONST(K) P1(K,1) P1(K,2) ... P1(K,K) P2(K,1) ... P2(K,K) ...]
 %   VCV           - A K*((# lags) + CONSTANT) by K*((# lags) + CONSTANT) matrix of estimated
-%                     parameter covariances computed using HET and UNCORR 
+%                     parameter covariances computed using HET and UNCORR
 % COMMENTS:
 %   Estimates a VAR including any lags.
 %   y(:,t)' = CONST + P(1) * y(:,t-1) + P(2)*y(:,t-2) + ... + P(1)*y(:,t-K)'
@@ -65,7 +65,7 @@ function [parameters,stderr,tstat,pval,const,conststd,r2,errors,s2,paramvec,vcv]
 
 % Copyright: Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk
-% Revision: 3.0    Date: 1/1/2007
+% Revision: 3.1    Date: 3/1/2014
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input Checking
@@ -137,12 +137,13 @@ end
 % Input Checking
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
 % First estimate the parameters, the
 T=size(y,1);
 K=size(y,2);
 m=max(lags);
+if isempty(m)
+    m = 0;
+end
 ylags=cell(K,1);
 X = zeros(T-m,K*sum(lags>0)+constant);
 Y = y(m+1:T,:);
