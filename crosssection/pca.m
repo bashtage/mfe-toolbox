@@ -107,8 +107,6 @@ eigenvals=rot90(eigenvals,2);
 weights=eigenvects;
 % Principle components are the data times the eigenvectors
 princomp=data*eigenvects;
-% Get the diagonal elements of the eigenvalue matrix
-eigenvals=diag(eigenvals);
 % Explained variance is the % of total eigenvalue sum
 explvar=eigenvals/sum(eigenvals);
 % Cumulative R2 is the amount less than or equal to the sum of the

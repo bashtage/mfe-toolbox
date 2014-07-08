@@ -22,7 +22,7 @@ function [stat,pval,statAll,pvalAll]=grangercause(y,constant,lags,het,uncorr,inf
 %                      0 - Correlated errors  [DEFAULT]
 %                      1 - Uncorrelated errors
 %   INFERENCE     - [OPTIONAL] Inference method
-%                      1 - Likelihood ratio
+%                      1 - Likelihood ratio [DEFAULT]
 %                      2 - LM test
 %                      3 - Wald test
 %

@@ -5,7 +5,7 @@ function [parameters, LL, ht, VCVrobust, VCV, scores, diagnostics] = igarch(epsi
 % Estimation of IAVARCH if IGARCHTYPE=1
 %
 % USAGE:
-%   [PARAMETERS] = igarch(EPSILON,P,O,Q)
+%   [PARAMETERS] = igarch(EPSILON,P,Q)
 %   [PARAMETERS,LL,HT,VCVROBUST,VCV,SCORES,DIAGNOSTICS] 
 %                         = igarch(EPSILON,P,Q,ERRORTYPE,IGARCHTYPE,CONSTANT,STARTINGVALS,OPTIONS)
 %
@@ -23,13 +23,13 @@ function [parameters, LL, ht, VCVrobust, VCV, scores, diagnostics] = igarch(epsi
 %                    2 - Model evolves in squares [DEFAULT]
 %   CONSTANT     - [OPTIONAL] Logical value indicating whether model should include a constant.
 %                    Default is true (include). 
-%   STARTINGVALS - [OPTIONAL] A (CONSTANT+p+q), plus 1 for STUDENTST OR GED (nu), plus 2 for SKEWT
+%   STARTINGVALS - [OPTIONAL] A P+Q, plus 1 for STUDENTST OR GED (nu), plus 2 for SKEWT
 %                    (nu,lambda), vector of starting values. 
 %                    [omega alpha(1) ... alpha(p) beta(1) ... beta(q) [nu lambda]]'.
 %   OPTIONS      - [OPTIONAL] A user provided options structure. Default options are below.
 %
 % OUTPUTS:
-%   PARAMETERS   - A CONSTANT+p+q column vector of parameters with
+%   PARAMETERS   - A P+Q column vector of parameters with
 %                    [omega alpha(1) ... alpha(p) beta(1) ... beta(q-1) [nu lambda]]'.
 %                    Note that the final beta is redundant and so excluded
 %   LL           - The log likelihood at the optimum
@@ -40,6 +40,11 @@ function [parameters, LL, ht, VCVrobust, VCV, scores, diagnostics] = igarch(epsi
 %   DIAGNOSTICS  - Structure of optimization output information.  Useful to check for convergence problems
 %
 % COMMENTS:
+%   The parameters returned will always have P+Q elements, where the first
+%   element is omega, and the remaining elements are
+%   [alpha(1) alpha(2) ... alpha(P) beta(1) ... beta(Q-1)]
+%   the value of the missing beta, beta(Q) is 1-sum(alpha) - sum(beta(1:Q-1))
+%
 %   The following (generally wrong) constraints are used:
 %    (1) omega > 0 if CONSTANT
 %    (2) alpha(i) >= 0 for i = 1,2,...,p

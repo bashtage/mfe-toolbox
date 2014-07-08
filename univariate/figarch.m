@@ -47,7 +47,7 @@ function [parameters, LL, ht, VCVrobust, VCV, scores, diagnostics] = figarch(eps
 %
 %    where L is the lag operator which is estimated using an ARCH(oo) representation,
 %
-%    h(t) = omega + sum(lambda(i) * epsilon(t-1)^2)
+%    h(t) = (1-beta)^(-1) * omega + sum(lambda(i) * epsilon(t-i)^2)
 %
 %    where lambda(i) is a function of the fractional differencing parameter, phi and beta.
 %
