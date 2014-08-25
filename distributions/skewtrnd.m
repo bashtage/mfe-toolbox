@@ -38,7 +38,7 @@ function r = skewtrnd(v,lambda,varargin)
 % kevin.sheppard@economics.ox.ac.uk
 % Revision: 3    Date: 9/1/2005
 
-if nargin < 2,
+if nargin < 2
     error('Requires at least two input arguments.');
 end
 

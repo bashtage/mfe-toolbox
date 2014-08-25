@@ -1,19 +1,20 @@
-function y=stdtpdf(x,v)
+function y=stdtpdf(x,mu,sigma2,nu)
 % Probability Density Function (PDF) for the Standardized T distribution
 %
 % USAGE:
-%   Y = stdtpdf(X,V)
+%   Y = stdtpdf(X,MU,SIGMA2,NU)
 %
 % INPUTS:
-%   X     - Standardized T random variables
-%   V     - Degree of freedom parameters, either scalar or size(x)
+%   X      - Standardized T random variables
+%   MU     - Mean of X, either scalar or size(x) 
+%   SIGMA2 - Variance of X, either scalar or size(x)
+%   NU     - Degree of freedom parameters, either scalar or size(x)
 %
 % OUTPUTS:
-%   Y     - Probability density evaluated at x
+%   Y     - Probability density evaluated at X
 %
 % COMMENTS:
-%   V>2
-%   Uses TPDF
+%   NU>2
 %
 % REFERENCES:
 %   [1] Cassella and Berger (1990) 'Statistical Inference'
@@ -23,23 +24,37 @@ function y=stdtpdf(x,v)
 % Copyright:
 % Kevin Sheppard
 % kevin.sheppard@economics.ox.ac.uk
-% Revision: 3    Date: 8/1/2005
+% Revision: 6    Date: 8/21/2014
 
-% v must either be scalar or the same size as x
-if nargin~=2
-    error('2 inputs required')
+[T,K]=size(x);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Input Checking
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if K~=1
+    error('X must be a column vector');
 end
 
-[err, errtext, sizeOut, v] = iscompatible(1,v,size(x));
-
-if err
-    error(errtext)
+if nargin==4
+    if length(mu)~=1 && ~all(size(mu)==[T K])
+        error('mu must be either a scalar or the same size as X');
+    end
+    if any(sigma2<=0)
+        error('sigma2 must contain only positive elements')
+    end
+    if length(sigma2)==1
+        sigma2=sigma2*ones(T,K);
+    elseif size(sigma2,1)~=T || size(sigma2,2)~=1
+        error('sigma2 must be a scalar or a vector with the same dimensions as X');
+    end
+    if length(nu)>1 || nu<=2
+        error('nu must be a scalar greater than 2');
+    end
+    x=x-mu;
+else
+    error('Only 4 inputs supported');
 end
 
-%stdev=sqrt(v./(v-2));
-%stdev(v<=2)=NaN;
-%x=x.*stdev;
 
-constant = exp(gammaln((v+1)/2)-gammaln(v/2));
-y = constant./sqrt(pi*(v-2)).*(1+x.^2./(v-2)).^(-(v+1)/2);
-%y=tpdf(x,v);
+constant = exp(gammaln( 0.5 * (nu + 1)) - gammaln(0.5 * nu));
+y = constant ./ sqrt(pi * (nu - 2) * sigma2) .* (1 + (x-mu) .^ 2.0 / (sigma2 * (nu - 2))) .^ (-(nu + 1) / 2);
