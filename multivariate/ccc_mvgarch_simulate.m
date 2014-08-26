@@ -48,7 +48,7 @@ function [simulatedata,ht,pseudorc]=ccc_mvgarch_simulate(t,k,parameters,p,o,q,m)
 %    p = 1; o = 0; q = 1;
 %    parameters = [garch_parameters; garch_parameters; garch_parameters];
 %    parameters = [parameters; corr_vech(R)]
-%    [data,Ht] = ccc_mvgarch_simulate(1000, 3, parameters, p, o, q)
+%    [data,Ht] = ccc_mvgarch_simulate(1000, 3, parameters, p, o, q) 
 %
 % See also TARCH_SIMULATE, SCALAR_VT_VECH
 
