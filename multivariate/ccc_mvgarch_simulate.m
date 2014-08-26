@@ -41,6 +41,15 @@ function [simulatedata,ht,pseudorc]=ccc_mvgarch_simulate(t,k,parameters,p,o,q,m)
 %
 %   NOTE: This program generates 2000 more than required to minimize any start-up bias
 %
+% EXAMPLES:
+%    % 3 by 3 CCC model
+%    garch_parameters = [0.1 0.1 0.8]';
+%    R = [1 .2 .5;.2 1 .3;.5 .3 1];
+%    p = 1; o = 0; q = 1;
+%    parameters = [garch_parameters; garch_parameters; garch_parameters];
+%    parameters = [parameters; corr_vech(R)]
+%    [data,Ht] = ccc_mvgarch_simulate(1000, 3, parameters, p, o, q)
+%
 % See also TARCH_SIMULATE, SCALAR_VT_VECH
 
 % Copyright: Kevin Sheppard
