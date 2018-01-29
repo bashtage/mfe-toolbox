@@ -115,12 +115,12 @@ else
     nu=[];
     lambda=[];
     if errorType==2 || errorType==3 || errorType==4
-        nu=startingvals(p+o+q+2);
+        nu=startingvals(p+q+2);
     end
     if errorType==4
-        lambda=startingvals(p+o+q+3);
+        lambda=startingvals(p+q+3);
     end
-    startingvals=startingvals(1:p+o+q+1);
+    startingvals=startingvals(1:p+q+1);
 end
 
 
