@@ -310,7 +310,10 @@ s BW, on over-smoothed (
  The results of this code is contained in figure 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "Fig:KernelDens"
+reference "fig:DensSilverman"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -442,21 +445,18 @@ status open
 
 \begin_layout Plain Layout
 A plot with kernel densities using Silverman's BW and over- and under- smoothed.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
-name "Fig:KernelDens"
+name "fig:DensSilverman"
 
 \end_inset
 
- 
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset

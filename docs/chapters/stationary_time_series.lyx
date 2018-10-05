@@ -9817,8 +9817,8 @@ covvar
 \begin_layout Standard
 Long-run covariance estimation using the VAR-based estimator of 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "denHaanLevin::2000"
+LatexCommand cite
+key "HaanLevin::2000"
 literal "true"
 
 \end_inset

@@ -1045,34 +1045,10 @@ Copyright
 \begin_layout Standard
 Except where explicitly noted, all contents of the toolbox and this documentatio
 n are 
-\size footnotesize
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-
 \family sans
+\size footnotesize
 ©
 \family default
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
 \size default
 2001-2018 Kevin Sheppard.
 \end_layout
@@ -1080,7 +1056,7 @@ status collapsed
 \begin_layout Standard
 \noindent
 MATLAB
-\begin_inset Formula $^{\text{{\tiny®}}}$
+\begin_inset Formula $^{\text{®}}$
 \end_inset
 
  is a registered trademark The Mathworks, Inc.
