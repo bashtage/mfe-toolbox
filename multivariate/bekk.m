@@ -187,7 +187,10 @@ m = ceil(sqrt(T));
 w = .06 * .94.^(0:(m-1));
 w = reshape(w/sum(w),[1 1 m]);
 backCast = sum(bsxfun(@times,w,data(:,:,1:m)),3);
-backCastAsym = sum(bsxfun(@times,w,dataAsym(:,:,1:m)),3);
+backCastAsym = backCast;
+if o>0
+    backCastAsym = sum(bsxfun(@times,w,dataAsym(:,:,1:m)),3);
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Estimation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

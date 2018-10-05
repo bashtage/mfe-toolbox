@@ -1,7 +1,9 @@
-#LyX 2.0 created this file. For more info see http://www.lyx.org/
-\lyxformat 413
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
 \begin_document
 \begin_header
+\save_transient_properties true
+\origin unavailable
 \textclass book
 \begin_preamble
 \usepackage{SheppardCommonNew}
@@ -52,18 +54,20 @@
 \maintain_unincluded_children false
 \language english
 \language_package none
-\inputencoding auto
+\inputencoding utf8
 \fontencoding default
-\font_roman default
-\font_sans default
-\font_typewriter default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
-\font_sf_scale 100
-\font_tt_scale 100
-
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -83,20 +87,32 @@
 \pdf_breaklinks false
 \pdf_pdfborder false
 \pdf_colorlinks false
-\pdf_backref section
+\pdf_backref false
 \pdf_pdfusetitle true
 \papersize default
 \use_geometry false
-\use_amsmath 1
-\use_esint 0
-\use_mhchem 0
-\use_mathdots 0
-\cite_engine natbib_authoryear
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 0
+\use_package mathdots 0
+\use_package mathtools 1
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine biblatex-natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\biblatex_bibstyle authoryear
+\biblatex_citestyle authoryear
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
+\justification true
 \use_refstyle 0
+\use_minted 0
 \index Index
 \shortcut idx
 \color #008000
@@ -105,7 +121,10 @@
 \tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
-\quotes_language english
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
 \papercolumns 1
 \papersides 2
 \paperpagestyle fancy
@@ -885,22 +904,22 @@ status collapsed
 
 \begin_layout Plain Layout
 \begin_inset FormulaMacro
-\newcommand{\argmin}{\mathop{\rm argmin}}
+\newcommand{\argmin}{\mathop{{\rm argmin}}}
 \end_inset
 
  
 \begin_inset FormulaMacro
-\newcommand{\vech}{\mathop{\rm vech}}
+\newcommand{\vech}{\mathop{{\rm vech}}}
 \end_inset
 
  
 \begin_inset FormulaMacro
-\newcommand{\argmax}{\mathop{\rm argmax}}
+\newcommand{\argmax}{\mathop{{\rm argmax}}}
 \end_inset
 
  
 \begin_inset FormulaMacro
-\newcommand{\sgn}{\mathop{\rm sgn}}
+\newcommand{\sgn}{\mathop{{\rm sgn}}}
 \end_inset
 
  
@@ -935,8 +954,8 @@ status collapsed
 \begin_inset Tabular
 <lyxtabular version="3" rows="1" columns="2">
 <features tabularvalignment="middle">
-<column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
 <row>
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
@@ -976,7 +995,7 @@ status collapsed
 ©
 \family default
 \size default
-2001-2012 Kevin Sheppard 
+2001-2018 Kevin Sheppard 
 \end_layout
 
 \begin_layout Standard
@@ -1055,7 +1074,7 @@ status collapsed
 
 
 \size default
-2001-2009 Kevin Sheppard.
+2001-2018 Kevin Sheppard.
 \end_layout
 
 \begin_layout Standard
@@ -1076,9 +1095,9 @@ I welcome bug reports and feedback about the software.
  The best type of bug report should include the command run that produced
  the errors, a description of the data used (a zipped .MAT file with the
  data may be useful) and the version of MATLAB run.
- I am usually working on a recent version of MATLAB (currently R2009b, 7.9)
- and while I try to ensure some backward compatibility, it is likely that
- this code will not run flawlessly on ancient versions of MATLAB.
+ I am usually working on a recent version of MATLAB (currently R2017b) and
+ while I try to ensure some backward compatibility, it is likely that this
+ code will not run flawlessly on ancient versions of MATLAB.
 \end_layout
 
 \begin_layout Standard
@@ -3053,7 +3072,8 @@ filename "chapters/helper_functions.lyx"
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "master"
+btprint "btPrintCited"
+bibfiles "master-bibliography"
 options "agsm"
 
 \end_inset
@@ -3062,6 +3082,8 @@ options "agsm"
 \begin_inset CommandInset index_print
 LatexCommand printindex
 type "idx"
+name "Index"
+literal "true"
 
 \end_inset
 

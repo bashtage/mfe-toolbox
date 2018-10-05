@@ -4,8 +4,8 @@ function [c,u,l]=bsds(bench,models,B,w,type,boot)
 % heteroskedastic
 %
 % USAGE:
-%   [C] = bsds_studentized(BENCH,MODELS,B,W)
-%   [C,U,L] = bsds_studentized(BENCH,MODELS,B,W,TYPE,BOOT)
+%   [C] = bsds(BENCH,MODELS,B,W)
+%   [C,U,L] = bsds(BENCH,MODELS,B,W,TYPE,BOOT)
 %
 % INPUTS:
 %   BENCH  - Losses from the benchmark model
@@ -27,7 +27,7 @@ function [c,u,l]=bsds(bench,models,B,w,type,boot)
 %   performance across the models.  The alternative is that the minimum average loss across the
 %   models is smaller than the the average performance of the benchmark.
 %
-%   If the quantities of interest are 'goods', such as returns, simple call bsds_studentized with
+%   If the quantities of interest are 'goods', such as returns, call bsds with
 %   -1*BENCH and -1*MODELS
 %
 % EXAMPLES:

@@ -128,7 +128,7 @@ switch nargin
         error('5 to 13 inputs required.')
 end
 
-if ndims(data)==2
+if ismatrix(data)
     [T,k] = size(data);
     data2d = data;
     eta = data.*(data<0);
@@ -140,7 +140,7 @@ if ndims(data)==2
     end
 elseif ndims(data)==3
     [k,~,T]=size(data);
-    data2d = zeros(k,k,T);
+    data2d = zeros(k,T);
     for i=1:K
         data2d(:,i) = squeeze((1-2*(dataAsym(i,i,:)==0)) .* sqrt(data(i,i,:)));
     end

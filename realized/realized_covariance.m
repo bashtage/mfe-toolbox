@@ -102,7 +102,7 @@ samplingInterval = varargin{2*k+3};
 if Q==(2*k+4)
     subsamples = varargin{2*k+4};
 else
-    subsamples  = 0;
+    subsamples  = 1;
 end
 
 timeType=lower(timeType);

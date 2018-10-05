@@ -1,24 +1,28 @@
-#LyX 2.0 created this file. For more info see http://www.lyx.org/
-\lyxformat 413
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
 \begin_document
 \begin_header
+\save_transient_properties true
+\origin unavailable
 \textclass book
 \use_default_options true
 \maintain_unincluded_children false
 \language english
 \language_package default
-\inputencoding auto
+\inputencoding utf8
 \fontencoding global
-\font_roman default
-\font_sans default
-\font_typewriter default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
-\font_sf_scale 100
-\font_tt_scale 100
-
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -29,16 +33,26 @@
 \use_hyperref false
 \papersize default
 \use_geometry false
-\use_amsmath 1
-\use_esint 1
-\use_mhchem 1
-\use_mathdots 1
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
 \cite_engine basic
+\cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
+\justification true
 \use_refstyle 1
+\use_minted 0
 \index Index
 \shortcut idx
 \color #008000
@@ -47,7 +61,10 @@
 \tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
-\quotes_language english
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
@@ -326,6 +343,10 @@ ERRORTYPE
 
 : Sting value indicating distribution of standardized shock.
  
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -949,6 +970,10 @@ ERRORTYPE
 
 : Sting value indicating distribution of standardized shock.
  
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -1563,6 +1588,10 @@ ERRORTYPE
 
 : Sting value indicating distribution of standardized shock.
  
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -2190,7 +2219,7 @@ Q
  by 1 vector of parameters in the order 
 \begin_inset Formula 
 \[
-[\omega\,\alpha\, d\,\beta]'
+[\omega\,\alpha\,d\,\beta]'
 \]
 
 \end_inset
@@ -2255,6 +2284,10 @@ ERRORTYPE
 
 : Sting value indicating distribution of standardized shock.
  
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -2986,6 +3019,10 @@ ERROR_TYPE
 \family default
 : The variable specifies the error distribution as a string and can take
  the values 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -3290,6 +3327,10 @@ fminunc
 \family default
 , is unconstrained but this is deceptive.
  The parameters are constrained to satisfy: 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -4022,7 +4063,7 @@ egarch
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\sigma_{\delta}^{2}=\omega+\sum_{p=1}^{P}\alpha_{p}|\epsilon_{t-p}|^{\delta}+\sum_{o=1}^{O}\gamma_{o}|\epsilon_{t-o}|^{\delta}I_{[\epsilon_{t-o}<0]}+\sum_{q=1}^{Q}\beta_{q}\sigma_{t-q}^{\delta}
+\ln\sigma^{2}=\omega+\sum_{p=1}^{P}\alpha_{p}|\epsilon_{t-p}-\sqrt{\nicefrac{2}{\pi}}|+\sum_{o=1}^{O}\gamma_{o}\epsilon_{t-o}+\sum_{q=1}^{Q}\beta_{q}\ln\sigma_{t-q}^{2}
 \]
 
 \end_inset
@@ -4127,10 +4168,6 @@ tarch_type
 
 \begin_layout Subsubsection
 Examples
-\end_layout
-
-\begin_layout Standard
-
 \end_layout
 
 \begin_layout Standard
@@ -5545,6 +5582,10 @@ ERRORTYPE
 
 : The variable specifies the error distribution as a string and can take
  the values 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -6566,6 +6607,10 @@ ERRORTYPE
 
 : The variable specifies the error distribution as a string and can take
  the values 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -7572,8 +7617,8 @@ where
 \begin{align*}
 \delta_{1} & =d\\
 \lambda_{1} & =\phi-\beta+d\\
-\delta_{i} & =\frac{i-1-d}{i}\delta_{i-1},\,\,\, i=2,\ldots\\
-\lambda_{i} & =\beta\lambda_{i-1}+\delta_{i}-\phi\delta_{i-1},\,\,\, i=2,\ldots\\
+\delta_{i} & =\frac{i-1-d}{i}\delta_{i-1},\,\,\,i=2,\ldots\\
+\lambda_{i} & =\beta\lambda_{i-1}+\delta_{i}-\phi\delta_{i-1},\,\,\,i=2,\ldots\\
 \end{align*}
 
 \end_inset
@@ -7762,6 +7807,10 @@ ERRORTYPE
 
 : The variable specifies the error distribution as a string and can take
  the values 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper

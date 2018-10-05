@@ -92,7 +92,7 @@ if isempty(rho)
 end
 
 if tau1*rho^(kmax-1)>tau0
-    error('The inputs must satisfy: TAU1*RHO^(KMAX-1)>TAU0')
+    error('The inputs must satisfy: TAU1*RHO^(KMAX-1)<TAU0')
 end
 if tau1<0
     error('TAU1 must be positive')
@@ -164,8 +164,3 @@ if nargout>1
         weights = weights + w(k) * weightMatrix;
     end
 end
-
-
-
-
-
