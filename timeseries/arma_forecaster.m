@@ -185,7 +185,7 @@ yorig = y;
 zerosToPad = max(maxq-maxp,0);
 m = max(maxp,maxq);
 if ~isempty(holdBack)
-    if holdBack > maxp;
+    if holdBack > maxp
         m = m + (holdBack-maxp);
     end
 end
@@ -215,8 +215,8 @@ m = maxq;
 for t=r:T
     ytemp = zeros(T+m+h,1);
     etemp = zeros(T+m+h,1);
-    ytemp(m+1:m+t) = y(1:t);
-    etemp(m+1:m+t) = errors(1:t);
+    ytemp(m+1:m+t) = y(1+zerosToPad:t+zerosToPad);
+    etemp(m+1:m+t) = errors(1+zerosToPad:t+zerosToPad);
     for i=1:h
         % This is r+m+i for the first one
         % The +1 is because we should be using r+m for the first one
@@ -247,7 +247,7 @@ old = zeros(h,1);
 
 for i=1:h
     old(h-i+1) = new(i);
-    for j=1:i-1;
+    for j=1:i-1
         old(h-i+1) = old(h-i+1) + newar(j)*old(h-i+1+j);
     end
 end
