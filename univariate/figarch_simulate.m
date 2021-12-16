@@ -44,7 +44,7 @@ function [simulatedata, ht, lambda] = figarch_simulate(t,parameters,p,q,errorTyp
 %   FIGARCH(1,d,1) simulation
 %       simulatedData = figarch_simulate(2500, [.1 .1 .42 .4],1,1)
 %   FIGARCH(0,d,0) simulation with Student's T errors
-%       simulatedData = figarch_simulate(2500, [.1 .42],0,0,'STUDENTST')
+%       simulatedData = figarch_simulate(2500, [.1 .42 6],0,0,'STUDENTST')
 %   FIGARCH(0,d,0) simulation with a truncation lag of 5000
 %       simulatedData = figarch_simulate(2500, [.1 .42],0,0,[],5000)
 %
