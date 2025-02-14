@@ -37,7 +37,7 @@ function [noiseVariance, debiasedNoiseVariance, IQEstimate, noiseEstimateOomen] 
 % Input Checking
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if nargin~=4
-    error('Seven inputs required.')
+    error('Four inputs required.')
 end
 if size(price,2)>size(price,1)
     price=price';
@@ -80,13 +80,13 @@ medFrequencySamplingInterval = options.medFrequencySamplingInterval;
 medFrequencyKernel = options.medFrequencyKernel;
 medFrequencyBandwidth = options.medFrequencyBandwidth;
 if ~isscalar(medFrequencySamplingInterval) || floor(medFrequencySamplingInterval)~=medFrequencySamplingInterval || medFrequencySamplingInterval<=0
-    error('MEDIUMFREQUENCYTIME must be a postive integer scalar value.');
+    error('MEDIUMFREQUENCYTIME must be a positive integer scalar value.');
 end
 
 IQEstimationSamplingType = options.IQEstimationSamplingType;
 IQEstimationSamplingInterval = options.IQEstimationSamplingInterval;
 if ~isscalar(IQEstimationSamplingInterval) || floor(IQEstimationSamplingInterval)~=IQEstimationSamplingInterval || IQEstimationSamplingInterval<=0
-    error('LOWFREQUENCYTIME must be a postive integer scalar value.');
+    error('LOWFREQUENCYTIME must be a positive integer scalar value.');
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input Checking
