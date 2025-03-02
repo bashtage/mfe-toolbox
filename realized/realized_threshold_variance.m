@@ -185,7 +185,7 @@ if isempty(localVar)
     V = inf*ones(size(returns));
     K = -L:L;
     K = 1/sqrt(2*pi)*exp(-(K/L).^2/2);
-    K(L+(-1:1)) = 0;
+    K(L+(0:2)) = 0;
     returns2 = returns.^2;
     
     finished = false;
@@ -238,7 +238,7 @@ if isempty(localVar)
     V = inf*ones(size(returns));
     K = -L:L;
     K = 1/sqrt(2*pi)*exp(-(K/L).^2/2);
-    K(L+(-subsamples:subsamples)) = 0;
+    K(L+(-subsamples+1:subsamples+1)) = 0;
     m = size(returns,1);
     returns2 = returns.^2;
     
